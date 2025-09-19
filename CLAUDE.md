@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ForkerDotNet is a production-grade .NET 8 file copier service designed for large medical imaging files (SVS format, 500MB-20GB). This is a complete rewrite of the PowerShell-based forker service with enterprise security, reliability, and observability features.
 
-**Current Status**: Repository setup phase - no .NET solution structure exists yet. This is a planning and design repository containing comprehensive documentation for the implementation.
+**Current Status**: Phase 3 Complete - SQLite persistence layer implemented with 88/88 tests passing. Core domain model and repository pattern operational with comprehensive integration testing.
 
 ## Key Architecture Principles
 
@@ -73,17 +73,18 @@ Key configuration areas:
 
 ## Development Commands
 
-**Note**: No .NET solution exists yet. The following commands will be available after Phase 1 implementation:
+**Current Commands**:
 
 ```bash
-# After solution creation:
-dotnet restore
-dotnet build
-dotnet test
-dotnet run --project src/Forker.Service
+# Build and test (working):
+dotnet restore          # Restore packages
+dotnet build           # Build all projects
+dotnet test            # Run all 88 tests (Domain: 68, Infrastructure: 19, Resilience: 1)
+dotnet run --project src/Forker.Service  # Run service with health endpoint
 
-# Testing commands (planned):
+# Testing commands (working):
 dotnet test --collect:"XPlat Code Coverage"
+dotnet test tests/Forker.Infrastructure.Tests --filter "ServiceIntegrationTests"  # Integration tests
 dotnet test tests/Forker.Resilience.Tests  # Chaos engineering tests
 ```
 
@@ -91,9 +92,9 @@ dotnet test tests/Forker.Resilience.Tests  # Chaos engineering tests
 
 The project follows a 12-phase implementation plan over 30 days:
 
-1. **Phase 1** (Day 0-1): Solution skeleton + health endpoints
-2. **Phase 2** (Day 1-3): Domain core with state machines
-3. **Phase 3** (Day 3-5): SQLite persistence layer
+1. **Phase 1** (Day 0-1): Solution skeleton + health endpoints ✅ COMPLETED
+2. **Phase 2** (Day 1-3): Domain core with state machines ✅ COMPLETED
+3. **Phase 3** (Day 3-5): SQLite persistence layer ✅ COMPLETED
 4. **Phase 4** (Day 5-7): File discovery and stability detection
 5. **Phase 5** (Day 7-10): Single-target copy pipeline
 6. **Phase 6** (Day 10-13): Multi-target verification
