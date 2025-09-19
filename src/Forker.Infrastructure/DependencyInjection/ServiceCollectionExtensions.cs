@@ -19,10 +19,12 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The service collection</param>
     /// <param name="configureDatabase">Optional database configuration action</param>
+    /// <param name="configureTargets">Optional target configuration action</param>
     /// <returns>The service collection for method chaining</returns>
     public static IServiceCollection AddForkerInfrastructure(
         this IServiceCollection services,
-        Action<DatabaseConfiguration>? configureDatabase = null)
+        Action<DatabaseConfiguration>? configureDatabase = null,
+        Action<TargetConfiguration>? configureTargets = null)
     {
         // Configure database options
         if (configureDatabase != null)
@@ -32,6 +34,16 @@ public static class ServiceCollectionExtensions
         else
         {
             services.Configure<DatabaseConfiguration>(_ => { }); // Use defaults
+        }
+
+        // Configure target options
+        if (configureTargets != null)
+        {
+            services.Configure(configureTargets);
+        }
+        else
+        {
+            services.Configure<TargetConfiguration>(_ => { }); // Use defaults
         }
 
         // Register database services
@@ -44,6 +56,11 @@ public static class ServiceCollectionExtensions
         // Register file discovery services
         services.AddSingleton<IFileStabilityChecker, FileStabilityChecker>();
         services.AddSingleton<IFileDiscoveryService, FileDiscoveryService>();
+
+        // Register file copy services
+        services.AddScoped<IHashingService, HashingService>();
+        services.AddScoped<IFileCopyService, FileCopyService>();
+        services.AddScoped<ICopyOrchestrator, CopyOrchestrator>();
 
         return services;
     }

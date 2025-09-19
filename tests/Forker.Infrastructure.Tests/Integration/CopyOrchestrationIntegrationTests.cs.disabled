@@ -1,0 +1,363 @@
+using Forker.Domain;
+using Forker.Domain.Repositories;
+using Forker.Domain.Services;
+using Forker.Infrastructure.Configuration;
+using Forker.Infrastructure.DependencyInjection;
+using Forker.Infrastructure.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
+namespace Forker.Infrastructure.Tests.Integration;
+
+/// <summary>
+/// Integration tests for dual-target copy orchestration.
+/// Tests the complete workflow with real file operations and database persistence.
+/// </summary>
+public sealed class CopyOrchestrationIntegrationTests : IDisposable
+{
+    private readonly ServiceProvider _serviceProvider;
+    private readonly string _testSourceDirectory;
+    private readonly string _testTargetADirectory;
+    private readonly string _testTargetBDirectory;
+    private readonly IJobRepository _jobRepository;
+    private readonly ITargetOutcomeRepository _targetOutcomeRepository;
+    private readonly ICopyOrchestrator _copyOrchestrator;
+
+    public CopyOrchestrationIntegrationTests()
+    {
+        // Set up test directories
+        var testRoot = Path.Combine(Path.GetTempPath(), "ForkerIntegrationTests", Guid.NewGuid().ToString());
+        _testSourceDirectory = Path.Combine(testRoot, "Source");
+        _testTargetADirectory = Path.Combine(testRoot, "TargetA");
+        _testTargetBDirectory = Path.Combine(testRoot, "TargetB");
+
+        Directory.CreateDirectory(_testSourceDirectory);
+        Directory.CreateDirectory(_testTargetADirectory);
+        Directory.CreateDirectory(_testTargetBDirectory);
+
+        // Set up service provider with real dependencies
+        var services = new ServiceCollection();
+
+        // Configure logging
+        services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
+
+        // Configure infrastructure with test-specific configurations
+        services.AddForkerInfrastructure(
+            configureDatabase: config =>
+            {
+                // Configure will be called, but we'll set up the connection string elsewhere
+            },
+            configureTargets: config =>
+            {
+                config.Targets = new Dictionary<string, TargetDefinition>
+                {
+                    ["TargetA"] = new()
+                    {
+                        Id = "TargetA",
+                        Path = _testTargetADirectory,
+                        Enabled = true,
+                        Description = "Primary test target",
+                        Priority = 1
+                    },
+                    ["TargetB"] = new()
+                    {
+                        Id = "TargetB",
+                        Path = _testTargetBDirectory,
+                        Enabled = true,
+                        Description = "Secondary test target",
+                        Priority = 2
+                    }
+                };
+                config.ParallelCopyEnabled = true;
+                config.MaxConcurrentCopiesPerTarget = 2;
+            }
+        );
+
+        _serviceProvider = services.BuildServiceProvider();
+
+        // Initialize database
+        _serviceProvider.InitializeForkerDatabaseAsync().GetAwaiter().GetResult();
+
+        // Get required services
+        _jobRepository = _serviceProvider.GetRequiredService<IJobRepository>();
+        _targetOutcomeRepository = _serviceProvider.GetRequiredService<ITargetOutcomeRepository>();
+        _copyOrchestrator = _serviceProvider.GetRequiredService<ICopyOrchestrator>();
+    }
+
+    [Fact]
+    public async Task ProcessFileAsync_WithValidFile_CopiesSuccessfullyToBothTargets()
+    {
+        // Arrange
+        const string testContent = "Test medical imaging file content for dual-target replication";
+        var sourceFileName = "medical-test.scn";
+        var sourceFilePath = Path.Combine(_testSourceDirectory, sourceFileName);
+        await File.WriteAllTextAsync(sourceFilePath, testContent);
+
+        var requiredTargets = new[] { new TargetId("TargetA"), new TargetId("TargetB") };
+        var job = FileJob.CreateDiscovered(sourceFilePath, testContent.Length, requiredTargets);
+        job.MarkAsQueued();
+        await _jobRepository.SaveAsync(job);
+
+        // Act
+        var result = await _copyOrchestrator.ProcessFileAsync(job.Id, sourceFilePath);
+
+        // Assert
+        Assert.True(result.Success, $"Copy orchestration failed: {result.ErrorMessage}");
+        Assert.Equal(2, result.TargetResults.Count);
+        Assert.NotEmpty(result.SourceHash);
+
+        // Verify both targets succeeded
+        var targetAResult = result.TargetResults[new TargetId("TargetA")];
+        var targetBResult = result.TargetResults[new TargetId("TargetB")];
+
+        Assert.True(targetAResult.Success);
+        Assert.True(targetBResult.Success);
+        Assert.Equal(targetAResult.Hash, targetBResult.Hash); // Both should have same hash
+
+        // Verify files exist in both targets
+        var targetAFile = Path.Combine(_testTargetADirectory, sourceFileName);
+        var targetBFile = Path.Combine(_testTargetBDirectory, sourceFileName);
+
+        Assert.True(File.Exists(targetAFile));
+        Assert.True(File.Exists(targetBFile));
+
+        // Verify content is correct
+        var targetAContent = await File.ReadAllTextAsync(targetAFile);
+        var targetBContent = await File.ReadAllTextAsync(targetBFile);
+
+        Assert.Equal(testContent, targetAContent);
+        Assert.Equal(testContent, targetBContent);
+
+        // Verify job state was updated correctly
+        var updatedJob = await _jobRepository.GetByIdAsync(job.Id);
+        Assert.NotNull(updatedJob);
+        Assert.Equal(JobState.Partial, updatedJob.State);
+        Assert.Equal(result.SourceHash, updatedJob.SourceHash);
+
+        // Verify target outcomes were created and updated
+        var targetOutcomes = await _targetOutcomeRepository.GetByJobIdAsync(job.Id);
+        Assert.Equal(2, targetOutcomes.Count);
+
+        foreach (var outcome in targetOutcomes)
+        {
+            Assert.Equal(TargetCopyState.Copied, outcome.CopyState);
+            Assert.NotNull(outcome.Hash);
+            Assert.NotNull(outcome.FinalPath);
+        }
+    }
+
+    [Fact]
+    public async Task ProcessFileAsync_WithLargeFile_HandlesCopyProgressCorrectly()
+    {
+        // Arrange - Create a larger test file (1MB)
+        var sourceFileName = "large-medical-file.svs";
+        var sourceFilePath = Path.Combine(_testSourceDirectory, sourceFileName);
+        var testData = new byte[1024 * 1024]; // 1MB
+        new Random(42).NextBytes(testData);
+        await File.WriteAllBytesAsync(sourceFilePath, testData);
+
+        var requiredTargets = new[] { new TargetId("TargetA"), new TargetId("TargetB") };
+        var job = FileJob.CreateDiscovered(sourceFilePath, testData.Length, requiredTargets);
+        job.MarkAsQueued();
+        await _jobRepository.SaveAsync(job);
+
+        var progressEvents = new List<CopyProgressEvent>();
+        var completionEvents = new List<TargetCopyCompletedEvent>();
+
+        _copyOrchestrator.CopyProgressChanged += (_, e) => progressEvents.Add(e);
+        _copyOrchestrator.TargetCopyCompleted += (_, e) => completionEvents.Add(e);
+
+        // Act
+        var result = await _copyOrchestrator.ProcessFileAsync(job.Id, sourceFilePath);
+
+        // Assert
+        Assert.True(result.Success);
+
+        // Verify progress events were fired
+        Assert.NotEmpty(progressEvents);
+        Assert.Contains(progressEvents, e => e.TargetId.Value == "TargetA");
+        Assert.Contains(progressEvents, e => e.TargetId.Value == "TargetB");
+
+        // Verify completion events were fired for both targets
+        Assert.Equal(2, completionEvents.Count);
+        Assert.True(completionEvents.All(e => e.Result.Success));
+
+        // Verify both target files have correct size
+        var targetAFile = Path.Combine(_testTargetADirectory, sourceFileName);
+        var targetBFile = Path.Combine(_testTargetBDirectory, sourceFileName);
+
+        var targetAInfo = new FileInfo(targetAFile);
+        var targetBInfo = new FileInfo(targetBFile);
+
+        Assert.Equal(testData.Length, targetAInfo.Length);
+        Assert.Equal(testData.Length, targetBInfo.Length);
+
+        // Verify content matches
+        var targetAData = await File.ReadAllBytesAsync(targetAFile);
+        var targetBData = await File.ReadAllBytesAsync(targetBFile);
+
+        Assert.Equal(testData, targetAData);
+        Assert.Equal(testData, targetBData);
+    }
+
+    [Fact]
+    public async Task ProcessFileAsync_WithRealMedicalImagingFile_ProcessesCorrectly()
+    {
+        // Arrange - Check if real test data exists
+        var realTestDataDirectory = Path.GetFullPath("tests/testData/source");
+        if (!Directory.Exists(realTestDataDirectory))
+        {
+            // Skip test if test data is not available
+            return;
+        }
+
+        var realFiles = Directory.GetFiles(realTestDataDirectory, "*.scn");
+        if (realFiles.Length == 0)
+        {
+            // Skip if no .scn files are available
+            return;
+        }
+
+        var sourceFile = realFiles[0]; // Use first available medical imaging file
+        var sourceFileName = Path.GetFileName(sourceFile);
+
+        // Copy to our test source directory to avoid modifying original
+        var testSourceFile = Path.Combine(_testSourceDirectory, sourceFileName);
+        File.Copy(sourceFile, testSourceFile);
+
+        var fileInfo = new FileInfo(testSourceFile);
+        var requiredTargets = new[] { new TargetId("TargetA"), new TargetId("TargetB") };
+        var job = FileJob.CreateDiscovered(testSourceFile, fileInfo.Length, requiredTargets);
+        job.MarkAsQueued();
+        await _jobRepository.SaveAsync(job);
+
+        // Act
+        var result = await _copyOrchestrator.ProcessFileAsync(job.Id, testSourceFile);
+
+        // Assert
+        Assert.True(result.Success, $"Failed to process real medical imaging file: {result.ErrorMessage}");
+
+        // Verify both targets have the file
+        var targetAFile = Path.Combine(_testTargetADirectory, sourceFileName);
+        var targetBFile = Path.Combine(_testTargetBDirectory, sourceFileName);
+
+        Assert.True(File.Exists(targetAFile));
+        Assert.True(File.Exists(targetBFile));
+
+        // Verify file sizes match
+        var originalSize = fileInfo.Length;
+        Assert.Equal(originalSize, new FileInfo(targetAFile).Length);
+        Assert.Equal(originalSize, new FileInfo(targetBFile).Length);
+
+        // Verify hashes match between targets
+        var targetAResult = result.TargetResults[new TargetId("TargetA")];
+        var targetBResult = result.TargetResults[new TargetId("TargetB")];
+
+        Assert.Equal(targetAResult.Hash, targetBResult.Hash);
+        Assert.Equal(originalSize, targetAResult.FileSize);
+        Assert.Equal(originalSize, targetBResult.FileSize);
+    }
+
+    [Fact]
+    public async Task ProcessFileAsync_WithOneTargetDisabled_OnlyCopiesEnabledTarget()
+    {
+        // Arrange - Disable TargetB
+        var targetConfig = _serviceProvider.GetRequiredService<IOptions<TargetConfiguration>>().Value;
+        targetConfig.Targets["TargetB"].Enabled = false;
+
+        const string testContent = "Single target test content";
+        var sourceFileName = "single-target-test.txt";
+        var sourceFilePath = Path.Combine(_testSourceDirectory, sourceFileName);
+        await File.WriteAllTextAsync(sourceFilePath, testContent);
+
+        var requiredTargets = new[] { new TargetId("TargetA"), new TargetId("TargetB") };
+        var job = FileJob.CreateDiscovered(sourceFilePath, testContent.Length, requiredTargets);
+        job.MarkAsQueued();
+        await _jobRepository.SaveAsync(job);
+
+        // Act
+        var result = await _copyOrchestrator.ProcessFileAsync(job.Id, sourceFilePath);
+
+        // Assert
+        Assert.True(result.Success);
+        Assert.Single(result.TargetResults); // Only TargetA should have been processed
+
+        var targetAResult = result.TargetResults[new TargetId("TargetA")];
+        Assert.True(targetAResult.Success);
+
+        // Verify only TargetA file exists
+        var targetAFile = Path.Combine(_testTargetADirectory, sourceFileName);
+        var targetBFile = Path.Combine(_testTargetBDirectory, sourceFileName);
+
+        Assert.True(File.Exists(targetAFile));
+        Assert.False(File.Exists(targetBFile));
+
+        // Re-enable TargetB for other tests
+        targetConfig.Targets["TargetB"].Enabled = true;
+    }
+
+    [Fact]
+    public async Task ProcessFileAsync_WithNonExistentJob_ReturnsFailure()
+    {
+        // Arrange
+        var nonExistentJobId = new FileJobId(Guid.NewGuid());
+        var sourceFilePath = Path.Combine(_testSourceDirectory, "test.txt");
+        await File.WriteAllTextAsync(sourceFilePath, "test");
+
+        // Act
+        var result = await _copyOrchestrator.ProcessFileAsync(nonExistentJobId, sourceFilePath);
+
+        // Assert
+        Assert.False(result.Success);
+        Assert.NotNull(result.ErrorMessage);
+        Assert.Contains("not found in repository", result.ErrorMessage);
+    }
+
+    [Fact]
+    public async Task ProcessFileAsync_WithNonExistentSourceFile_HandlesGracefully()
+    {
+        // Arrange
+        var nonExistentFile = Path.Combine(_testSourceDirectory, "non-existent.txt");
+        var requiredTargets = new[] { new TargetId("TargetA"), new TargetId("TargetB") };
+        var job = FileJob.CreateDiscovered(nonExistentFile, 1000, requiredTargets);
+        job.MarkAsQueued();
+        await _jobRepository.SaveAsync(job);
+
+        // Act
+        var result = await _copyOrchestrator.ProcessFileAsync(job.Id, nonExistentFile);
+
+        // Assert
+        Assert.False(result.Success);
+        Assert.NotNull(result.ErrorMessage);
+
+        // Verify target outcomes were created and marked as failed
+        var targetOutcomes = await _targetOutcomeRepository.GetByJobIdAsync(job.Id);
+        Assert.Equal(2, targetOutcomes.Count);
+
+        foreach (var outcome in targetOutcomes)
+        {
+            Assert.Equal(TargetCopyState.FailedRetryable, outcome.CopyState);
+            Assert.NotNull(outcome.LastError);
+        }
+    }
+
+    public void Dispose()
+    {
+        _serviceProvider?.Dispose();
+
+        // Clean up test directories
+        try
+        {
+            var testRoot = Path.GetDirectoryName(_testSourceDirectory);
+            if (testRoot != null && Directory.Exists(testRoot))
+            {
+                Directory.Delete(testRoot, true);
+            }
+        }
+        catch
+        {
+            // Ignore cleanup errors in tests
+        }
+    }
+}
