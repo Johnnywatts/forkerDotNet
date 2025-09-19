@@ -24,7 +24,10 @@
       "Bash(curl:*)",
       "Bash(dotnet test:*)",
       "Bash(dotnet build:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(for i in {1..5})",
+      "Bash(do echo \"Run $i:\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

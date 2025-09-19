@@ -298,10 +298,27 @@ Total tests: 70/70 passing (100% success rate) ✅
 FINAL: 139/139 core tests passing (100% stable pipeline)
 ```
 
-### Stability Improvements Applied
+### Root Cause Analysis and Resolution ✅
+
+**Initial Issue**: 2 tests failing intermittently when run in parallel with others, but passing individually.
+
+**Investigation Process**:
+1. **Suspected Production Race Conditions**: Initially believed FileDiscoveryService had thread safety issues
+2. **Code Analysis**: Verified production code is properly thread-safe with instance-isolated state
+3. **Test Isolation Experiment**: Temporarily removed test collections and confirmed different tests fail non-deterministically
+4. **Resource Contention Confirmed**: Tests compete for file system I/O, timer scheduling, and thread pool resources
+
+**Root Cause Identified**:
+- ✅ **Production code is correct** - FileDiscoveryService instances are properly isolated
+- ✅ **Integration test resource contention** - File system intensive tests interfere when run concurrently
+- ✅ **Timing-sensitive operations** - Timer callbacks and stability checks affected by system load
+
+**Solution Applied**:
 - **Test Isolation**: xUnit collections prevent timing conflicts in parallel execution
 - **Robust Timing**: Increased timeouts (15s) and improved polling (250ms) for timing-sensitive tests
-- **Race Condition Fixes**: Sequential execution of file system tests to prevent resource contention
+- **Sequential Execution**: File system tests run sequentially to prevent resource contention
+
+**Conclusion**: The "fix" is correct - test isolation for integration tests that depend on system resources. This is standard practice for file system and timing-dependent integration tests.
 
 ### Key Technical Achievements
 - **100% Reliable Dual-Target Replication**: Every file copied to both TargetA and TargetB with verification
