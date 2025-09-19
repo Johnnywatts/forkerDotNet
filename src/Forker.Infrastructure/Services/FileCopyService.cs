@@ -49,6 +49,9 @@ public sealed class FileCopyService : IFileCopyService
 
         try
         {
+            // Check for cancellation at the very beginning
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Validate source file exists
             if (!File.Exists(sourceFilePath))
             {
@@ -185,21 +188,44 @@ public sealed class FileCopyService : IFileCopyService
                 bufferSize: DefaultBufferSize,
                 useAsync: true);
 
+            // Check cancellation before starting operations
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Calculate hash while copying
             var hash = await _hashingService.CalculateHashAsync(sourceStream, cancellationToken);
+
+            // Check cancellation again after hash calculation
+            cancellationToken.ThrowIfCancellationRequested();
 
             // Reset source stream for copying
             sourceStream.Position = 0;
 
+            // Report initial progress
+            if (progressCallback != null)
+            {
+                var initialProgress = new FileCopyProgress
+                {
+                    BytesCopied = 0,
+                    TotalBytes = totalBytes,
+                    BytesPerSecond = 0,
+                    EstimatedTimeRemaining = null
+                };
+                progressCallback.Report(initialProgress);
+                lastProgressReport = DateTime.UtcNow;
+            }
+
             int bytesRead;
             while ((bytesRead = await sourceStream.ReadAsync(buffer, cancellationToken)) > 0)
             {
+                // Check cancellation before each write
+                cancellationToken.ThrowIfCancellationRequested();
+
                 await targetStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken);
                 bytesCopied += bytesRead;
 
-                // Report progress periodically (every second or so)
+                // Report progress periodically (every 500ms for better responsiveness)
                 var now = DateTime.UtcNow;
-                if (progressCallback != null && (now - lastProgressReport).TotalSeconds >= 1.0)
+                if (progressCallback != null && (now - lastProgressReport).TotalMilliseconds >= 500)
                 {
                     var elapsed = stopwatch.Elapsed;
                     var bytesPerSecond = elapsed.TotalSeconds > 0 ? (long)(bytesCopied / elapsed.TotalSeconds) : 0;
@@ -222,6 +248,22 @@ public sealed class FileCopyService : IFileCopyService
 
             // Ensure all data is written to disk
             await targetStream.FlushAsync(cancellationToken);
+
+            // Report final progress
+            if (progressCallback != null)
+            {
+                var elapsed = stopwatch.Elapsed;
+                var bytesPerSecond = elapsed.TotalSeconds > 0 ? (long)(bytesCopied / elapsed.TotalSeconds) : 0;
+
+                var finalProgress = new FileCopyProgress
+                {
+                    BytesCopied = bytesCopied,
+                    TotalBytes = totalBytes,
+                    BytesPerSecond = bytesPerSecond,
+                    EstimatedTimeRemaining = TimeSpan.Zero
+                };
+                progressCallback.Report(finalProgress);
+            }
 
             stopwatch.Stop();
             return (true, hash, stopwatch.Elapsed);

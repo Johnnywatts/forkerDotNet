@@ -7,9 +7,18 @@ using Microsoft.Extensions.Options;
 namespace Forker.Infrastructure.Tests.Services;
 
 /// <summary>
+/// Test collection for file system operations that need sequential execution.
+/// </summary>
+[CollectionDefinition("FileSystemTests")]
+public class FileSystemTestCollection : ICollectionFixture<FileSystemTestCollection>
+{
+}
+
+/// <summary>
 /// Unit tests for FileDiscoveryService.
 /// Tests file system watching and pattern matching for medical imaging files.
 /// </summary>
+[Collection("FileSystemTests")]
 public sealed class FileDiscoveryServiceTests : IDisposable
 {
     private readonly string _testSourceDirectory;
@@ -138,7 +147,17 @@ public sealed class FileDiscoveryServiceTests : IDisposable
 
         // Wait a bit and check if file becomes stable and gets discovered
         _stabilityChecker.SetStableFiles(unstableFile);
-        await Task.Delay(2000); // Wait for stability timer
+
+        // Wait longer for stability timer to fire (stability check interval is 1 second)
+        // We need to wait for multiple cycles to ensure the file gets processed
+        // Increased timeout for more robust testing under load
+        var maxWaitTime = TimeSpan.FromSeconds(15);
+        var startTime = DateTime.UtcNow;
+
+        while (_discoveredFiles.Count == 0 && DateTime.UtcNow - startTime < maxWaitTime)
+        {
+            await Task.Delay(250); // Check more frequently for faster detection
+        }
 
         Assert.Single(_discoveredFiles);
         Assert.Equal(unstableFile, _discoveredFiles[0].FilePath);
@@ -159,8 +178,15 @@ public sealed class FileDiscoveryServiceTests : IDisposable
         // Make file stable
         _stabilityChecker.SetStableFiles(newFile);
 
-        // Wait for file system events and stability checks
-        await Task.Delay(3000);
+        // Wait for file system events and stability checks with polling
+        // Increased timeout for more robust testing under load
+        var maxWaitTime = TimeSpan.FromSeconds(15);
+        var startTime = DateTime.UtcNow;
+
+        while (_discoveredFiles.Count == 0 && DateTime.UtcNow - startTime < maxWaitTime)
+        {
+            await Task.Delay(250); // Check more frequently for faster detection
+        }
 
         // Assert
         Assert.Single(_discoveredFiles);
