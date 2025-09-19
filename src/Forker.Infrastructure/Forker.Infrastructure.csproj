@@ -4,6 +4,16 @@
     <ProjectReference Include="..\Forker.Domain\Forker.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Database\Scripts\*.sql" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -11,6 +21,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <!-- Suppress CA1848 (LoggerMessage) for Phase 3 - will implement in Phase 4 -->
+    <NoWarn>$(NoWarn);CA1848</NoWarn>
   </PropertyGroup>
 
 </Project>

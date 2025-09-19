@@ -22,7 +22,8 @@
       "Bash(dotnet build)",
       "Bash(dotnet run:*)",
       "Bash(curl:*)",
-      "Bash(dotnet test:*)"
+      "Bash(dotnet test:*)",
+      "Bash(dotnet build:*)"
     ],
     "deny": [],
     "ask": []

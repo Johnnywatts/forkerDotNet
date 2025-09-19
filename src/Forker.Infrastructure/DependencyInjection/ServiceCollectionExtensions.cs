@@ -1,0 +1,58 @@
+using Forker.Domain.Repositories;
+using Forker.Infrastructure.Database;
+using Forker.Infrastructure.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
+namespace Forker.Infrastructure.DependencyInjection;
+
+/// <summary>
+/// Extension methods for configuring infrastructure services in dependency injection container.
+/// </summary>
+public static class ServiceCollectionExtensions
+{
+    /// <summary>
+    /// Adds ForkerDotNet infrastructure services to the service collection.
+    /// </summary>
+    /// <param name="services">The service collection</param>
+    /// <param name="configureDatabase">Optional database configuration action</param>
+    /// <returns>The service collection for method chaining</returns>
+    public static IServiceCollection AddForkerInfrastructure(
+        this IServiceCollection services,
+        Action<DatabaseConfiguration>? configureDatabase = null)
+    {
+        // Configure database options
+        if (configureDatabase != null)
+        {
+            services.Configure(configureDatabase);
+        }
+        else
+        {
+            services.Configure<DatabaseConfiguration>(_ => { }); // Use defaults
+        }
+
+        // Register database services
+        services.AddSingleton<ISqliteConnectionFactory, SqliteConnectionFactory>();
+
+        // Register repositories
+        services.AddScoped<IJobRepository, SqliteJobRepository>();
+        services.AddScoped<ITargetOutcomeRepository, SqliteTargetOutcomeRepository>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Initializes the ForkerDotNet database during application startup.
+    /// Should be called during application configuration.
+    /// </summary>
+    /// <param name="serviceProvider">The service provider</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    public static async Task InitializeForkerDatabaseAsync(
+        this IServiceProvider serviceProvider,
+        CancellationToken cancellationToken = default)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var connectionFactory = scope.ServiceProvider.GetRequiredService<ISqliteConnectionFactory>();
+        await connectionFactory.InitializeDatabaseAsync(cancellationToken);
+    }
+}

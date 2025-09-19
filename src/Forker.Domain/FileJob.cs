@@ -71,6 +71,27 @@ public sealed class FileJob
     }
 
     /// <summary>
+    /// Internal constructor for reconstructing FileJob from persistence layer.
+    /// </summary>
+    internal FileJob(FileJobId id, string sourcePath, long initialSize, IEnumerable<TargetId> requiredTargets,
+        string? sourceHash, JobState state, DateTime createdAt, VersionToken versionToken)
+    {
+        Id = id ?? throw new ArgumentNullException(nameof(id));
+        SourcePath = ValidateSourcePath(sourcePath);
+        InitialSize = ValidateInitialSize(initialSize);
+        RequiredTargets = requiredTargets?.ToList().AsReadOnly()
+                         ?? throw new ArgumentNullException(nameof(requiredTargets));
+
+        if (!RequiredTargets.Any())
+            throw new ArgumentException("At least one target is required.", nameof(requiredTargets));
+
+        _sourceHash = sourceHash;
+        _state = state;
+        CreatedAt = createdAt;
+        VersionToken = versionToken;
+    }
+
+    /// <summary>
     /// Sets the source hash. Can only be set once (Invariant I10).
     /// </summary>
     public void SetSourceHash(string hash)
