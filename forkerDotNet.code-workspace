@@ -1,0 +1,81 @@
+{
+    "folders": [
+        {
+            "name": "ForkerDotNet",
+            "path": "."
+        }
+    ],
+    "settings": {
+        "dotnet.defaultSolution": "Forker.sln",
+        "files.exclude": {
+            "**/bin": true,
+            "**/obj": true,
+            "**/.vs": true
+        },
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit"
+        },
+        "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true,
+        "omnisharp.enableEditorConfigSupport": true,
+        "omnisharp.enableRoslynAnalyzers": true
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-dotnettools.csharp",
+            "ms-dotnettools.vscode-dotnet-runtime",
+            "formulahendry.dotnet-test-explorer",
+            "jchannon.csharpextensions",
+            "k--kato.docomment"
+        ]
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "build",
+                "command": "dotnet",
+                "type": "process",
+                "args": [
+                    "build",
+                    "${workspaceFolder}/Forker.sln",
+                    "/property:GenerateFullPaths=true",
+                    "/consoleloggerparameters:NoSummary"
+                ],
+                "problemMatcher": "$msCompile",
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
+            },
+            {
+                "label": "test",
+                "command": "dotnet",
+                "type": "process",
+                "args": [
+                    "test",
+                    "${workspaceFolder}/Forker.sln",
+                    "--logger",
+                    "trx",
+                    "--results-directory",
+                    "${workspaceFolder}/TestResults"
+                ],
+                "problemMatcher": "$msCompile",
+                "group": {
+                    "kind": "test",
+                    "isDefault": true
+                }
+            },
+            {
+                "label": "clean",
+                "command": "dotnet",
+                "type": "process",
+                "args": [
+                    "clean",
+                    "${workspaceFolder}/Forker.sln"
+                ],
+                "problemMatcher": "$msCompile"
+            }
+        ]
+    }
+}

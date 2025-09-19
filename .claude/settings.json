@@ -1,0 +1,35 @@
+{
+  "hooks": {
+    "user-prompt-submit-hook": "echo '\n=== DEVELOPMENT RULES REMINDER ===\n1. PROOF-BASED TESTING: Show actual test output, coverage reports, or execution logs\n2. NO FAKE TESTS: If implementation is difficult, STOP and discuss\n3. MAINTAIN DEV LOG: Update todo list with completed/pending work\n4. COMMIT REGULARLY: At end of each logical unit of work\n5. SHOW EVIDENCE: Screenshots, logs, or command output for verification\n================================\n'",
+
+    "before-test-hook": "echo '\n🧪 TESTING REMINDER: Provide actual proof of test execution (output, coverage, logs)'",
+
+    "before-commit-hook": "echo '\n📝 COMMIT REMINDER: Ensure all tests pass and development log is updated'",
+
+    "after-tool-use-hook": "echo '\n📋 PROGRESS CHECK: Update todo list if significant work completed'"
+  },
+
+  "aliases": {
+    "devlog": "TodoWrite with current progress status",
+    "proof": "Provide evidence of testing or implementation completion"
+  },
+
+  "development_rules": {
+    "testing_requirements": [
+      "Show actual test output, not just PASS/FAIL status",
+      "Include coverage reports when available",
+      "Demonstrate functionality with screenshots or logs",
+      "Stop and discuss if implementation proves difficult"
+    ],
+    "commit_requirements": [
+      "Commit after each logical unit of work",
+      "Ensure all tests pass before committing",
+      "Update development log before committing"
+    ],
+    "progress_tracking": [
+      "Maintain active todo list",
+      "Mark tasks complete only when fully proven",
+      "Document blockers or challenges immediately"
+    ]
+  }
+}
