@@ -8,7 +8,21 @@
       "Bash(git commit:*)",
       "Bash(git remote add:*)",
       "Bash(git push:*)",
-      "Bash(gh repo view:*)"
+      "Bash(gh repo view:*)",
+      "Bash(dotnet --version)",
+      "Bash(dotnet new:*)",
+      "Bash(winget install:*)",
+      "Bash(where dotnet)",
+      "Bash(\"C:\\Program Files\\dotnet\\dotnet.exe\" --version)",
+      "Bash(winget uninstall:*)",
+      "Bash(dotnet --info)",
+      "Bash(dotnet sln add:*)",
+      "Bash(dotnet add:*)",
+      "Bash(dotnet remove:*)",
+      "Bash(dotnet build)",
+      "Bash(dotnet run:*)",
+      "Bash(curl:*)",
+      "Bash(dotnet test:*)"
     ],
     "deny": [],
     "ask": []
