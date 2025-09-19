@@ -1,6 +1,9 @@
 using Forker.Domain.Repositories;
+using Forker.Domain.Services;
+using Forker.Infrastructure.Configuration;
 using Forker.Infrastructure.Database;
 using Forker.Infrastructure.Repositories;
+using Forker.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -37,6 +40,10 @@ public static class ServiceCollectionExtensions
         // Register repositories
         services.AddScoped<IJobRepository, SqliteJobRepository>();
         services.AddScoped<ITargetOutcomeRepository, SqliteTargetOutcomeRepository>();
+
+        // Register file discovery services
+        services.AddSingleton<IFileStabilityChecker, FileStabilityChecker>();
+        services.AddSingleton<IFileDiscoveryService, FileDiscoveryService>();
 
         return services;
     }

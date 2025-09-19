@@ -23,7 +23,8 @@
       "Bash(dotnet run:*)",
       "Bash(curl:*)",
       "Bash(dotnet test:*)",
-      "Bash(dotnet build:*)"
+      "Bash(dotnet build:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []
