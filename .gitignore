@@ -167,4 +167,4 @@ data/
 logs/
 temp/
 *.db
-*.db-*
+*.db-*tests/TestData/source/*.scn
