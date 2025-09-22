@@ -30,7 +30,8 @@
       "Bash(done)",
       "Bash(git rm:*)",
       "Bash(git filter-branch:*)",
-      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --index-filter 'git rm --cached --ignore-unmatch tests/TestData/source/*.scn' HEAD~10..HEAD)"
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --index-filter 'git rm --cached --ignore-unmatch tests/TestData/source/*.scn' HEAD~10..HEAD)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --index-filter 'git rm --cached --ignore-unmatch tests/TestData/source/*.scn' HEAD~15..HEAD)"
     ],
     "deny": [],
     "ask": []
