@@ -167,4 +167,7 @@ data/
 logs/
 temp/
 *.db
-*.db-*tests/TestData/source/*.scn
+*.db-*
+
+# Test data directory with large medical imaging files
+tests/TestData/source/
