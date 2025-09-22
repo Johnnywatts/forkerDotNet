@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # Multi-process race condition testing service
+  forker-multiprocess-test:
+    build:
+      context: ../../
+      dockerfile: tests/Forker.Resilience.Tests/Dockerfile
+    container_name: forker-race-test
+    volumes:
+      # Shared volume for multi-process file system testing
+      - forker-shared:/shared
+      # Bind mount for logs and results
+      - ./test-results:/app/test-results
+    environment:
+      - DOTNET_ENVIRONMENT=Testing
+      - FORKER_TEST_MODE=MultiProcess
+    networks:
+      - forker-test-network
+    # Resource constraints to simulate production environment
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  # Additional load generator for stress testing
+  forker-load-generator:
+    build:
+      context: ../../
+      dockerfile: tests/Forker.Resilience.Tests/Dockerfile
+    container_name: forker-load-gen
+    volumes:
+      - forker-shared:/shared
+    environment:
+      - DOTNET_ENVIRONMENT=Testing
+      - FORKER_TEST_MODE=LoadGenerator
+    networks:
+      - forker-test-network
+    entrypoint: >
+      bash -c "
+      echo 'Starting continuous load generation for race condition testing';
+      while true; do
+        for i in {1..10}; do
+          filename=\"load_\$\$_\$i_\$(date +%s%N).test\";
+          echo \"LOAD_TEST_FILE_\$i\" > \"/shared/source/\$filename\";
+          sleep 0.\$(shuf -i 1-3 -n 1);
+        done;
+        sleep 5;
+      done
+      "
+    depends_on:
+      - forker-multiprocess-test
+
+  # Monitoring container for observing race conditions
+  forker-monitor:
+    image: alpine:latest
+    container_name: forker-monitor
+    volumes:
+      - forker-shared:/shared:ro
+    networks:
+      - forker-test-network
+    entrypoint: >
+      sh -c "
+      apk add --no-cache inotify-tools;
+      echo 'Starting file system monitoring for race condition detection';
+      inotifywait -m -r -e create,modify,move,delete /shared/source /shared/targetA /shared/targetB |
+      while read path action file; do
+        echo \"\$(date): \$action on \$path\$file\";
+      done
+      "
+    depends_on:
+      - forker-multiprocess-test
+
+volumes:
+  forker-shared:
+    driver: local
+
+networks:
+  forker-test-network:
+    driver: bridge

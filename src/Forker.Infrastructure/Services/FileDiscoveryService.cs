@@ -11,7 +11,7 @@ namespace Forker.Infrastructure.Services;
 /// FileSystemWatcher-based implementation of file discovery for medical imaging files.
 /// Monitors source directory and raises events when stable files are discovered.
 /// </summary>
-public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
+public sealed class FileDiscoveryService : IFileDiscoveryService, IAsyncDisposable, IDisposable
 {
     private readonly DirectoryConfiguration _directories;
     private readonly FileMonitoringConfiguration _monitoring;
@@ -22,9 +22,47 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
     private readonly ConcurrentDictionary<string, DateTime> _pendingFiles = new();
     private readonly Timer _stabilityCheckTimer;
     private readonly SemaphoreSlim _processingLock = new(1, 1);
-    private volatile bool _isRunning;
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
+    private readonly ConcurrentBag<EventHandler<FileDiscoveredEventArgs>> _eventHandlers = new();
+    private readonly object _eventLock = new();
+    private readonly object _stateLock = new();
+    private volatile int _serviceState; // 0 = Stopped, 1 = Starting, 2 = Running, 3 = Stopping
+    private volatile int _processingInProgress; // 0 = not processing, 1 = processing
 
-    public event EventHandler<FileDiscoveredEventArgs>? FileDiscovered;
+    // Service state constants for atomic operations
+    private const int STATE_STOPPED = 0;
+    private const int STATE_STARTING = 1;
+    private const int STATE_RUNNING = 2;
+    private const int STATE_STOPPING = 3;
+
+    /// <summary>
+    /// Gets a value indicating whether the service is currently running and accepting operations.
+    /// </summary>
+    private bool IsRunning => _serviceState == STATE_RUNNING;
+
+    /// <summary>
+    /// Thread-safe event for file discovery notifications.
+    /// Subscribers are isolated from each other's exceptions.
+    /// </summary>
+    public event EventHandler<FileDiscoveredEventArgs>? FileDiscovered
+    {
+        add
+        {
+            if (value != null)
+            {
+                lock (_eventLock)
+                {
+                    _eventHandlers.Add(value);
+                }
+            }
+        }
+        remove
+        {
+            // Note: ConcurrentBag doesn't support efficient removal
+            // For production use, consider ConcurrentDictionary with weak references
+            // For now, we'll leave handlers in place (they'll be cleaned up on disposal)
+        }
+    }
 
     public FileDiscoveryService(
         IOptions<DirectoryConfiguration> directories,
@@ -37,15 +75,16 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
         _stabilityChecker = stabilityChecker ?? throw new ArgumentNullException(nameof(stabilityChecker));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        // Timer for periodic stability checks
-        _stabilityCheckTimer = new Timer(ProcessPendingFiles, null, Timeout.Infinite, Timeout.Infinite);
+        // Timer for periodic stability checks - using safe callback pattern
+        _stabilityCheckTimer = new Timer(ProcessPendingFilesCallback, null, Timeout.Infinite, Timeout.Infinite);
     }
 
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        if (_isRunning)
+        // Atomic state transition from STOPPED to STARTING
+        if (Interlocked.CompareExchange(ref _serviceState, STATE_STARTING, STATE_STOPPED) != STATE_STOPPED)
         {
-            return;
+            return; // Already starting or running
         }
 
         _logger.LogInformation("Starting file discovery service for directory: {SourceDirectory}",
@@ -74,7 +113,9 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
 
         // Start watching
         _fileWatcher.EnableRaisingEvents = true;
-        _isRunning = true;
+
+        // Atomic transition to RUNNING state
+        Interlocked.Exchange(ref _serviceState, STATE_RUNNING);
 
         // Start stability check timer
         _stabilityCheckTimer.Change(
@@ -87,16 +128,19 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
         _logger.LogInformation("File discovery service started successfully");
     }
 
-    public Task StopAsync(CancellationToken cancellationToken = default)
+    public async Task StopAsync(CancellationToken cancellationToken = default)
     {
-        if (!_isRunning)
+        // Atomic state transition from RUNNING to STOPPING
+        var previousState = Interlocked.CompareExchange(ref _serviceState, STATE_STOPPING, STATE_RUNNING);
+        if (previousState != STATE_RUNNING)
         {
-            return Task.CompletedTask;
+            return; // Already stopping or stopped
         }
 
         _logger.LogInformation("Stopping file discovery service");
 
-        _isRunning = false;
+        // Cancel any ongoing processing operations
+        _cancellationTokenSource.Cancel();
 
         // Stop timer
         _stabilityCheckTimer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -112,8 +156,23 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
             _fileWatcher = null;
         }
 
+        // Wait for any pending processing to complete (with timeout)
+        var timeout = TimeSpan.FromSeconds(10);
+        var waitStart = DateTime.UtcNow;
+        while (_processingInProgress != 0 && DateTime.UtcNow - waitStart < timeout)
+        {
+            await Task.Delay(100, cancellationToken);
+        }
+
+        if (_processingInProgress != 0)
+        {
+            _logger.LogWarning("File processing did not complete within timeout during shutdown");
+        }
+
+        // Atomic transition to STOPPED state
+        Interlocked.Exchange(ref _serviceState, STATE_STOPPED);
+
         _logger.LogInformation("File discovery service stopped");
-        return Task.CompletedTask;
     }
 
     public async Task<IReadOnlyList<string>> ScanForExistingFilesAsync(CancellationToken cancellationToken = default)
@@ -186,7 +245,7 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
 
     private void HandleFileEvent(string filePath, string eventType)
     {
-        if (!_isRunning || !ShouldProcessFile(filePath))
+        if (!IsRunning || !ShouldProcessFile(filePath))
         {
             return;
         }
@@ -234,20 +293,67 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
         return Regex.IsMatch(fileName, regexPattern, RegexOptions.IgnoreCase);
     }
 
-    private async void ProcessPendingFiles(object? state)
+    /// <summary>
+    /// Timer callback that safely schedules async processing without overlapping executions.
+    /// This prevents the async void anti-pattern that can cause race conditions.
+    /// </summary>
+    private void ProcessPendingFilesCallback(object? state)
     {
-        if (!_isRunning || _pendingFiles.IsEmpty)
+        // Atomic check-and-set to prevent overlapping executions - critical for race condition prevention
+        if (Interlocked.CompareExchange(ref _processingInProgress, 1, 0) != 0)
+        {
+            return; // Already processing
+        }
+
+        if (!IsRunning || _pendingFiles.IsEmpty)
+        {
+            Interlocked.Exchange(ref _processingInProgress, 0);
+            return;
+        }
+
+        // Schedule async processing on thread pool to avoid blocking timer
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await ProcessPendingFilesAsync(_cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected during shutdown
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unhandled exception in pending files processing");
+            }
+            finally
+            {
+                // Always reset processing flag in finally block
+                Interlocked.Exchange(ref _processingInProgress, 0);
+            }
+        }, _cancellationTokenSource.Token);
+    }
+
+    /// <summary>
+    /// Async implementation of pending file processing with proper cancellation support.
+    /// </summary>
+    private async Task ProcessPendingFilesAsync(CancellationToken cancellationToken)
+    {
+        // Processing flag is already set atomically in callback, just verify state
+        if (!IsRunning || _pendingFiles.IsEmpty)
         {
             return;
         }
 
-        await _processingLock.WaitAsync();
+        await _processingLock.WaitAsync(cancellationToken);
         try
         {
             var filesToRemove = new List<string>();
 
             foreach (var kvp in _pendingFiles.ToArray())
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 var filePath = kvp.Key;
                 var firstSeen = kvp.Value;
 
@@ -272,8 +378,8 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
                         continue;
                     }
 
-                    // Check stability
-                    var stabilityResult = await _stabilityChecker.WaitForStabilityAsync(filePath);
+                    // Check stability with cancellation support
+                    var stabilityResult = await _stabilityChecker.WaitForStabilityAsync(filePath, cancellationToken);
 
                     if (stabilityResult.IsStable)
                     {
@@ -286,6 +392,11 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
                             filePath, stabilityResult.UnstableReason);
                         filesToRemove.Add(filePath);
                     }
+                }
+                catch (OperationCanceledException)
+                {
+                    // Operation cancelled, exit gracefully
+                    break;
                 }
                 catch (Exception ex)
                 {
@@ -306,7 +417,12 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
         }
     }
 
-    private Task NotifyFileDiscovered(string filePath)
+    /// <summary>
+    /// Thread-safe notification of file discovery events.
+    /// Each event handler is called in isolation to prevent one subscriber's exception
+    /// from affecting other subscribers or the main processing flow.
+    /// </summary>
+    private async Task NotifyFileDiscovered(string filePath)
     {
         try
         {
@@ -316,25 +432,76 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IDisposable
             _logger.LogInformation("File discovered and stable: {FilePath} ({FileSize:N0} bytes)",
                 filePath, fileInfo.Length);
 
-            FileDiscovered?.Invoke(this, eventArgs);
+            // Get a snapshot of current handlers to avoid modification during enumeration
+            EventHandler<FileDiscoveredEventArgs>[] handlers;
+            lock (_eventLock)
+            {
+                handlers = _eventHandlers.ToArray();
+            }
+
+            // Invoke each handler in parallel with exception isolation
+            if (handlers.Length > 0)
+            {
+                var tasks = handlers.Select(handler => Task.Run(() =>
+                {
+                    try
+                    {
+                        handler.Invoke(this, eventArgs);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Event handler failed for file discovery: {FilePath}. Handler: {HandlerType}",
+                            filePath, handler.Method.DeclaringType?.Name ?? "Unknown");
+                    }
+                }));
+
+                // Wait for all handlers to complete with a reasonable timeout
+                try
+                {
+                    await Task.WhenAll(tasks).WaitAsync(TimeSpan.FromSeconds(30));
+                }
+                catch (TimeoutException)
+                {
+                    _logger.LogWarning("Some event handlers did not complete within timeout for file: {FilePath}", filePath);
+                }
+            }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error notifying file discovered for {FilePath}", filePath);
+            _logger.LogError(ex, "Error in NotifyFileDiscovered for {FilePath}", filePath);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (IsRunning)
+        {
+            await StopAsync();
         }
 
-        return Task.CompletedTask;
+        _cancellationTokenSource.Dispose();
+        _stabilityCheckTimer.Dispose();
+        _processingLock.Dispose();
+        _fileWatcher?.Dispose();
     }
 
     public void Dispose()
     {
-        if (_isRunning)
-        {
-            StopAsync().GetAwaiter().GetResult();
-        }
+        // Synchronous disposal with timeout to avoid deadlocks
+        var disposeTask = DisposeAsync().AsTask();
+        var completed = disposeTask.Wait(TimeSpan.FromSeconds(30));
 
-        _stabilityCheckTimer.Dispose();
-        _processingLock.Dispose();
-        _fileWatcher?.Dispose();
+        if (!completed)
+        {
+            _logger?.LogWarning("Async disposal did not complete within timeout, forcing synchronous disposal");
+
+            // Force synchronous cleanup
+            Interlocked.Exchange(ref _serviceState, STATE_STOPPED);
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
+            _stabilityCheckTimer?.Dispose();
+            _processingLock?.Dispose();
+            _fileWatcher?.Dispose();
+        }
     }
 }

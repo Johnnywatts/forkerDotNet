@@ -374,12 +374,23 @@ FINAL: 139/139 core tests passing (100% stable pipeline)
 3. ✅ Phase 3 - Persistence Layer (COMPLETED)
 4. ✅ Phase 4 - File Discovery (COMPLETED)
 5. ❌ Phase 5 - Dual-Target Copy Pipeline (FAILED - Race Conditions)
-6. **Phase 5.1 - Fix Production Race Conditions** (CRITICAL - Must complete before Phase 6)
-   - Fix async void timer callback anti-pattern in FileDiscoveryService
-   - Implement proper disposal pattern with CancellationToken coordination
-   - Add thread safety for event handlers and subscribers
-   - Create production stress tests for concurrent scenarios
-   - Verify race condition fixes under simulated production load
+6. **Phase 5.1 - Fix Production Race Conditions + Concurrent Testing** (CRITICAL - Must complete before Phase 6)
+
+   **Part A: Race Condition Fixes (Days 1-2)**
+   - Fix Timer Callback Anti-Pattern: Replace `async void ProcessPendingFiles()` with proper Task-based execution
+   - Thread-Safe Event Handling: Replace direct event invocation with thread-safe dispatching
+   - Fix Disposal Race Conditions: Implement `IAsyncDisposable` pattern, remove `GetAwaiter().GetResult()`
+   - Atomic Shutdown Sequence: Replace volatile bool with proper synchronization primitives
+
+   **Part B: Hybrid Concurrent Testing Strategy (Days 1-5)**
+   - **Phase 5.1A (Days 1-2)**: NBomber in-process stress testing with 50-100 concurrent operations
+   - **Phase 5.1B (Days 3-4)**: Docker multi-process validation with shared file systems
+   - **Phase 5.1C (Day 5)**: Hyper-V VM production simulation with realistic medical imaging workflows
+
+   **Part C: Documentation & Integration**
+   - Create comprehensive race condition testing design document
+   - Document thread safety guarantees for all public methods
+   - Integration with existing test suite and CI/CD pipeline
 7. **Phase 6 - Multi-Target Verification** (Blocked until Phase 5.1 complete)
    - Implement verification service to ensure target files match source
    - Add verification workflow after copy completion

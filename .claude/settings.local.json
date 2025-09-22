@@ -25,13 +25,15 @@
       "Bash(dotnet test:*)",
       "Bash(dotnet build:*)",
       "WebSearch",
-      "Bash(for i in {1..5})",
-      "Bash(do echo \"Run $i:\")",
-      "Bash(done)",
+      "Bash(for i in {1..5}; do echo \"Run $i:\"; done)",
       "Bash(git rm:*)",
       "Bash(git filter-branch:*)",
       "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --index-filter 'git rm --cached --ignore-unmatch tests/TestData/source/*.scn' HEAD~10..HEAD)",
-      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --index-filter 'git rm --cached --ignore-unmatch tests/TestData/source/*.scn' HEAD~15..HEAD)"
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --index-filter 'git rm --cached --ignore-unmatch tests/TestData/source/*.scn' HEAD~15..HEAD)",
+      "Bash(git for-each-ref:*)",
+      "Bash(git update-ref:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(docker:*)"
     ],
     "deny": [],
     "ask": []
