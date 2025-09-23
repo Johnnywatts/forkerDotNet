@@ -94,10 +94,38 @@
 - ✅ **Prometheus metrics and health monitoring**
 - ✅ **Distributed tracing for file processing workflows**
 
-### Phase 10 - Resilience Testing
+### Phase 10 - Resilience Testing & Comprehensive Race Condition Validation
+- ✅ **Thread Safety Race Condition Testing** (CorrectStressTests.cs - 5/5 tests passing)
+- 📝 **Fix File System Race Condition Tests** (ConcurrentStressTests.cs design flaws)
+- 📝 **Fix Production Load Tests** (SimplifiedNBomberTests.cs configuration issues)
+- 📝 **Implement File System Timing Race Validation** (FileSystemWatcher reliability)
+- 📝 **Implement Medical Imaging Load Pattern Testing** (realistic batch processing)
 - 📝 **Chaos engineering test harness**
 - 📝 **Fault injection and recovery validation**
-- 📝 **Production load simulation**
+- 📝 **Production load simulation with comprehensive race condition coverage**
+
+### Phase 10.1 - Test Design Flaw Remediation (URGENT)
+- 📝 **Analyze ConcurrentStressTests design flaws** (multi-service anti-pattern identification)
+- 📝 **Fix TimerOverlapPrevention test** (single service focus, actual race condition validation)
+- 📝 **Fix EventHandlerSafety test** (file system timing vs thread safety separation)
+- 📝 **Fix HighVolumeFileProcessing test** (realistic expectations, timing tolerance)
+- 📝 **Fix NBomber warm-up/duration configuration** (warm-up ≤ test duration requirement)
+- 📝 **Optimize NBomber loads for CI environments** (8-15 ops/sec sustainable rates)
+- 📝 **Implement stability-focused assertions** (system stability vs exact performance metrics)
+
+### Phase 10.2 - Comprehensive File System Race Condition Testing
+- 📝 **File Stability Detection Race Validation** (growth detection, lock detection, age requirements)
+- 📝 **FileSystemWatcher Reliability Testing** (event coalescing, initialization races, ordering)
+- 📝 **Pending File Management Timing Tests** (timeout cleanup, concurrent modification handling)
+- 📝 **I/O Race Condition Validation** (file accessibility during stability checks)
+- 📝 **Medical Imaging Workflow Pattern Testing** (large file batch arrivals, external tool integration)
+
+### Phase 10.3 - Production Load Pattern Validation
+- 📝 **Large File Processing Stability** (500MB-20GB SVS files under concurrent load)
+- 📝 **Batch Arrival Pattern Testing** (multiple simultaneous file discoveries)
+- 📝 **Resource Utilization Validation** (memory, CPU, I/O under sustained medical imaging loads)
+- 📝 **External Integration Testing** (file locking by imaging software during processing)
+- 📝 **Error Recovery Under Load** (stability detection failures, I/O errors, resource exhaustion)
 
 ---
 
@@ -126,8 +154,13 @@
 ## 📊 CURRENT STATUS
 
 **Last Updated**: 2025-09-23
-**Total Tests**: 249/249 passing ✅ (Domain: 143, Infrastructure: 106)
+**Total Tests**: 254/??? (Domain: 143, Infrastructure: 106, Resilience: 5/5 CorrectStressTests ✅)
 **Code Coverage**: 95%+ across all layers
 **Production Readiness**: Phase 9 COMPLETE - Observability Maturity Implemented
 
-**Next Action**: Begin Phase 10 resilience testing implementation
+**Current Focus**: Phase 10.1 URGENT - Fix fundamental race condition test design flaws
+**Thread Safety**: 100% validated via CorrectStressTests.cs ✅
+**File System Races**: Requires comprehensive testing strategy implementation
+**Critical Issue**: Original timing tests have design flaws that need remediation, not deprecation
+
+**Next Action**: Implement comprehensive testing strategy per comprehensive_testing_strategy.md
