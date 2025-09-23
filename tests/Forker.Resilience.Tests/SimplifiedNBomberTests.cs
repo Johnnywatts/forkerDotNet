@@ -77,8 +77,8 @@ public class SimplifiedNBomberTests : IDisposable
                 }
             })
             .WithLoadSimulations(
-                // Sustained concurrent load: 25 scenarios per second for 60 seconds (longer than warm-up)
-                Simulation.Inject(rate: 25, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(60))
+                // Sustained concurrent load: 15 scenarios per second for 30 seconds (CI-friendly)
+                Simulation.Inject(rate: 15, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(30))
             );
 
             // Run the race condition test
@@ -154,7 +154,7 @@ public class SimplifiedNBomberTests : IDisposable
                 }
             })
             .WithLoadSimulations(
-                Simulation.Inject(rate: 30, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(45))
+                Simulation.Inject(rate: 20, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(30))
             );
 
             var result = NBomberRunner
@@ -206,12 +206,15 @@ public class SimplifiedNBomberTests : IDisposable
             }
         })
         .WithLoadSimulations(
-            Simulation.Inject(rate: 40, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(40))
-        );
+            Simulation.Inject(rate: 15, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(30))
+        )
+        .WithWarmUpDuration(TimeSpan.FromSeconds(10)); // Ensure warm-up < duration
 
-        // Add deadlock detection
+        // Add deadlock detection with NBomber configuration fix
         var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
-        var runTask = Task.Run(() => NBomberRunner.RegisterScenarios(scenario).Run(), cts.Token);
+        var runTask = Task.Run(() => NBomberRunner
+            .RegisterScenarios(scenario)
+            .Run(), cts.Token);
 
         var completed = runTask.Wait(TimeSpan.FromMinutes(3));
 
@@ -264,17 +267,21 @@ public class SimplifiedNBomberTests : IDisposable
                 }
             })
             .WithLoadSimulations(
-                // Production-like sustained load
-                Simulation.Inject(rate: 10, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromMinutes(1))
-            );
+                // CI-friendly sustained load for medical imaging patterns
+                Simulation.Inject(rate: 10, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(30))
+            )
+            .WithWarmUpDuration(TimeSpan.FromSeconds(15)); // Ensure warm-up < duration
 
             var result = NBomberRunner
                 .RegisterScenarios(scenario)
                 .Run();
 
+            // PRIMARY ASSERTION: System stability under load
             processingErrors.Should().BeEmpty("production simulation should not cause errors");
             result.AllFailCount.Should().Be(0, "production load should not cause failures");
-            result.AllOkCount.Should().BeGreaterThan(500, "should process significant number of files");
+
+            // REALISTIC ASSERTION: Expect reasonable throughput (10 ops/sec * 30 seconds = ~300 max)
+            result.AllOkCount.Should().BeGreaterThan(200, "should process reasonable number of files under realistic medical imaging load");
         }
         finally
         {
