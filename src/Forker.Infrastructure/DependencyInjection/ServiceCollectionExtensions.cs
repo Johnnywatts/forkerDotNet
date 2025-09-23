@@ -70,6 +70,14 @@ public static class ServiceCollectionExtensions
         // Register quarantine repository (Phase 6)
         services.AddScoped<IQuarantineRepository, SqliteQuarantineRepository>();
 
+        // Register retry services (Phase 7)
+        services.AddSingleton<IRetryPolicy, ExponentialBackoffRetryPolicy>();
+        services.AddScoped<IRetryOrchestrator, RetryOrchestrator>();
+        services.AddScoped<IDeadLetterService, DeadLetterService>();
+
+        // Register retry policy options (Phase 7)
+        services.Configure<ExponentialBackoffRetryPolicyOptions>(_ => ExponentialBackoffRetryPolicyOptions.CreateDefault());
+
         return services;
     }
 
