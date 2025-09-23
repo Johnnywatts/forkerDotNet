@@ -234,6 +234,14 @@ public sealed class ResourceUtilization
             throw new ArgumentException("Utilization details cannot be null, empty, or whitespace.", nameof(utilizationDetails));
         return utilizationDetails.Trim();
     }
+
+    // Extension properties for metrics compatibility
+    public double CpuUtilizationPercent => SystemMetrics.CpuUsage * 100.0; // Convert to percentage
+    public double MemoryUtilizationPercent => Math.Min(100.0, (SystemMetrics.MemoryUsageBytes / (double)(SystemMetrics.MemoryUsageBytes + AvailableMemoryBytes)) * 100.0);
+    public double DiskReadBytesPerSecond => SystemMetrics.DiskThroughputBytesPerSecond / 2.0; // Approximate read rate
+    public double DiskWriteBytesPerSecond => SystemMetrics.DiskThroughputBytesPerSecond / 2.0; // Approximate write rate
+    public long AvailableMemoryBytes => Math.Max(0, 8_000_000_000L - SystemMetrics.MemoryUsageBytes); // Estimate based on 8GB system
+    public long AvailableDiskSpaceBytes => SystemMetrics.AvailableDiskSpaceBytes;
 }
 
 /// <summary>

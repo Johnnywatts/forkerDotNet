@@ -82,6 +82,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IResourceMonitor, BasicResourceMonitor>();
         services.AddSingleton<IConcurrencyController, AdaptiveConcurrencyController>();
 
+        // Register observability services (Phase 9)
+        services.AddSingleton<IMetricsCollector, PrometheusMetricsCollector>();
+        services.AddScoped<IObservabilityService, ObservabilityService>();
+
         return services;
     }
 
