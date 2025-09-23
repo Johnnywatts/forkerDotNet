@@ -19,6 +19,13 @@ class Program
 {
     static async Task Main(string[] args)
     {
+        // Check if running in non-interactive mode for testing
+        if (args.Length > 0 && args[0] == "--test")
+        {
+            await SimpleTest.RunNonInteractiveTest();
+            return;
+        }
+
         var app = new ClinicalDemoApplication();
         await app.RunAsync();
     }
