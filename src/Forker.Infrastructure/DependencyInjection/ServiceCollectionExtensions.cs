@@ -78,6 +78,10 @@ public static class ServiceCollectionExtensions
         // Register retry policy options (Phase 7)
         services.Configure<ExponentialBackoffRetryPolicyOptions>(_ => ExponentialBackoffRetryPolicyOptions.CreateDefault());
 
+        // Register adaptive concurrency services (Phase 8)
+        services.AddSingleton<IResourceMonitor, BasicResourceMonitor>();
+        services.AddSingleton<IConcurrencyController, AdaptiveConcurrencyController>();
+
         return services;
     }
 
