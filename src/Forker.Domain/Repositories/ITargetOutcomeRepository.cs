@@ -34,6 +34,15 @@ public interface ITargetOutcomeRepository
     Task<TargetOutcome?> GetByIdAsync(FileJobId jobId, TargetId targetId, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Retrieves a TargetOutcome by job and target identifiers (alias for verification compatibility).
+    /// </summary>
+    /// <param name="jobId">The job identifier</param>
+    /// <param name="targetId">The target identifier</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The TargetOutcome if found, null otherwise</returns>
+    Task<TargetOutcome?> GetByJobIdAndTargetIdAsync(FileJobId jobId, TargetId targetId, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Retrieves all TargetOutcomes for a specific job.
     /// </summary>
     /// <param name="jobId">The job identifier</param>

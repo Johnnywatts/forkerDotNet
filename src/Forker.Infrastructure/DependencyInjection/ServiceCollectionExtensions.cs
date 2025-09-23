@@ -62,6 +62,14 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IFileCopyService, FileCopyService>();
         services.AddScoped<ICopyOrchestrator, CopyOrchestrator>();
 
+        // Register verification services (Phase 6)
+        services.AddScoped<IVerificationService, VerificationService>();
+        services.AddScoped<IQuarantineService, QuarantineService>();
+        services.AddScoped<IVerificationOrchestrator, VerificationOrchestrator>();
+
+        // Register quarantine repository (Phase 6)
+        services.AddScoped<IQuarantineRepository, SqliteQuarantineRepository>();
+
         return services;
     }
 

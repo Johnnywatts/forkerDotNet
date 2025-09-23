@@ -114,6 +114,12 @@ public sealed class SqliteTargetOutcomeRepository : ITargetOutcomeRepository
         return CreateOutcomeFromReader(reader);
     }
 
+    public async Task<TargetOutcome?> GetByJobIdAndTargetIdAsync(FileJobId jobId, TargetId targetId, CancellationToken cancellationToken = default)
+    {
+        // Alias for GetByIdAsync to support verification workflow
+        return await GetByIdAsync(jobId, targetId, cancellationToken);
+    }
+
     public async Task<IReadOnlyList<TargetOutcome>> GetByJobIdAsync(FileJobId jobId, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(jobId);
