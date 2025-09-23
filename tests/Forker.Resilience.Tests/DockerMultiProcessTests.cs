@@ -16,8 +16,25 @@ public class DockerMultiProcessTests : IDisposable
 
     public DockerMultiProcessTests()
     {
-        _testResultsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "test-results");
-        _dockerComposeFile = Path.Combine(Directory.GetCurrentDirectory(), "docker-compose.yml");
+        // Find the test source directory (not bin/Debug)
+        var currentDir = Directory.GetCurrentDirectory();
+        var testSourceDir = currentDir;
+
+        // Navigate up from bin/Debug/net8.0 to the test project directory
+        while (testSourceDir != null && !File.Exists(Path.Combine(testSourceDir, "docker-compose.yml")))
+        {
+            var parentDir = Directory.GetParent(testSourceDir);
+            if (parentDir == null) break;
+            testSourceDir = parentDir.FullName;
+        }
+
+        if (testSourceDir == null || !File.Exists(Path.Combine(testSourceDir, "docker-compose.yml")))
+        {
+            throw new FileNotFoundException("Could not find docker-compose.yml file in test directory hierarchy");
+        }
+
+        _testResultsDirectory = Path.Combine(testSourceDir, "test-results");
+        _dockerComposeFile = Path.Combine(testSourceDir, "docker-compose.yml");
         Directory.CreateDirectory(_testResultsDirectory);
     }
 
@@ -178,7 +195,7 @@ public class DockerMultiProcessTests : IDisposable
         {
             FileName = "docker",
             Arguments = arguments,
-            WorkingDirectory = Directory.GetCurrentDirectory(),
+            WorkingDirectory = Path.GetDirectoryName(_dockerComposeFile) ?? Directory.GetCurrentDirectory(),
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,

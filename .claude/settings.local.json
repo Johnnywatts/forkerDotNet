@@ -33,7 +33,9 @@
       "Bash(git for-each-ref:*)",
       "Bash(git update-ref:*)",
       "Bash(dotnet restore:*)",
-      "Bash(docker:*)"
+      "Bash(docker:*)",
+      "Bash(dos2unix:*)",
+      "Bash(timeout 60 docker compose -f docker-compose.yml up --abort-on-container-exit forker-multiprocess-test)"
     ],
     "deny": [],
     "ask": []

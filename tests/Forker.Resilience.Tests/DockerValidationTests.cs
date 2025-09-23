@@ -37,7 +37,7 @@ public class DockerValidationTests
             throw new SkipException("Docker is not available for testing");
         }
 
-        var result = await RunDockerCommand("run --rm mcr.microsoft.com/dotnet/runtime:8.0 dotnet --version", TimeSpan.FromMinutes(3));
+        var result = await RunDockerCommand("run --rm mcr.microsoft.com/dotnet/sdk:8.0 dotnet --version", TimeSpan.FromMinutes(3));
         result.Success.Should().BeTrue("Docker .NET container should run successfully");
         result.Output.Should().Contain("8.0", ".NET container should report version 8.0");
     }
