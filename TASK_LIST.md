@@ -117,17 +117,97 @@
 - ✅ **Clinical Risk Mitigation Procedures** (Detailed incident response matrix with measurable response times)
 - ✅ **Pathology Integration Guidelines** (Clinical workflow integration with governance-ready documentation)
 
-### Phase 12 - Performance & Tuning
-- 📝 **Buffer size experiments** (64KB vs 256KB vs 1MB) measure throughput & CPU
-- 📝 **Optional async prefetching** of source stream
-- 📝 **Evaluate memory pressure** under concurrency
-- 📝 **Decide on final default** buffer + hashing concurrency
+### Phase 12 - Performance Tuning & Production Optimization
+- 📝 **Clinical Pathway Prioritization** (optimize Primary Clinical target copy speed)
+  - Configure Clinical folder as TargetA (primary) with priority queuing
+  - Implement parallel copy optimization for Clinical + Research targets
+  - Validate minimal delay on primary pathway (<5 seconds for 1GB files)
+- 📝 **Buffer Size Experiments** (64KB vs 256KB vs 1MB for medical imaging files)
+  - Measure throughput with 500MB-20GB SVS/SCN files
+  - Evaluate CPU usage vs I/O throughput trade-offs
+  - Test optimal buffer size for dual-target parallel copying
+- 📝 **Streaming Copy Optimization** (minimize memory footprint for 20GB files)
+  - Optional async prefetching of source stream
+  - Validate <100MB memory usage during concurrent operations
+  - Optimize SHA-256 hashing concurrency for verification pipeline
+- 📝 **Concurrent Operations Tuning** (adaptive concurrency control refinement)
+  - Evaluate memory pressure under high-volume pathology workflows
+  - Optimize resource monitoring thresholds for production loads
+  - Test backpressure mechanisms with sustained medical imaging batches
+- 📝 **Throughput Validation** (1GB/min per target performance targets)
+  - Measure dual-target throughput with real medical imaging files
+  - Validate parallel copy performance meets clinical pathway requirements
+  - Decide on final default buffer + hashing concurrency settings
+- 📝 **Medical Imaging Format Optimization** (SVS, NDPI, SCN, TIFF specific tuning)
+  - Test performance with typical pathology file sizes (500MB-5GB)
+  - Validate extreme case handling (20GB+ whole slide images)
+  - Optimize file stability detection for large file growth patterns
 
 ### Phase 13 - Pre-Production Hardening
-- 📝 **Config validation** (fail fast on invalid paths, duplicate target IDs)
-- 📝 **Security hardening** (path canonicalization, permission checks)
-- 📝 **Manual failover rehearsal** (simulate service crash during high load)
-- 📝 **Warm startup recovery time** measurement (I4, I20)
+- 📝 **Configuration Validation** (fail fast on invalid setup)
+  - Validate Clinical and Research folder paths exist and are writable
+  - Check for duplicate target IDs in dual-target configuration
+  - Enforce medical imaging file pattern validation (*.svs, *.scn, *.ndpi, *.tiff)
+  - Validate Input directory accessibility and monitoring permissions
+- 📝 **Security Hardening** (NHS-grade security requirements)
+  - Path canonicalization to prevent directory traversal attacks
+  - Permission checks for least-privilege service account operation
+  - FIPS-compliant SHA-256 verification enforcement
+  - Secure configuration file handling (encryption for sensitive paths)
+- 📝 **Crash Recovery Validation** (Invariants I4, I20 enforcement)
+  - Manual failover rehearsal (simulate service crash during high load)
+  - Warm startup recovery time measurement and optimization
+  - SQLite WAL recovery testing with interrupted operations
+  - Validate no duplicate writes after restart (I4 enforcement)
+- 📝 **Production Deployment Testing** (real-world scenario validation)
+  - Test Windows Service deployment via NSSM or built-in service host
+  - Validate automatic startup and crash recovery in production environment
+  - Simulate pathology scanner continuous file drops (24-hour soak test)
+  - Test NPIC ingestion workflow integration (zero interference validation)
+
+### Phase 14 - Clinical Deployment Validation (Simplified Approach Alignment)
+- 📝 **Requirement 1: Input Directory Monitoring** (digital pathology scanner integration)
+  - Validate continuous file monitoring with FileSystemWatcher reliability
+  - Test with actual pathology scanner file drop patterns
+  - Confirm medical imaging format detection (SVS, NDPI, SCN, TIFF)
+  - Validate file stability detection prevents incomplete file processing
+- 📝 **Requirement 2: Dual-Target Copy Operations** (Clinical + Research pathways)
+  - Validate Primary Clinical folder copy (guaranteed bit-perfect OS file copy)
+  - Validate Research folder copy (secondary pathway with same integrity)
+  - Confirm both copies complete before Input cleanup (coordination requirement)
+  - Test SHA-256 verification ensures bit-perfect copy integrity
+- 📝 **Requirement 3: Input Directory Cleanup** (files cleared after dual copy success)
+  - Validate Input cleanup only after BOTH Clinical and Research copies verified
+  - Test cleanup atomicity (no partial cleanup on failure)
+  - Confirm failed files remain in Input for retry processing
+  - Validate quarantine handling for hash mismatch scenarios
+- 📝 **Requirement 4: NPIC Workflow Non-Interference** (zero blocking guarantee)
+  - Test NPIC ingestion can read from Clinical folder during ForkerDotNet operations
+  - Validate no file locking prevents external system access
+  - Confirm Clinical folder files immediately available after copy completion
+  - Test continuous NPIC ingestion while ForkerDotNet processes new files
+- 📝 **Requirement 6: Minimize Clinical Pathway Interference** (OS file copy preference)
+  - Validate streaming copy operations use OS-level file copy mechanisms
+  - Confirm atomic temp file staging with rename operations
+  - Test bit-perfect copy integrity with SHA-256 verification
+  - Validate no data corruption risk during copy operations
+- 📝 **Requirement 7: Minimize Primary Pathway Delay** (Clinical pathway optimization)
+  - Measure Clinical folder copy completion time (<5 seconds for 1GB files)
+  - Validate parallel copy to Research doesn't delay Clinical pathway
+  - Test Clinical target priority in dual-target orchestration
+  - Confirm 1GB/min throughput meets clinical urgency requirements
+- 📝 **Requirement 8: Clinical Risk Elimination Design** (safety-first architecture)
+  - Validate 20 invariants (I1-I20) enforce safe state transitions
+  - Test crash recovery prevents partial operations (SQLite WAL validation)
+  - Confirm quarantine system prevents corrupted data propagation (I5)
+  - Validate append-only audit trail supports clinical compliance
+  - Test failure modes: network interruption, service crash, disk full scenarios
+- 📝 **End-to-End Clinical Workflow Validation** (complete pathway testing)
+  - Simulate full pathology workflow: Scanner → Input → Clinical → NPIC ingestion
+  - Test Research folder parallel replication with Clinical pathway priority
+  - Validate 24-hour continuous operation with real medical imaging file loads
+  - Confirm zero data loss, zero corruption, zero NPIC interference
+  - Capture evidence: logs, metrics, performance data for governance approval
 
 ### Phase 10.1 - Test Design Flaw Remediation ✅ COMPLETED
 - ✅ **Analyze ConcurrentStressTests design flaws** (timing-dependent assertions identified)
@@ -209,4 +289,14 @@
 
 **Phase 11 Achievement**: ✅ COMPLETE - All clinical safety validation demonstrations implemented with governance-ready documentation package for executive stakeholder approval. Interactive demo system provides observable proof of system safety for deployment in critical medical data paths.
 
-**Next Action**: Phase 12 Performance & Tuning - Buffer size optimization and throughput analysis for production deployment
+**Next Action**: Phase 14 Clinical Deployment Validation - Run demonstrations and capture evidence for governance approval, validate alignment with simplified_approach.md requirements
+
+**Strategic Alignment Confirmed** (2025-09-30): After reviewing simplified_approach.md requirements, the current ForkerDotNet architecture is perfectly aligned with clinical needs:
+- ✅ Dual-target copy operations (Clinical + Research) match requirement #2
+- ✅ Input cleanup only after BOTH pathways complete (requirement #3)
+- ✅ OS-level streaming copy ensures bit-perfect operations (requirement #6)
+- ✅ SHA-256 verification and crash recovery eliminate clinical risk (requirement #8)
+- ✅ Non-locking operations ensure zero NPIC interference (requirement #4)
+- ✅ Parallel copying minimizes Clinical pathway delay (requirement #7)
+
+**Phase 14 Priority**: Capture demonstration evidence validating all 8 simplified_approach.md requirements for governance approval

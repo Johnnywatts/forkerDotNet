@@ -38,7 +38,8 @@
       "Bash(timeout 60 docker compose -f docker-compose.yml up --abort-on-container-exit forker-multiprocess-test)",
       "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --index-filter 'git rm --cached --ignore-unmatch tests/TestData/source/*.scn' HEAD~20..HEAD)",
       "Bash(git stash:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []

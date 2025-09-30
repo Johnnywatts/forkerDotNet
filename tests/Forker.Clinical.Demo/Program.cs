@@ -294,8 +294,8 @@ public class ClinicalDemoApplication
             }
         }
 
-        // Atomic rename
-        File.Move(tempFile, destFile);
+        // Atomic rename (overwrite if exists from previous demo run)
+        File.Move(tempFile, destFile, overwrite: true);
         AnsiConsole.MarkupLine($"[green]  ✓ Atomic copy complete to {type}[/]");
     }
 
@@ -957,7 +957,7 @@ public class ClinicalDemoApplication
         foreach (var corruptedFile in corruptedFiles)
         {
             var quarantinedFile = Path.Combine(quarantineDir, Path.GetFileName(corruptedFile));
-            File.Move(corruptedFile, quarantinedFile);
+            File.Move(corruptedFile, quarantinedFile, overwrite: true);
             await Task.Delay(200);
 
             AnsiConsole.MarkupLine($"[yellow]  → Quarantined: {Path.GetFileName(corruptedFile)}[/]");
