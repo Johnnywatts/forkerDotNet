@@ -5,6 +5,7 @@ using Forker.Infrastructure.Database;
 using Forker.Infrastructure.Repositories;
 using Forker.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Forker.Infrastructure.DependencyInjection;
@@ -70,13 +71,18 @@ public static class ServiceCollectionExtensions
         // Register quarantine repository (Phase 6)
         services.AddScoped<IQuarantineRepository, SqliteQuarantineRepository>();
 
-        // Register retry services (Phase 7)
-        services.AddSingleton<IRetryPolicy, ExponentialBackoffRetryPolicy>();
-        services.AddScoped<IRetryOrchestrator, RetryOrchestrator>();
-        services.AddScoped<IDeadLetterService, DeadLetterService>();
-
         // Register retry policy options (Phase 7)
         services.Configure<ExponentialBackoffRetryPolicyOptions>(_ => ExponentialBackoffRetryPolicyOptions.CreateDefault());
+
+        // Register retry services (Phase 7) - provide options directly via factory
+        services.AddSingleton<IRetryPolicy>(sp =>
+        {
+            var options = sp.GetRequiredService<IOptions<ExponentialBackoffRetryPolicyOptions>>().Value;
+            var logger = sp.GetRequiredService<ILogger<ExponentialBackoffRetryPolicy>>();
+            return new ExponentialBackoffRetryPolicy(options, logger);
+        });
+        services.AddScoped<IRetryOrchestrator, RetryOrchestrator>();
+        services.AddScoped<IDeadLetterService, DeadLetterService>();
 
         // Register adaptive concurrency services (Phase 8)
         services.AddSingleton<IResourceMonitor, BasicResourceMonitor>();

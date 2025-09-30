@@ -139,6 +139,94 @@
 - ✅ External Integration Testing (file locking by imaging software during processing)
 - ✅ Error Recovery Under Load (stability detection failures, I/O errors, resource exhaustion)
 
+## Phase 11.0 - Production Pipeline Integration ✅ COMPLETED (2025-09-30)
+
+**Objective**: Wire up all ForkerDotNet components into a working end-to-end production pipeline
+
+### Configuration System ✅
+- ✅ Created comprehensive appsettings.json with all configuration sections
+- ✅ Configured Database settings (SQLite with WAL mode)
+- ✅ Configured Directory paths (Input, Clinical, Research, Error, Processing)
+- ✅ Configured File Monitoring (patterns, stability detection, exclusions)
+- ✅ Configured Target settings (dual-target replication with verification)
+- ✅ Configured Serilog logging (console and file outputs with rotation)
+
+### Service Integration ✅
+- ✅ Updated Program.cs with configuration loading from appsettings.json
+- ✅ Registered all ForkerInfrastructure services in DI container
+- ✅ Fixed ExponentialBackoffRetryPolicy DI registration (IOptions resolution)
+- ✅ Added database initialization on startup
+- ✅ Upgraded NuGet packages to v9.0.9 for consistency
+
+### Worker Implementation ✅
+- ✅ Implemented complete Worker.cs with end-to-end pipeline
+- ✅ Injected IFileDiscoveryService, ICopyOrchestrator, IVerificationOrchestrator
+- ✅ Event-driven architecture: FileDiscovered → Copy → Verify → Cleanup
+- ✅ Complete state machine: DISCOVERED → QUEUED → IN_PROGRESS → PARTIAL → VERIFIED
+- ✅ Automatic Input directory cleanup after successful verification
+- ✅ Comprehensive error handling and structured logging
+- ✅ Directory creation on startup
+
+### Validation ✅
+- ✅ Clean build (0 errors, 0 warnings)
+- ✅ Service starts and runs without errors
+- ✅ All components properly wired and communicating
+- ✅ SQLite database initialized successfully
+- ✅ File discovery service monitoring Input directory
+- ✅ Health endpoint operational on http://localhost:8080/health/live
+
+**Result**: ForkerDotNet production pipeline is fully operational and ready for Windows Service deployment!
+
+---
+
+## Phase 11.2 - Windows Service Deployment ✅ COMPLETED (2025-09-30)
+
+**Objective**: Package ForkerDotNet as a production-ready Windows Service with deployment automation
+
+### Windows Service Support ✅
+- ✅ Added Microsoft.Extensions.Hosting.WindowsServices NuGet package (v9.0.9)
+- ✅ Upgraded Microsoft.Extensions.Hosting to v9.0.9
+- ✅ Upgraded Configuration packages to v9.0.9 (Json, EnvironmentVariables)
+- ✅ Added UseWindowsService() configuration in Program.cs
+- ✅ Configured service name: "ForkerDotNet"
+
+### Deployment Scripts ✅
+- ✅ Created Install-ForkerService.ps1 (full-featured installation script)
+  - Administrator privilege checking
+  - Existing service detection and removal
+  - Service creation with sc.exe
+  - Service description configuration
+  - Installation verification and status reporting
+- ✅ Created Uninstall-ForkerService.ps1 (clean removal script)
+- ✅ Created Test-ServiceInstallation.ps1 (automated end-to-end testing)
+  - Automated publish → install → start → monitor workflow
+  - 30-second service stability monitoring
+  - Optional test file processing validation
+
+### Automatic Recovery Configuration ✅
+- ✅ Configured automatic restart on crash (via sc.exe failure command)
+  - 1st failure: Restart after 5 seconds
+  - 2nd failure: Restart after 10 seconds
+  - 3rd+ failures: Restart after 30 seconds
+  - Reset failure counter after 24 hours
+- ✅ Configured automatic startup on boot
+- ✅ Service recovery actions fully documented
+
+### Documentation ✅
+- ✅ Created comprehensive windows-service-deployment.md covering:
+  - Quick start guide (5 minutes to deployment)
+  - Complete configuration reference (all appsettings.json sections)
+  - Service management commands (start/stop/restart/status)
+  - Monitoring and health checks (Event Log, file logs, health endpoint)
+  - Troubleshooting guide (12 common scenarios with solutions)
+  - Security considerations (least privilege, FIPS compliance, audit trail)
+  - Advanced topics (network paths, performance tuning, custom user accounts)
+  - Production deployment checklist (pre/during/post deployment steps)
+
+**Result**: ForkerDotNet is production-ready for Windows Service deployment with enterprise-grade automation and documentation!
+
+---
+
 ## Phase 11 - Observable System Testing ⚠️ COMPLETED WITH ISSUES
 
 **CRITICAL DISCOVERY**: Phase 11 demos are mostly fake simulations (see commit fbcdd29)
@@ -150,11 +238,11 @@
 - ❌ Demo #6 (Real-Time Monitoring) - Fake progress bars, no real processing
 - ✅ Demos #7-9 (Documentation) - Appropriate informational content
 
-**Action Required**: Replace fake demos with real observable demonstrations using Windows tools (see Phase 11.1)
+**Action Required**: Replace fake demos with real observable demonstrations using Windows tools (see Phase 11.3)
 
 ---
 
-## Phase 11.1 - Real Demo System 🔄 IN PROGRESS (URGENT)
+## Phase 11.3 - Real Demo System 📝 TO DO (HIGH PRIORITY)
 
 **Objective**: Replace fake Spectre.Console demos with observable demonstrations using real Windows system tools
 
