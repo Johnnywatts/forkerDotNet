@@ -26,11 +26,13 @@ cd C:\Dev\win_repos\forkerDotNet
 # Build solution
 dotnet build --configuration Release
 
-# Run tests to verify
-dotnet test
+# Run tests to verify (takes 2-3 minutes - includes resilience tests)
+dotnet test --configuration Release
 ```
 
-**Expected Result**: 88/88 tests passing, clean build
+**Expected Result**: Build succeeds with 0 errors, all tests passing
+
+**Note**: Full test suite includes Docker and resilience tests which take 2-3 minutes. Ensure Docker Desktop is running.
 
 ### Step 2: Setup Demo Environment
 

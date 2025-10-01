@@ -603,6 +603,10 @@ public class FileSystemRaceTests : IDisposable
                 // Expected
             }
 
+            // Give file system time to release file handles from background writer
+            // This prevents race conditions where the test's own writer still has the file open
+            await Task.Delay(200);
+
             await service.StopAsync();
 
             // Primary assertion: System should handle unstable files without exceptions
