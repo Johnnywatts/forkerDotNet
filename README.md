@@ -71,10 +71,14 @@ forkerDotNet/
 
 ## Development Status
 
-**Current Phase**: Repository setup and solution structure
-**Next Phase**: Domain core implementation with state machines
+**Status**: ✅ **Production Ready** (Phase 11.0 Complete)
 
-See `dev_plan.md` for detailed 30-day implementation roadmap.
+- ✅ All 88 tests passing
+- ✅ Windows Service deployment automation complete
+- ✅ Real demo system with PowerShell scripts
+- 📝 Phase 11.3+ in progress (see `TASK_LIST.md`)
+
+See `dev_plan.md` for full 30-day implementation roadmap.
 
 ## Requirements from PowerShell Analysis
 
@@ -92,11 +96,51 @@ See `dev_plan.md` for detailed 30-day implementation roadmap.
 - `security-*.md` - NHS-grade security requirements and implementation
 - `next-steps-refactor-dotNet.md` - Implementation roadmap
 
-## Getting Started
+## Quick Start
+
+### Option 1: Run Demonstrations (Recommended)
+
+```powershell
+# Setup demo environment
+cd demo\scripts
+.\Demo-Setup.ps1
+
+# Run end-to-end demo (5 minutes)
+.\Run-Scenario1-EndToEnd.ps1
+```
+
+**See [Quick-Start-Demo.md](docs/Quick-Start-Demo.md) for full demo guide** with 5 scenarios:
+1. End-to-End Workflow (5 min)
+2. Corruption Detection (3 min)
+3. Concurrent Access (5 min)
+4. Crash Recovery (5 min)
+5. Stability Detection (3 min)
+
+### Option 2: Production Deployment
+
+```powershell
+# Build solution
+dotnet build --configuration Release
+
+# Run tests
+dotnet test
+
+# Install Windows Service
+cd demo\scripts
+.\Install-Service.ps1
+
+# Start service
+Start-Service ForkerDotNet
+```
+
+**See [windows-service-deployment.md](docs/windows-service-deployment.md) for full deployment guide**
+
+### Option 3: Development
 
 1. Ensure .NET 8 SDK is installed
-2. Open VS Code workspace in this directory
-3. Run `dotnet restore` to restore dependencies
-4. Follow the phase-by-phase implementation in `dev_plan.md`
+2. Run `dotnet restore` to restore dependencies
+3. Run `dotnet build` to build solution
+4. Run `dotnet test` to verify all tests pass (88/88 expected)
+5. See `dev_plan.md` for architecture and development roadmap
 
 This project emphasizes **proof** at every level - comprehensive test coverage, performance benchmarks, security validation, and reliability evidence suitable for medical data processing environments.
