@@ -19,7 +19,7 @@ function Write-DemoStep {
     param([string]$Number, [string]$Description)
 
     Write-Host ""
-    Write-Host "STEP $Number: $Description" -ForegroundColor Cyan
+    Write-Host "STEP ${Number}: $Description" -ForegroundColor Cyan
     Write-Host ("-" * 80) -ForegroundColor DarkGray
 }
 
@@ -27,11 +27,11 @@ function Write-DemoStatus {
     param([string]$Message, [string]$Type = "Info")
 
     $prefix = switch ($Type) {
-        "Success" { "✓"; $color = "Green" }
-        "Warning" { "⚠"; $color = "Yellow" }
-        "Error"   { "✗"; $color = "Red" }
-        "Info"    { "ℹ"; $color = "Cyan" }
-        default   { "•"; $color = "White" }
+        "Success" { "[OK]"; $color = "Green" }
+        "Warning" { "[WARN]"; $color = "Yellow" }
+        "Error"   { "[ERROR]"; $color = "Red" }
+        "Info"    { "[INFO]"; $color = "Cyan" }
+        default   { "[*]"; $color = "White" }
     }
 
     Write-Host "  $prefix $Message" -ForegroundColor $color

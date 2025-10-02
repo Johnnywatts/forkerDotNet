@@ -79,9 +79,12 @@ public sealed class CopyOrchestrator : ICopyOrchestrator, IDisposable
                     totalStopwatch.Elapsed);
             }
 
-            // Transition job to IN_PROGRESS
-            job.MarkAsInProgress();
-            await _jobRepository.UpdateAsync(job, cancellationToken);
+            // Transition job to IN_PROGRESS (only if not already in that state)
+            if (job.State != JobState.InProgress)
+            {
+                job.MarkAsInProgress();
+                await _jobRepository.UpdateAsync(job, cancellationToken);
+            }
 
             // Get enabled targets for copying
             var enabledTargets = _config.EnabledTargets.ToList();
@@ -99,14 +102,26 @@ public sealed class CopyOrchestrator : ICopyOrchestrator, IDisposable
             _logger.LogInformation("Copying to {TargetCount} targets: {Targets}",
                 enabledTargets.Count, string.Join(", ", enabledTargets.Select(t => t.Id)));
 
-            // Create target outcomes for each target
-            var targetOutcomes = new List<TargetOutcome>();
-            foreach (var target in enabledTargets)
+            // Load existing target outcomes (created by Worker.cs)
+            var targetOutcomes = await _targetOutcomeRepository.GetByJobIdAsync(fileJobId, cancellationToken);
+            if (targetOutcomes.Count == 0)
             {
-                var targetId = new TargetId(target.Id);
-                var outcome = new TargetOutcome(fileJobId, targetId);
-                targetOutcomes.Add(outcome);
-                await _targetOutcomeRepository.SaveAsync(outcome, cancellationToken);
+                _logger.LogError("No target outcomes found for job {JobId} - cannot proceed with copy", fileJobId.Value);
+                return CopyOrchestrationResult.CreateFailure(
+                    fileJobId,
+                    new Dictionary<TargetId, FileCopyResult>(),
+                    "No target outcomes found",
+                    totalStopwatch.Elapsed);
+            }
+
+            // Transition all target outcomes to COPYING state (Pending -> Copying)
+            foreach (var outcome in targetOutcomes)
+            {
+                // Use temp directory from configuration (even though we copy directly to final destination,
+                // the state machine requires a valid temp path)
+                var tempPath = Path.Combine(_config.TempDirectory, Path.GetFileName(sourceFilePath));
+                outcome.StartCopy(tempPath);
+                await _targetOutcomeRepository.UpdateAsync(outcome, cancellationToken);
             }
 
             // Perform copying operations (parallel or sequential based on configuration)
