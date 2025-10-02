@@ -241,12 +241,64 @@ Start-Service ForkerDotNet
 Get-Content C:\ProgramData\ForkerDotNet\logs\*.log -Tail 50
 ```
 
+**Alternative: Run in Console Mode**
+```powershell
+# If service installation fails, run directly
+cd C:\Dev\win_repos\forkerDotNet\src\Forker.Service
+dotnet run
+```
+
 ### "Demo directories not found"
 
 **Solution:**
 ```powershell
 # Run setup script
 .\Demo-Setup.ps1
+```
+
+### "Configuration path mismatch"
+
+**Problem:** Service configured for `C:\ForkerDotNet` but demos use `C:\ForkerDemo`
+
+**Solution:**
+```powershell
+# Update appsettings.json to use demo paths
+cd C:\Dev\win_repos\forkerDotNet\src\Forker.Service
+# Edit appsettings.json - change all paths to C:\ForkerDemo
+```
+
+### "PowerShell script parse errors with Unicode characters"
+
+**Problem:** Errors like `Unexpected token '→'` or `Cannot parse '✓'`
+
+**Solution:** This is fixed in commit b8a48c1. Update to latest code:
+```powershell
+git pull
+```
+
+All Unicode characters (✓, →, ⚠, etc.) have been replaced with ASCII equivalents.
+
+### "Scenarios 2-4 fail with 'file not found' errors"
+
+**Known Issue:** ForkerDotNet processes files extremely fast (50MB in <1 second). Demo scenarios designed for slower PowerShell version don't have time to inject corruption/test concurrent access before files complete.
+
+**Workaround:**
+- **Scenario 1 (End-to-End)**: ✅ Works perfectly - use this for demos
+- **Scenario 5 (Stability Detection)**: ✅ Works - demonstrates file growth detection
+- **Scenarios 2-4**: ⚠️ Skip for now - require redesign for .NET speed
+- **Alternative**: Use Test-Simple.ps1 for quick validation
+
+**Future Fix:** Scenarios 2-4 need redesign to handle sub-second processing times.
+
+### "Scenario 4 requires Administrator"
+
+**Problem:** `#requires -RunAsAdministrator` error
+
+**Solution:**
+```powershell
+# Right-click PowerShell, select "Run as Administrator"
+# Then run scenario
+.\Run-Scenario4-CrashRecovery.ps1
 ```
 
 ### "SQLite Browser not found"
@@ -256,22 +308,33 @@ Get-Content C:\ProgramData\ForkerDotNet\logs\*.log -Tail 50
 - Or use PowerShell to query database:
   ```powershell
   Install-Module -Name PSSQLite
-  Invoke-SqliteQuery -Database "C:\ProgramData\ForkerDotNet\forker.db" -Query "SELECT * FROM FileJobs"
+  Invoke-SqliteQuery -Database "C:\ForkerDemo\forker.db" -Query "SELECT * FROM FileJobs"
   ```
 
 ### "Test files too large / taking too long"
 
-**Solution:**
-```powershell
-# Use smaller test files
-.\Run-Scenario1-EndToEnd.ps1 -TestFileSize 50  # 50MB instead of 100MB
-```
+**Note:** With .NET 8 performance, even large files process quickly:
+- 100MB file: ~5-8 seconds (720+ MB/min per target)
+- 200MB file: ~10-15 seconds
+
+If you need slower processing for demos, use Test-Simple.ps1 which provides clear step-by-step output.
 
 ### "Access denied" errors
 
 **Solution:**
 - Run PowerShell as Administrator
 - Ensure current user has full control of `C:\ForkerDemo` directory
+
+### "NuGet package downgrade warnings"
+
+**Problem:** `NU1605: Detected package downgrade`
+
+**Solution:** This is fixed in commit c227cd9. Update to latest code:
+```powershell
+git pull
+dotnet restore
+dotnet build --configuration Release
+```
 
 ## Next Steps
 
