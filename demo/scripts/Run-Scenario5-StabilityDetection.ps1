@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 
 <#
 .SYNOPSIS
@@ -65,7 +65,7 @@ Write-DemoStep "3" "Opening SQLite Browser to monitor stability detection"
 $dbPath = Get-ForkerDatabasePath
 if (Test-Path $dbPath) {
     Start-SqliteBrowser -DatabasePath $dbPath
-    Write-DemoStatus "Watch the FileJobs table for DISCOVERED → QUEUED transition" "Info"
+    Write-DemoStatus "Watch the FileJobs table for DISCOVERED -> QUEUED transition" "Info"
     Write-DemoStatus "QUEUED state will wait until file is stable" "Info"
 }
 
@@ -130,7 +130,7 @@ while ($currentSizeMB -lt $FinalFileSizeMB) {
     $destA = Join-Path "$DemoPath\DestinationA" $fileName
     if (Test-Path $destA) {
         Write-Host ""
-        Write-DemoStatus "⚠ WARNING: ForkerDotNet started processing before file was stable!" "Warning"
+        Write-DemoStatus "[WARN] WARNING: ForkerDotNet started processing before file was stable!" "Warning"
         Write-DemoStatus "This suggests stability detection may need tuning" "Warning"
         break
     }
@@ -177,7 +177,7 @@ while (-not $processingStarted -and ((Get-Date) - $startWait).TotalSeconds -lt $
         $processingStarted = $true
         $processingStartTime = Get-Date
         Write-Host ""
-        Write-DemoStatus "✓ Processing started!" "Success"
+        Write-DemoStatus "[OK] Processing started!" "Success"
         Write-DemoStatus "Stability detection time: $([math]::Round(($processingStartTime - $stableTime).TotalSeconds, 1)) seconds" "Success"
     } else {
         Write-Host "." -NoNewline -ForegroundColor Gray
@@ -235,7 +235,7 @@ $completionTime = Get-Date
 $copyDuration = ($completionTime - $processingStartTime).TotalSeconds
 
 Write-Host ""
-Write-DemoStatus "✓ Replication completed in $([math]::Round($copyDuration, 1)) seconds" "Success"
+Write-DemoStatus "[OK] Replication completed in $([math]::Round($copyDuration, 1)) seconds" "Success"
 
 # Step 9: Verify hash integrity
 Write-Host ""
@@ -251,10 +251,10 @@ Write-Host "Destination B:   $hashB" -ForegroundColor $(if ($hashB -eq $sourceHa
 
 if ($hashA -eq $sourceHash -and $hashB -eq $sourceHash) {
     Write-Host ""
-    Write-DemoStatus "✓ Hash verification PASSED - stability detection worked correctly" "Success"
+    Write-DemoStatus "[OK] Hash verification PASSED - stability detection worked correctly" "Success"
 } else {
     Write-Host ""
-    Write-DemoStatus "✗ Hash verification FAILED" "Error"
+    Write-DemoStatus "[ERROR] Hash verification FAILED" "Error"
 }
 
 # Step 10: Display summary
@@ -265,11 +265,11 @@ Write-Host ""
 Write-DemoSummary @"
 Scenario 5 Complete: File Stability Detection
 
-✓ File created and grown incrementally (simulated slow network copy)
-✓ ForkerDotNet detected file is growing
-✓ Stability detection waited for growth to stop
-✓ Processing only started after file was stable
-✓ Hash integrity verified after replication
+[OK] File created and grown incrementally (simulated slow network copy)
+[OK] ForkerDotNet detected file is growing
+[OK] Stability detection waited for growth to stop
+[OK] Processing only started after file was stable
+[OK] Hash integrity verified after replication
 
 Key Observations:
 - Final File Size:          $([math]::Round($FinalFileSizeMB, 0)) MB
@@ -279,14 +279,14 @@ Key Observations:
 - Stability Wait Time:      $([math]::Round($stabilityWaitTime, 1)) seconds
 - Copy Duration:            $([math]::Round($copyDuration, 1)) seconds
 - Total Duration:           $([math]::Round($totalDuration, 1)) seconds
-- Data Integrity:           ✓ All hashes match (no corruption)
+- Data Integrity:           [OK] All hashes match (no corruption)
 
 Clinical Workflow Impact:
-✓ Large medical imaging files often arrive via slow network copy
-✓ Scanning devices may write files incrementally
-✓ ForkerDotNet waits for complete file before processing
-✓ No incomplete files copied to destinations
-✓ No "file changed during copy" errors
+[OK] Large medical imaging files often arrive via slow network copy
+[OK] Scanning devices may write files incrementally
+[OK] ForkerDotNet waits for complete file before processing
+[OK] No incomplete files copied to destinations
+[OK] No "file changed during copy" errors
 
 Technical Implementation:
 - File size monitored at regular intervals (StabilityCheckIntervalSeconds)

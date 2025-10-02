@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 
 <#
 .SYNOPSIS
@@ -74,7 +74,7 @@ if (Test-Path $dbPath) {
 # Step 4: Move file to Input folder to trigger processing
 Write-Host ""
 Write-DemoStep "4" "Moving file to Input folder to trigger ForkerDotNet processing"
-Write-DemoStatus "Moving: $($testFile.Name) → $DemoPath\Input" "Info"
+Write-DemoStatus "Moving: $($testFile.Name) -> $DemoPath\Input" "Info"
 $inputFile = Join-Path "$DemoPath\Input" $testFile.Name
 Move-Item -Path $testFile.FullName -Destination $inputFile -Force
 Write-DemoStatus "File moved - ForkerDotNet will detect in <5 seconds" "Success"
@@ -83,7 +83,7 @@ Write-DemoStatus "File moved - ForkerDotNet will detect in <5 seconds" "Success"
 Write-Host ""
 Write-DemoStep "5" "Monitoring replication progress"
 Write-DemoStatus "Watch File Explorer windows for file appearance" "Info"
-Write-DemoStatus "Watch SQLite Browser for state changes: DISCOVERED → QUEUED → IN_PROGRESS → VERIFIED" "Info"
+Write-DemoStatus "Watch SQLite Browser for state changes: DISCOVERED -> QUEUED -> IN_PROGRESS -> VERIFIED" "Info"
 
 $destA = Join-Path "$DemoPath\DestinationA" $testFile.Name
 $destB = Join-Path "$DemoPath\DestinationB" $testFile.Name
@@ -109,7 +109,7 @@ while (-not $completed -and ((Get-Date) - $startTime).TotalSeconds -lt $timeout)
 
         # Check if files are complete (size matches)
         if ($destASize -ge $expectedSize -and $destBSize -ge $expectedSize) {
-            Write-DemoStatus "✓ Both targets reached full size" "Success"
+            Write-DemoStatus "[OK] Both targets reached full size" "Success"
             $completed = $true
         } else {
             $progressA = [math]::Round(($destASize / $expectedSize) * 100, 1)
@@ -148,10 +148,10 @@ Write-Host "Destination B:   $hashB" -ForegroundColor $(if ($hashB -eq $sourceHa
 
 if ($hashA -eq $sourceHash -and $hashB -eq $sourceHash) {
     Write-Host ""
-    Write-DemoStatus "✓ Hash verification PASSED - data integrity confirmed" "Success"
+    Write-DemoStatus "[OK] Hash verification PASSED - data integrity confirmed" "Success"
 } else {
     Write-Host ""
-    Write-DemoStatus "✗ Hash verification FAILED - corruption detected!" "Error"
+    Write-DemoStatus "[ERROR] Hash verification FAILED - corruption detected!" "Error"
     exit 1
 }
 
@@ -166,10 +166,10 @@ try {
     $bytesRead = $stream.Read($buffer, 0, 1024)
     $stream.Close()
 
-    Write-DemoStatus "✓ Successfully read $bytesRead bytes from destination" "Success"
-    Write-DemoStatus "✓ External applications can access files during ForkerDotNet operations" "Success"
+    Write-DemoStatus "[OK] Successfully read $bytesRead bytes from destination" "Success"
+    Write-DemoStatus "[OK] External applications can access files during ForkerDotNet operations" "Success"
 } catch {
-    Write-DemoStatus "✗ Could not read file - unexpected locking behavior" "Error"
+    Write-DemoStatus "[ERROR] Could not read file - unexpected locking behavior" "Error"
 }
 
 # Step 8: Display summary
@@ -177,11 +177,11 @@ Write-Host ""
 Write-DemoSummary @"
 Scenario 1 Complete: End-to-End File Replication
 
-✓ Medical imaging file created and dropped
-✓ Dual-target replication completed (DestinationA + DestinationB)
-✓ SHA-256 hash integrity verified (all hashes match)
-✓ Non-locking behavior confirmed (external read access works)
-✓ SQLite state transitions observable in real-time
+[OK] Medical imaging file created and dropped
+[OK] Dual-target replication completed (DestinationA + DestinationB)
+[OK] SHA-256 hash integrity verified (all hashes match)
+[OK] Non-locking behavior confirmed (external read access works)
+[OK] SQLite state transitions observable in real-time
 
 Key Observations:
 - ForkerDotNet detected file within 5 seconds
@@ -194,7 +194,7 @@ Key Observations:
 Evidence:
 - File Explorer: Visual confirmation of dual replication
 - PowerShell Get-FileHash: Cryptographic integrity proof
-- SQLite Browser: State machine audit trail (DISCOVERED → VERIFIED)
+- SQLite Browser: State machine audit trail (DISCOVERED -> VERIFIED)
 - File system timestamps: Replication timing data
 
 Next Steps:

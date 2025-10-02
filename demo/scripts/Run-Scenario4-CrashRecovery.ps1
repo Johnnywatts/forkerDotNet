@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 #Requires -RunAsAdministrator
 
 <#
@@ -79,7 +79,7 @@ $dbPath = Get-ForkerDatabasePath
 if (Test-Path $dbPath) {
     Start-SqliteBrowser -DatabasePath $dbPath
     Write-DemoStatus "Watch the FileJobs table for state during crash and recovery" "Info"
-    Write-DemoStatus "Note the State column: IN_PROGRESS → (crash) → IN_PROGRESS → VERIFIED" "Info"
+    Write-DemoStatus "Note the State column: IN_PROGRESS -> (crash) -> IN_PROGRESS -> VERIFIED" "Info"
 }
 
 # Step 4: Move file to Input to trigger processing
@@ -139,7 +139,7 @@ Write-DemoStatus "  Destination B: $([math]::Round($sizeBeforeCrashB / 1MB, 2)) 
 # Step 6: Kill ForkerDotNet service (simulate crash)
 Write-Host ""
 Write-DemoStep "6" "Simulating service crash (killing ForkerDotNet process)"
-Write-DemoStatus "⚠ This simulates a power failure or service crash" "Warning"
+Write-DemoStatus "[WARN] This simulates a power failure or service crash" "Warning"
 
 Write-Host ""
 Write-Host "KILLING SERVICE IN 3 SECONDS..." -ForegroundColor Red
@@ -153,7 +153,7 @@ Stop-ForkerService -Force
 
 $crashTime = Get-Date
 Write-Host ""
-Write-DemoStatus "✗ Service crashed at $($crashTime.ToString('HH:mm:ss'))" "Error"
+Write-DemoStatus "[ERROR] Service crashed at $($crashTime.ToString('HH:mm:ss'))" "Error"
 Write-DemoStatus "Check SQLite Browser: job should remain in IN_PROGRESS state" "Info"
 
 # Step 7: Wait a moment to let user observe crashed state
@@ -171,7 +171,7 @@ Start-ForkerService
 
 $recoveryStartTime = Get-Date
 Write-Host ""
-Write-DemoStatus "✓ Service restarted at $($recoveryStartTime.ToString('HH:mm:ss'))" "Success"
+Write-DemoStatus "[OK] Service restarted at $($recoveryStartTime.ToString('HH:mm:ss'))" "Success"
 Write-DemoStatus "ForkerDotNet will detect incomplete job and resume" "Info"
 
 # Step 9: Monitor recovery progress
@@ -213,7 +213,7 @@ if (-not $recoveryComplete) {
 
 $recoveryDuration = ((Get-Date) - $recoveryStartTime).TotalSeconds
 Write-Host ""
-Write-DemoStatus "✓ Recovery completed in $([math]::Round($recoveryDuration, 1)) seconds" "Success"
+Write-DemoStatus "[OK] Recovery completed in $([math]::Round($recoveryDuration, 1)) seconds" "Success"
 
 # Step 10: Verify hash integrity after recovery
 Write-Host ""
@@ -229,10 +229,10 @@ Write-Host "Destination B:   $hashB" -ForegroundColor $(if ($hashB -eq $sourceHa
 
 if ($hashA -eq $sourceHash -and $hashB -eq $sourceHash) {
     Write-Host ""
-    Write-DemoStatus "✓ Hash verification PASSED - recovery maintained data integrity" "Success"
+    Write-DemoStatus "[OK] Hash verification PASSED - recovery maintained data integrity" "Success"
 } else {
     Write-Host ""
-    Write-DemoStatus "✗ Hash verification FAILED - recovery corrupted data" "Error"
+    Write-DemoStatus "[ERROR] Hash verification FAILED - recovery corrupted data" "Error"
 }
 
 # Step 11: Display summary
@@ -243,13 +243,13 @@ Write-Host ""
 Write-DemoSummary @"
 Scenario 4 Complete: Crash Recovery and Resume Capability
 
-✓ Large medical imaging file created ($TestFileSize MB)
-✓ Copy operation started normally
-✓ Service crashed mid-copy (simulated power failure)
-✓ Service restarted successfully
-✓ Automatic recovery detected incomplete job
-✓ Copy resumed from SQLite state (no restart from beginning)
-✓ Hash integrity verified after recovery
+[OK] Large medical imaging file created ($TestFileSize MB)
+[OK] Copy operation started normally
+[OK] Service crashed mid-copy (simulated power failure)
+[OK] Service restarted successfully
+[OK] Automatic recovery detected incomplete job
+[OK] Copy resumed from SQLite state (no restart from beginning)
+[OK] Hash integrity verified after recovery
 
 Key Observations:
 - File Size:              $TestFileSize MB
@@ -260,13 +260,13 @@ Key Observations:
 - Downtime Duration:      $([math]::Round($downtimeDuration, 1)) seconds
 - Recovery Duration:      $([math]::Round($recoveryDuration, 1)) seconds
 - Total Duration:         $([math]::Round($totalDuration, 1)) seconds
-- Data Integrity:         ✓ All hashes match (no corruption)
+- Data Integrity:         [OK] All hashes match (no corruption)
 
 Clinical Safety Impact:
-✓ CRITICAL: No data loss after service crash
-✓ No duplicate copies created (idempotent recovery)
-✓ No need to restart from beginning (efficient recovery)
-✓ Hash verification ensures no corruption during crash/recovery
+[OK] CRITICAL: No data loss after service crash
+[OK] No duplicate copies created (idempotent recovery)
+[OK] No need to restart from beginning (efficient recovery)
+[OK] Hash verification ensures no corruption during crash/recovery
 
 Technical Implementation:
 - SQLite WAL (Write-Ahead Logging) provides crash-safe persistence

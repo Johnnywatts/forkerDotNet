@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 
 <#
 .SYNOPSIS
@@ -123,13 +123,13 @@ if ($corruptedHash -eq $sourceHash) {
     exit 1
 }
 
-Write-DemoStatus "✓ Corruption confirmed (hashes differ)" "Success"
+Write-DemoStatus "[OK] Corruption confirmed (hashes differ)" "Success"
 
 # Step 7: Wait for ForkerDotNet to detect corruption
 Write-Host ""
 Write-DemoStep "7" "Waiting for ForkerDotNet to detect corruption during verification"
 Write-DemoStatus "ForkerDotNet will calculate SHA-256 and detect hash mismatch" "Info"
-Write-DemoStatus "Watch SQLite Browser for state transition: IN_PROGRESS → QUARANTINED" "Info"
+Write-DemoStatus "Watch SQLite Browser for state transition: IN_PROGRESS -> QUARANTINED" "Info"
 
 $quarantineFile = Join-Path "$DemoPath\Quarantine" $testFile.Name
 $checkInterval = 2
@@ -160,7 +160,7 @@ while (-not $quarantined -and ((Get-Date) - $detectionStart).TotalSeconds -lt $d
 Write-Host "" # New line
 
 if ($quarantined) {
-    Write-DemoStatus "✓ Corrupt file moved to Quarantine folder" "Success"
+    Write-DemoStatus "[OK] Corrupt file moved to Quarantine folder" "Success"
 
     # Verify quarantined file hash
     $quarantinedHash = (Get-FileHash -Path $quarantineFile -Algorithm SHA256).Hash
@@ -168,7 +168,7 @@ if ($quarantined) {
     Write-Host "Quarantined Hash: $quarantinedHash" -ForegroundColor Yellow
 
     if ($quarantinedHash -eq $corruptedHash) {
-        Write-DemoStatus "✓ Quarantine preserves corrupt file for forensic analysis" "Success"
+        Write-DemoStatus "[OK] Quarantine preserves corrupt file for forensic analysis" "Success"
     }
 } else {
     Write-DemoStatus "ForkerDotNet detection in progress or requires manual review" "Warning"
@@ -183,23 +183,23 @@ Write-Host ""
 Write-DemoSummary @"
 Scenario 2 Complete: Corruption Detection and Quarantine
 
-✓ Medical imaging file created with known hash
-✓ Data corruption simulated (1 byte modified)
-✓ SHA-256 hash mismatch detected
-✓ Corrupt file quarantined (moved to Quarantine folder)
-✓ Audit trail recorded in SQLite database
+[OK] Medical imaging file created with known hash
+[OK] Data corruption simulated (1 byte modified)
+[OK] SHA-256 hash mismatch detected
+[OK] Corrupt file quarantined (moved to Quarantine folder)
+[OK] Audit trail recorded in SQLite database
 
 Key Observations:
 - Source Hash:     $sourceHash
 - Corrupted Hash:  $corruptedHash
-- Hash Match:      $(if ($sourceHash -eq $corruptedHash) { "YES ✓" } else { "NO ✗ (corruption detected)" })
+- Hash Match:      $(if ($sourceHash -eq $corruptedHash) { "YES [OK]" } else { "NO [ERROR] (corruption detected)" })
 - Quarantine Time: $([math]::Round(((Get-Date) - $detectionStart).TotalSeconds, 1)) seconds
 
 Clinical Safety Impact:
-✓ CRITICAL: ForkerDotNet detected corruption BEFORE file was released for clinical use
-✓ No corrupt data reached destination systems
-✓ Forensic evidence preserved in Quarantine folder for investigation
-✓ Audit trail available in SQLite database for governance review
+[OK] CRITICAL: ForkerDotNet detected corruption BEFORE file was released for clinical use
+[OK] No corrupt data reached destination systems
+[OK] Forensic evidence preserved in Quarantine folder for investigation
+[OK] Audit trail available in SQLite database for governance review
 
 Evidence:
 - File Explorer: Visual confirmation of quarantine action

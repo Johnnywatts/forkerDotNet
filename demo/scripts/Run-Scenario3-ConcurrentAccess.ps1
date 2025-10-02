@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 
 <#
 .SYNOPSIS
@@ -141,7 +141,7 @@ while ($attemptCount -lt $maxAttempts) {
             }
 
             $concurrentAccessResults += $result
-            Write-Host "      ✓ FileStream read successful ($bytesRead bytes)" -ForegroundColor Green
+            Write-Host "      [OK] FileStream read successful ($bytesRead bytes)" -ForegroundColor Green
         } catch {
             $result = @{
                 Attempt = $attemptCount + 1
@@ -152,7 +152,7 @@ while ($attemptCount -lt $maxAttempts) {
             }
 
             $concurrentAccessResults += $result
-            Write-Host "      ✗ FileStream read failed: $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host "      [ERROR] FileStream read failed: $($_.Exception.Message)" -ForegroundColor Red
         }
 
         # Attempt to open in Notepad (Test 2: External application)
@@ -163,7 +163,7 @@ while ($attemptCount -lt $maxAttempts) {
                 Start-Sleep -Seconds 2
 
                 if (-not $notepadProcess.HasExited) {
-                    Write-Host "      ✓ Notepad opened file successfully (external app access works)" -ForegroundColor Green
+                    Write-Host "      [OK] Notepad opened file successfully (external app access works)" -ForegroundColor Green
                     Start-Sleep -Seconds 3
                     $notepadProcess.CloseMainWindow() | Out-Null
 
@@ -174,10 +174,10 @@ while ($attemptCount -lt $maxAttempts) {
                         Message = "External application access successful"
                     }
                 } else {
-                    Write-Host "      ✗ Notepad failed to open file" -ForegroundColor Red
+                    Write-Host "      [ERROR] Notepad failed to open file" -ForegroundColor Red
                 }
             } catch {
-                Write-Host "      ✗ Notepad failed: $($_.Exception.Message)" -ForegroundColor Red
+                Write-Host "      [ERROR] Notepad failed: $($_.Exception.Message)" -ForegroundColor Red
             }
         }
 
@@ -223,10 +223,10 @@ Write-Host "Destination B:   $hashB" -ForegroundColor $(if ($hashB -eq $sourceHa
 
 if ($hashA -eq $sourceHash -and $hashB -eq $sourceHash) {
     Write-Host ""
-    Write-DemoStatus "✓ Hash verification PASSED - concurrent access did not corrupt data" "Success"
+    Write-DemoStatus "[OK] Hash verification PASSED - concurrent access did not corrupt data" "Success"
 } else {
     Write-Host ""
-    Write-DemoStatus "✗ Hash verification FAILED" "Error"
+    Write-DemoStatus "[ERROR] Hash verification FAILED" "Error"
 }
 
 # Step 9: Display concurrent access results
@@ -244,7 +244,7 @@ Write-Host "Failed Accesses:            $($totalAccesses - $successfulAccesses)"
 Write-Host ""
 Write-Host "Detailed Results:" -ForegroundColor Cyan
 foreach ($result in $concurrentAccessResults) {
-    $status = if ($result.Success) { "✓" } else { "✗" }
+    $status = if ($result.Success) { "[OK]" } else { "[ERROR]" }
     $color = if ($result.Success) { "Green" } else { "Red" }
 
     Write-Host "  Attempt $($result.Attempt): $status $($result.Method)" -ForegroundColor $color
@@ -257,11 +257,11 @@ Write-Host ""
 Write-DemoSummary @"
 Scenario 3 Complete: Concurrent Access and Non-Locking Behavior
 
-✓ Large medical imaging file copied ($TestFileSize MB)
-✓ Concurrent access tested during copy operation
-✓ External applications successfully accessed files during copy
-✓ No "file in use" or locking errors encountered
-✓ Hash integrity maintained despite concurrent access
+[OK] Large medical imaging file copied ($TestFileSize MB)
+[OK] Concurrent access tested during copy operation
+[OK] External applications successfully accessed files during copy
+[OK] No "file in use" or locking errors encountered
+[OK] Hash integrity maintained despite concurrent access
 
 Key Observations:
 - Copy Duration:              $([math]::Round($copyDuration, 1)) seconds
@@ -269,13 +269,13 @@ Key Observations:
 - Concurrent Access Attempts: $totalAccesses
 - Successful Accesses:        $successfulAccesses
 - Success Rate:               $([math]::Round(($successfulAccesses / $totalAccesses) * 100, 1))%
-- Data Integrity:             ✓ All hashes match (no corruption)
+- Data Integrity:             [OK] All hashes match (no corruption)
 
 Clinical Workflow Impact:
-✓ PACS viewers can open images while ForkerDotNet is copying
-✓ No "file locked" errors for clinicians
-✓ Reporting systems can access files during replication
-✓ No disruption to clinical workflow
+[OK] PACS viewers can open images while ForkerDotNet is copying
+[OK] No "file locked" errors for clinicians
+[OK] Reporting systems can access files during replication
+[OK] No disruption to clinical workflow
 
 NHS Digital Assessment:
 This demonstrates compliance with operational requirements:
