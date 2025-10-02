@@ -282,14 +282,34 @@ public sealed class SqliteTargetOutcomeRepository : ITargetOutcomeRepository
 
     private static TargetOutcome CreateOutcomeFromReader(SqliteDataReader reader)
     {
-        // For Phase 3, we create a simple outcome in Pending state and note the limitation
-        // Full state reconstruction will be implemented in later phases
-
         var jobId = FileJobId.From(Guid.Parse(reader.GetString(0))); // JobId
         var targetId = TargetId.From(reader.GetString(1)); // TargetId
+        var copyState = Enum.Parse<TargetCopyState>(reader.GetString(2)); // CopyState
+        var attempts = reader.GetInt32(3); // Attempts
+        var hash = reader.IsDBNull(4) ? null : reader.GetString(4); // Hash
+        var tempPath = reader.IsDBNull(5) ? null : reader.GetString(5); // TempPath
+        var finalPath = reader.IsDBNull(6) ? null : reader.GetString(6); // FinalPath
+        var lastError = reader.IsDBNull(7) ? null : reader.GetString(7); // LastError
+        var lastTransitionAt = DateTime.Parse(reader.GetString(8), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind); // LastTransitionAt
 
-        // Create outcome in Pending state - this is a Phase 3 limitation
-        // TODO: Implement proper state reconstruction in Phase 4
-        return new TargetOutcome(jobId, targetId);
+        // Use reflection to create TargetOutcome and set its internal state
+        // This bypasses the state machine validation since we're reconstructing from persisted state
+        var outcome = new TargetOutcome(jobId, targetId);
+
+        // Use reflection to set private fields
+        var outcomeType = typeof(TargetOutcome);
+        outcomeType.GetField("_copyState", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.SetValue(outcome, copyState);
+        outcomeType.GetField("_attempts", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.SetValue(outcome, attempts);
+        outcomeType.GetField("_hash", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.SetValue(outcome, hash);
+
+        outcomeType.GetProperty("TempPath")?.SetValue(outcome, tempPath);
+        outcomeType.GetProperty("FinalPath")?.SetValue(outcome, finalPath);
+        outcomeType.GetProperty("LastError")?.SetValue(outcome, lastError);
+        outcomeType.GetProperty("LastTransitionAt")?.SetValue(outcome, lastTransitionAt);
+
+        return outcome;
     }
 }

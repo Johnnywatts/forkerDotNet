@@ -35,6 +35,7 @@ try
     builder.Services.Configure<DirectoryConfiguration>(builder.Configuration.GetSection("Directories"));
     builder.Services.Configure<FileMonitoringConfiguration>(builder.Configuration.GetSection("Monitoring"));
     builder.Services.Configure<TargetConfiguration>(builder.Configuration.GetSection("Target"));
+    builder.Services.Configure<TestingConfiguration>(builder.Configuration.GetSection("Testing"));
 
     // Register ForkerDotNet infrastructure services
     builder.Services.AddForkerInfrastructure();

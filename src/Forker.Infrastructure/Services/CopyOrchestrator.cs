@@ -19,6 +19,7 @@ public sealed class CopyOrchestrator : ICopyOrchestrator, IDisposable
     private readonly IJobRepository _jobRepository;
     private readonly ITargetOutcomeRepository _targetOutcomeRepository;
     private readonly TargetConfiguration _config;
+    private readonly TestingConfiguration _testingConfig;
     private readonly ILogger<CopyOrchestrator> _logger;
 
     // Semaphores to control concurrent operations per target
@@ -32,12 +33,14 @@ public sealed class CopyOrchestrator : ICopyOrchestrator, IDisposable
         IJobRepository jobRepository,
         ITargetOutcomeRepository targetOutcomeRepository,
         IOptions<TargetConfiguration> config,
+        IOptions<TestingConfiguration> testingConfig,
         ILogger<CopyOrchestrator> logger)
     {
         _fileCopyService = fileCopyService ?? throw new ArgumentNullException(nameof(fileCopyService));
         _jobRepository = jobRepository ?? throw new ArgumentNullException(nameof(jobRepository));
         _targetOutcomeRepository = targetOutcomeRepository ?? throw new ArgumentNullException(nameof(targetOutcomeRepository));
         _config = config?.Value ?? throw new ArgumentNullException(nameof(config));
+        _testingConfig = testingConfig?.Value ?? new TestingConfiguration();
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         // Initialize semaphores for each configured target
@@ -142,7 +145,17 @@ public sealed class CopyOrchestrator : ICopyOrchestrator, IDisposable
                 job.MarkAsPartial();
                 await _jobRepository.UpdateAsync(job, cancellationToken);
 
-                // Update all target outcomes to COPIED
+                // Apply verification delay if configured (for testing corruption detection)
+                // This keeps TargetOutcomes in COPYING state during the delay, preventing
+                // scheduled verification from picking them up prematurely
+                if (_testingConfig.VerificationDelaySeconds > 0)
+                {
+                    _logger.LogInformation("Test mode: Delaying before marking COPIED by {DelaySeconds} seconds - JobId: {JobId}",
+                        _testingConfig.VerificationDelaySeconds, fileJobId.Value);
+                    await Task.Delay(TimeSpan.FromSeconds(_testingConfig.VerificationDelaySeconds), cancellationToken);
+                }
+
+                // Update all target outcomes to COPIED (after delay if configured)
                 foreach (var outcome in targetOutcomes)
                 {
                     var result = copyResults[new TargetId(outcome.TargetId.Value)];

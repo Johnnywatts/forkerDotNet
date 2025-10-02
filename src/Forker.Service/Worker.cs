@@ -24,6 +24,7 @@ public class Worker : BackgroundService
     private readonly ITargetOutcomeRepository _targetOutcomeRepository;
     private readonly DirectoryConfiguration _directories;
     private readonly TargetConfiguration _targetConfig;
+    private readonly TestingConfiguration _testingConfig;
     private readonly IServiceScopeFactory _scopeFactory;
 
     public Worker(
@@ -31,13 +32,15 @@ public class Worker : BackgroundService
         IFileDiscoveryService fileDiscoveryService,
         IServiceScopeFactory scopeFactory,
         IOptions<DirectoryConfiguration> directories,
-        IOptions<TargetConfiguration> targetConfig)
+        IOptions<TargetConfiguration> targetConfig,
+        IOptions<TestingConfiguration> testingConfig)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _fileDiscoveryService = fileDiscoveryService ?? throw new ArgumentNullException(nameof(fileDiscoveryService));
         _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
         _directories = directories?.Value ?? throw new ArgumentNullException(nameof(directories));
         _targetConfig = targetConfig?.Value ?? throw new ArgumentNullException(nameof(targetConfig));
+        _testingConfig = testingConfig?.Value ?? new TestingConfiguration();
 
         // Create scoped services for this worker (repositories are scoped)
         var scope = _scopeFactory.CreateScope();
@@ -173,6 +176,8 @@ public class Worker : BackgroundService
                 await _jobRepository.UpdateAsync(fileJob);
 
                 // Start verification orchestration
+                // Note: VerificationDelay is now handled in CopyOrchestrator before marking as COPIED
+                // Re-read TargetOutcomes to get updated COPIED state after CopyOrchestrator completes
                 var targetOutcomes = await _targetOutcomeRepository.GetByJobIdAsync(jobId);
                 var verificationResult = await _verificationOrchestrator.VerifyJobAsync(
                     fileJob: fileJob,
