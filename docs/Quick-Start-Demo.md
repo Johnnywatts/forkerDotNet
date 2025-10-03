@@ -48,27 +48,27 @@ cd demo\scripts
 
 **Option A: Windows Service (Recommended)**
 ```powershell
-# Install service (requires Admin)
-.\Install-Service.ps1
+# Install service (requires Admin PowerShell)
+cd ..\..\scripts
+.\Install-ForkerService.ps1 -Environment Demo
 
-# Start service
-Start-Service ForkerDotNet
+# Service will prompt to start - answer 'y'
 ```
 
 **Option B: Console Mode (Development)**
 ```powershell
 # Run in console
 cd ..\..\src\Forker.Service
-dotnet run
+dotnet run --environment Demo
 ```
 
 ### Step 4: Verify Installation
 
 ```powershell
-# Check service status
-Get-Service ForkerDotNet
+# Check service status (Option A)
+Get-Service ForkerDotNetDemo
 
-# Check health endpoint (if installed)
+# Check health endpoint (both options)
 curl http://localhost:5000/health
 ```
 

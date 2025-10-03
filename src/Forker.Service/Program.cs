@@ -22,10 +22,13 @@ try
     var builder = Host.CreateApplicationBuilder(args);
 
     // Enable Windows Service support
+    var serviceName = builder.Configuration.GetValue<string>("ServiceName") ?? "ForkerDotNet";
     builder.Services.AddWindowsService(options =>
     {
-        options.ServiceName = "ForkerDotNet";
+        options.ServiceName = serviceName;
     });
+
+    Log.Information("Service configured with name: {ServiceName}", serviceName);
 
     // Add Serilog
     builder.Services.AddSerilog();
