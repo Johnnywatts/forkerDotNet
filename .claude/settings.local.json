@@ -39,7 +39,12 @@
       "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --index-filter 'git rm --cached --ignore-unmatch tests/TestData/source/*.scn' HEAD~20..HEAD)",
       "Bash(git stash:*)",
       "Bash(find:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(powershell:*)",
+      "Bash(set ASPNETCORE_ENVIRONMENT=SlowDrive)",
+      "Bash(Select-String -Pattern \"error|Build succeeded|Build FAILED\" -Context 0,2)",
+      "Bash(Select-String -Pattern \"error|Build succeeded\")",
+      "Bash(taskkill:*)"
     ],
     "deny": [],
     "ask": []
