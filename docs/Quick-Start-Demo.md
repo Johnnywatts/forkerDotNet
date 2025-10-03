@@ -52,6 +52,7 @@ cd demo\scripts
 cd ..\..\scripts
 .\Install-ForkerService.ps1 -Environment Demo
 
+# Script reads appsettings.Demo.json for service name and properties
 # Service will prompt to start - answer 'y'
 ```
 

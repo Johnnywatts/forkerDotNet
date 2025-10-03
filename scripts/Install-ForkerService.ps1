@@ -1,54 +1,46 @@
 #Requires -RunAsAdministrator
 <#
 .SYNOPSIS
-    Installs or uninstalls ForkerDotNet as a Windows Service.
+    Installs or uninstalls ForkerDotNet as a Windows Service using config-driven metadata.
 
 .DESCRIPTION
-    This script installs ForkerDotNet as a Windows Service using sc.exe.
-    It configures the service for automatic startup and crash recovery.
-    Can also uninstall the service with the -Uninstall flag.
+    This script reads service metadata (name, display name, description) from appsettings files
+    and installs ForkerDotNet as a Windows Service. All service properties are driven by the
+    configuration file, ensuring consistency between installation and runtime.
+
+.PARAMETER Environment
+    Environment name (e.g., "Demo", "SlowDrive").
+    Reads from appsettings.{Environment}.json for service metadata.
+    If not specified, uses appsettings.json (production defaults).
 
 .PARAMETER ServicePath
     Path to the ForkerDotNet executable. Defaults to the Release build output.
 
-.PARAMETER ServiceName
-    Name of the Windows Service. Defaults to "ForkerDotNet".
-
-.PARAMETER DisplayName
-    Display name for the Windows Service. Defaults to "ForkerDotNet File Copier Service".
-
-.PARAMETER Description
-    Service description.
-
-.PARAMETER Environment
-    Environment name (e.g., "Demo", "Production"). Sets DOTNET_ENVIRONMENT for appsettings loading.
-
 .PARAMETER Uninstall
     Uninstall the service instead of installing.
+    Reads service name from config file to ensure correct service is removed.
 
 .EXAMPLE
     .\Install-ForkerService.ps1
-    Installs the service using default settings.
+    Installs service using production settings (appsettings.json).
 
 .EXAMPLE
     .\Install-ForkerService.ps1 -Environment Demo
-    Installs service for demo environment (loads appsettings.Demo.json).
+    Installs demo service using settings from appsettings.Demo.json.
+    Service name, display name, and description all come from the config file.
 
 .EXAMPLE
-    .\Install-ForkerService.ps1 -Uninstall
-    Uninstalls the service.
+    .\Install-ForkerService.ps1 -Environment Demo -Uninstall
+    Uninstalls the demo service (reads service name from appsettings.Demo.json).
 
-.EXAMPLE
-    .\Install-ForkerService.ps1 -ServiceName "ForkerDotNetDemo" -Uninstall
-    Uninstalls the demo service.
+.NOTES
+    All service metadata (ServiceName, ServiceDisplayName, ServiceDescription) must be
+    defined in the appsettings file. This ensures config is the single source of truth.
 #>
 
 param(
-    [string]$ServicePath = (Join-Path $PSScriptRoot "..\src\Forker.Service\bin\Release\net8.0\Forker.Service.exe"),
-    [string]$ServiceName = "ForkerDotNet",
-    [string]$DisplayName = "ForkerDotNet File Copier Service",
-    [string]$Description = "Production-grade file copier for medical imaging files with dual-target replication and SHA-256 verification",
     [string]$Environment = "",
+    [string]$ServicePath = (Join-Path $PSScriptRoot "..\src\Forker.Service\bin\Release\net8.0\Forker.Service.exe"),
     [switch]$Uninstall
 )
 
@@ -77,6 +69,61 @@ if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Adm
     Write-Status "This script must be run as Administrator" "Error"
     exit 1
 }
+
+# Determine config file path
+$serviceDir = Join-Path $PSScriptRoot "..\src\Forker.Service"
+$configFileName = if ($Environment) { "appsettings.$Environment.json" } else { "appsettings.json" }
+$configPath = Join-Path $serviceDir $configFileName
+
+# Verify config file exists
+if (-not (Test-Path $configPath)) {
+    Write-Status "Configuration file not found: $configPath" "Error"
+    exit 1
+}
+
+Write-Status "Reading configuration from: $configFileName" "Info"
+
+# Read and parse config file
+try {
+    $configContent = Get-Content $configPath -Raw
+    $config = $configContent | ConvertFrom-Json
+} catch {
+    Write-Status "Failed to parse configuration file: $($_.Exception.Message)" "Error"
+    exit 1
+}
+
+# Extract service metadata from config
+$ServiceName = $config.ServiceName
+$DisplayName = $config.ServiceDisplayName
+$Description = $config.ServiceDescription
+
+# Validate required fields
+if (-not $ServiceName) {
+    Write-Status "ServiceName not found in $configFileName" "Error"
+    Write-Host "Please add 'ServiceName' field to the configuration file" -ForegroundColor Yellow
+    exit 1
+}
+
+# Use defaults if optional fields missing
+if (-not $DisplayName) {
+    $DisplayName = "$ServiceName Service"
+    Write-Status "ServiceDisplayName not in config, using default: $DisplayName" "Warning"
+}
+
+if (-not $Description) {
+    $Description = "ForkerDotNet file processing service"
+    Write-Status "ServiceDescription not in config, using default: $Description" "Warning"
+}
+
+Write-Host ""
+Write-Host "Service Configuration (from $configFileName):" -ForegroundColor Green
+Write-Host "  Name: $ServiceName"
+Write-Host "  Display Name: $DisplayName"
+Write-Host "  Description: $Description"
+if ($Environment) {
+    Write-Host "  Environment: $Environment"
+}
+Write-Host ""
 
 # UNINSTALL MODE
 if ($Uninstall) {
@@ -131,18 +178,7 @@ Write-Status "Found service executable: $ServicePath" "Success"
 $binPath = "`"$ServicePath`""
 if ($Environment) {
     $binPath = "`"$ServicePath`" --environment $Environment"
-    Write-Status "Environment: $Environment (will load appsettings.$Environment.json)" "Info"
 }
-
-Write-Host ""
-Write-Host "Service Configuration:" -ForegroundColor Green
-Write-Host "  Name: $ServiceName"
-Write-Host "  Display Name: $DisplayName"
-Write-Host "  Executable: $ServicePath"
-if ($Environment) {
-    Write-Host "  Environment: $Environment"
-}
-Write-Host ""
 
 # Check if service already exists
 $existingService = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
@@ -223,7 +259,11 @@ Write-Host "Service Management Commands:" -ForegroundColor Yellow
 Write-Host "  Start:     Start-Service -Name $ServiceName" -ForegroundColor Gray
 Write-Host "  Stop:      Stop-Service -Name $ServiceName" -ForegroundColor Gray
 Write-Host "  Status:    Get-Service -Name $ServiceName" -ForegroundColor Gray
-Write-Host "  Uninstall: .\Install-ForkerService.ps1 -ServiceName $ServiceName -Uninstall" -ForegroundColor Gray
+if ($Environment) {
+    Write-Host "  Uninstall: .\Install-ForkerService.ps1 -Environment $Environment -Uninstall" -ForegroundColor Gray
+} else {
+    Write-Host "  Uninstall: .\Install-ForkerService.ps1 -Uninstall" -ForegroundColor Gray
+}
 Write-Host ""
 
 Write-Status "Installation complete!" "Success"

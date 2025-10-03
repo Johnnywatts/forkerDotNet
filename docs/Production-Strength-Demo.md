@@ -80,13 +80,21 @@ cd C:\Dev\win_repos\forkerDotNet\scripts
 ```
 
 **What This Does**:
-- Registers ForkerDotNet as Windows Service with name "ForkerDotNetDemo"
-- Loads `appsettings.Demo.json` configuration via `-Environment Demo`
+- Reads `appsettings.Demo.json` to extract service metadata (name, display name, description)
+- Registers Windows Service using config-driven properties
 - Configures automatic startup and crash recovery
 - Prompts to start the service
 
 **Expected Output**:
 ```
+ℹ Reading configuration from: appsettings.Demo.json
+
+Service Configuration (from appsettings.Demo.json):
+  Name: ForkerDotNetDemo
+  Display Name: ForkerDotNet Demo Service
+  Description: Demo service for ForkerDotNet clinical file processing demonstrations
+  Environment: Demo
+
 ✓ Service installed successfully
 ✓ Service started successfully
 ```
@@ -98,7 +106,7 @@ Get-Service ForkerDotNetDemo
 
 Expected status: **Running**
 
-**Note**: The service name comes from `appsettings.Demo.json` where `ServiceName: "ForkerDotNetDemo"` is configured.
+**How It Works**: The script reads ALL service properties from the config file - no parameters needed! Change environment = change config file.
 
 ## Step 4: Open Visual Monitoring Tools
 
@@ -243,8 +251,10 @@ Stop-Service ForkerDotNetDemo
 ```powershell
 # Administrator PowerShell
 cd C:\Dev\win_repos\forkerDotNet\scripts
-.\Install-ForkerService.ps1 -ServiceName ForkerDotNetDemo -Uninstall
+.\Install-ForkerService.ps1 -Environment Demo -Uninstall
 ```
+
+**Note**: The script reads `appsettings.Demo.json` to get the service name, ensuring the correct service is uninstalled.
 
 ### 8.3 Preserve or Clean Demo Data
 
