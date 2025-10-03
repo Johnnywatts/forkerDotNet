@@ -171,6 +171,3 @@ temp/
 
 # Test data directory with large medical imaging files
 tests/TestData/source/
-
-# Claude Code chat history
-chats/
