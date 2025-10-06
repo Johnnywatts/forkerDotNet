@@ -1,7 +1,8 @@
 # ForkerDotNet Task List
 
 **Project**: Production-grade .NET 8 file copier for medical imaging files (500MB-20GB)
-**Current Phase**: Phase 11.1 - Real Demo System (URGENT)
+**Current Phase**: Phase 12 - Visual Demo Validation (NEXT PRIORITY)
+**Last Updated**: 2025-10-06
 
 **Legend**: ✅ Completed | 🔄 In Progress | 📝 To Do | ⛔ Blocked
 
@@ -270,7 +271,7 @@
 
 **Note**: WPF UI is optional - PowerShell scripts are sufficient for demonstrations
 
-### Documentation Updates ✅ COMPLETED
+### Documentation Updates ✅ COMPLETED (Phase 11.3)
 - ✅ Created docs/Quick-Start-Demo.md (360 lines: 10-min setup + 5 scenarios)
 - ✅ Created docs/Demo-Tools-Setup.md (310 lines: Windows tools guide)
 - ✅ Updated README.md with Quick Start section (3 usage paths)
@@ -278,6 +279,15 @@
 - ✅ Tool download links included in Demo-Tools-Setup.md
 
 **Total**: 796 lines of new documentation
+
+### Documentation Updates ✅ COMPLETED (Phase 11.4 - 2025-10-06)
+- ✅ Created CONFIGURATION.md (800+ lines: environment configuration guide)
+- ✅ Rewrote demo-user-guide.md v2.0 (500+ lines: PowerShell observable demos)
+- ✅ Updated README.md (Quick Start for Demo and Production)
+- ✅ Created scripts/Production-Setup.ps1 (production environment setup)
+- ✅ Created chats/session-2025-10-06.md (session documentation)
+
+**Total**: 2,000+ lines of updated documentation
 
 ### Cleanup Fake Demos ✅ COMPLETED
 - ✅ Reviewed Forker.Clinical.Demo project (Demo #4 was only real one)
@@ -302,12 +312,8 @@
   - appsettings.json updated with all paths
   - Directories created and ready
   - All 5 scenario scripts ready for visual testing
-- 📝 Test Scenario 1 with File Explorer + SQLite Browser visual demo
-- 📝 Test Scenarios 3, 4, 5 with monitoring tools
-- 📝 Practice complete demo flow (under 30 minutes total)
-- 📝 Create evidence package with screenshots and test outputs
 
-**Status**: Core system proven working! Visual demos ready to test tomorrow.
+**Status**: Core system proven working! Visual demos ready for standardization.
 
 ### Key Achievements
 ✅ **Zero Fake Simulations** - All demos use real ForkerDotNet operations
@@ -320,7 +326,103 @@
 
 ---
 
-## Phase 12 - Performance Tuning 📝 TO DO
+## Phase 11.4 - Configuration Cleanup & Standardization ✅ COMPLETED (2025-10-06)
+
+**Objective**: Eliminate all fake demo code, standardize .NET configuration pattern, clean up confusing documentation
+
+**Commit**: 02ea93a - refactor: complete configuration cleanup and .NET environment standardization
+
+### Configuration Standardization ✅ COMPLETED
+- ✅ **Fixed appsettings.json** - Changed from Demo paths to Production paths (C:\ProgramData\ForkerDotNet)
+- ✅ **Implemented Standard .NET Pattern** - Base config = Production, environment overlays = overrides
+- ✅ **Fixed PowerShell Get-ForkerDatabasePath()** - Maps environments to correct database locations
+- ✅ **Added Environment Variables** - All 5 demo scripts set ASPNETCORE_ENVIRONMENT="Demo"
+- ✅ **Created Production-Setup.ps1** - Production environment setup script
+
+**Environment Configuration:**
+```
+Production (default)  → C:\ProgramData\ForkerDotNet\forker.db
+Demo                  → C:\ForkerDemo\forker.db
+SlowDrive            → E:\ForkerDotNetTestVolume\forker.db
+```
+
+### Major Code Cleanup ✅ COMPLETED
+- ✅ **DELETED tests/Forker.Clinical.Demo/** - Removed fake Spectre.Console demos
+  - Evidence: Hardcoded SHA256:A1B2C3... hashes (not real verification)
+  - Evidence: Fake stability checks (switch statements, not real IFileStabilityChecker)
+  - Evidence: Progress bars not tied to actual operations
+- ✅ **DELETED demo/src/** - Removed unused infrastructure projects
+  - Demo.Controller, Demo.Dashboard, Demo.FileDropper, Demo.Tools (never used)
+- ✅ **DELETED demo/Demo.sln** - Removed unused solution file
+- ✅ **MOVED demo/scripts/ → scripts/** - Relocated to repository root for clarity
+
+### Documentation Cleanup ✅ COMPLETED
+- ✅ **CREATED CONFIGURATION.md** - Complete environment configuration guide (800+ lines)
+- ✅ **REWROTE demo-user-guide.md v2.0** - PowerShell observable demos only (500+ lines)
+- ✅ **UPDATED README.md** - Corrected Quick Start for Demo and Production
+- ✅ **DELETED 5 confusing docs:**
+  - demo_test.md (outdated)
+  - demo-do-over-no-fakes.md (planning doc, now implemented)
+  - DEMO-OPTIONS.md (confusing, merged into other docs)
+  - docs/Demo-Tools-Setup.md (referred to deleted projects)
+
+### Repository Cleanup ✅ COMPLETED
+- ✅ **Removed from Forker.sln** - Forker.Clinical.Demo project reference deleted
+- ✅ **Updated .gitignore** - Added demo/test data paths and deleted project references
+- ✅ **Build Validated** - 0 errors, 25 xUnit warnings (harmless async warnings)
+
+### Impact Metrics
+- **Files Changed**: 48
+- **Lines Added**: +1,668
+- **Lines Deleted**: -7,191
+- **Net Result**: -5,523 lines (massive cleanup!)
+- **Fake Demos Removed**: 100%
+- **Configuration Clarity**: ✅ Standard .NET pattern
+
+### Key Achievements
+✅ **Zero Confusion** - Single source of truth for configuration
+✅ **Industry Standard** - Standard .NET environment pattern (base=Production, overlays=overrides)
+✅ **No Fake Code** - All fake demos with hardcoded values eliminated
+✅ **Clean Structure** - Scripts at root level, clear directory organization
+✅ **Complete Documentation** - CONFIGURATION.md, demo-user-guide.md v2.0, updated README.md
+
+**Result**: Repository is clean, standardized, and production-ready with clear separation between Demo, Production, and Test environments!
+
+---
+
+## Phase 12 - Visual Demo Validation 📝 NEXT PRIORITY
+
+**Objective**: Validate all 5 PowerShell demo scenarios work with new configuration structure
+
+### Remaining Visual Testing (High Priority)
+- 📝 **Test Scenario 1** with File Explorer + DataGrip visual demo
+  - Verify environment variable sets Demo mode correctly
+  - Confirm database path: C:\ForkerDemo\forker.db
+  - Validate File Explorer grid opens and shows files
+  - Verify PowerShell Get-FileHash shows real SHA-256 values
+- 📝 **Test Scenario 2** (Corruption Detection) with DataGrip quarantine queries
+- 📝 **Test Scenario 3** (Concurrent Access) with external file access validation
+- 📝 **Test Scenario 4** (Crash Recovery) with service restart monitoring
+- 📝 **Test Scenario 5** (Stability Detection) with growing file simulation
+- 📝 **Practice complete demo flow** (all 5 scenarios under 30 minutes total)
+- 📝 **Create evidence package** with screenshots and DataGrip query results
+
+**Tools Needed:**
+- ✅ DataGrip (for database monitoring)
+- ✅ Windows File Explorer (for visual file tracking)
+- ✅ PowerShell Get-FileHash (for hash verification)
+- 📝 Process Monitor (optional, for advanced demonstrations)
+
+**Success Criteria:**
+- All 5 scenarios complete without errors
+- Database shows correct state transitions in DataGrip
+- File Explorer shows real files appearing in destinations
+- PowerShell hash verification shows matching SHA-256 hashes
+- Evidence package ready for governance review
+
+---
+
+## Phase 13 - Performance Tuning 📝 TO DO
 
 ### Clinical Pathway Prioritization
 - 📝 Configure Clinical folder as TargetA (primary) with priority queuing
@@ -354,7 +456,7 @@
 
 ---
 
-## Phase 13 - Pre-Production Hardening 📝 TO DO
+## Phase 14 - Pre-Production Hardening 📝 TO DO
 
 ### Configuration Validation
 - 📝 Validate Clinical and Research folder paths exist and are writable
@@ -382,7 +484,7 @@
 
 ---
 
-## Phase 14 - Clinical Deployment Validation 📝 TO DO
+## Phase 15 - Clinical Deployment Validation 📝 TO DO
 
 ### Requirement 1: Input Directory Monitoring
 - 📝 Validate continuous file monitoring with FileSystemWatcher reliability
