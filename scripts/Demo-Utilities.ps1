@@ -259,21 +259,15 @@ function Start-SqliteBrowser {
 }
 
 function Get-ForkerDatabasePath {
-    # Check common database locations
-    $possiblePaths = @(
-        "C:\ProgramData\ForkerDotNet\forker.db",
-        "$env:APPDATA\ForkerDotNet\forker.db",
-        ".\forker.db"
-    )
+    param([string]$Environment = "Demo")
 
-    foreach ($path in $possiblePaths) {
-        if (Test-Path $path) {
-            return $path
-        }
+    # Map environment to database location (matches appsettings files)
+    switch ($Environment) {
+        "Demo"       { return "C:\ForkerDemo\forker.db" }
+        "SlowDrive"  { return "E:\ForkerDotNetTestVolume\forker.db" }
+        "Production" { return "C:\ProgramData\ForkerDotNet\forker.db" }
+        default      { return "C:\ForkerDemo\forker.db" }  # Default to Demo
     }
-
-    # If not found, return default path
-    return "C:\ProgramData\ForkerDotNet\forker.db"
 }
 
 # Service control functions

@@ -29,13 +29,20 @@ forkerDotNet/
 │   ├── Forker.Domain/          # Core domain logic, entities, invariants
 │   ├── Forker.Infrastructure/  # SQLite, file system, hashing, metrics
 │   └── Forker.Service/         # Worker Service host, API endpoints
+│       ├── appsettings.json               # Production config (default)
+│       ├── appsettings.Demo.json          # Demo environment config
+│       └── appsettings.SlowDrive.json     # Test environment config
 ├── tests/
 │   ├── Forker.Domain.Tests/    # Unit tests with property-based testing
 │   ├── Forker.Infrastructure.Tests/  # Integration tests
 │   └── Forker.Resilience.Tests/      # Chaos engineering & fault injection
-├── config/                     # Configuration files from PowerShell version
+├── scripts/                    # PowerShell demo and setup scripts
+│   ├── Demo-Setup.ps1
+│   ├── Production-Setup.ps1
+│   └── Run-Scenario*.ps1      # 5 demo scenarios
 ├── docs/                       # Documentation and proof artifacts
-└── dev_plan.md                 # Detailed development plan
+├── CONFIGURATION.md            # Environment configuration guide
+└── demo-user-guide.md          # Observable demo system guide
 ```
 
 ## Security Features
@@ -98,49 +105,99 @@ See `dev_plan.md` for full 30-day implementation roadmap.
 
 ## Quick Start
 
-### Option 1: Run Demonstrations (Recommended)
+### Option 1: Run Demonstrations (Recommended First Step)
 
+**Setup demo environment:**
 ```powershell
-# Setup demo environment
-cd demo\scripts
-.\Demo-Setup.ps1
-
-# Run end-to-end demo (5 minutes)
-.\Run-Scenario1-EndToEnd.ps1
+# Run as Administrator
+.\scripts\Demo-Setup.ps1
 ```
 
-**See [Quick-Start-Demo.md](docs/Quick-Start-Demo.md) for full demo guide** with 5 scenarios:
-1. End-to-End Workflow (5 min)
-2. Corruption Detection (3 min)
-3. Concurrent Access (5 min)
-4. Crash Recovery (5 min)
-5. Stability Detection (3 min)
+**Start ForkerDotNet service in Demo mode:**
+```powershell
+# Terminal 1: Start service
+$env:ASPNETCORE_ENVIRONMENT = "Demo"
+cd src\Forker.Service
+dotnet run
+```
+
+**Run end-to-end demo:**
+```powershell
+# Terminal 2: Run demo script
+.\scripts\Run-Scenario1-EndToEnd.ps1
+```
+
+**This demonstrates:**
+- Real file operations with Windows File Explorer
+- Dual-target replication (DestinationA + DestinationB)
+- SHA-256 hash verification with PowerShell Get-FileHash
+- SQLite database monitoring (use DataGrip: `C:\ForkerDemo\forker.db`)
+
+**Full demo guide:** [demo-user-guide.md](demo-user-guide.md) - 5 observable scenarios with real tools
+
+---
 
 ### Option 2: Production Deployment
 
+**Setup production environment:**
 ```powershell
-# Build solution
-dotnet build --configuration Release
+# Run as Administrator
+.\scripts\Production-Setup.ps1
+```
 
-# Run tests
-dotnet test
+**Install as Windows Service:**
+```powershell
+# Builds solution and installs service
+.\scripts\Install-ForkerService.ps1
 
-# Install Windows Service
-cd demo\scripts
-.\Install-Service.ps1
-
-# Start service
+# Start production service
 Start-Service ForkerDotNet
 ```
 
-**See [windows-service-deployment.md](docs/windows-service-deployment.md) for full deployment guide**
+**Configuration:** Production uses `C:\ProgramData\ForkerDotNet` paths (default)
+**Full configuration guide:** [CONFIGURATION.md](CONFIGURATION.md)
+
+---
 
 ### Option 3: Development
 
-1. Ensure .NET 8 SDK is installed
-2. Run `dotnet restore` to restore dependencies
-3. Run `dotnet build` to build solution
-4. Run `dotnet test` to verify all tests pass (88/88 expected)
-5. See `dev_plan.md` for architecture and development roadmap
+**Build and test:**
+```powershell
+# Restore dependencies
+dotnet restore
+
+# Build solution
+dotnet build
+
+# Run all tests (expect 249/249 passing)
+dotnet test
+```
+
+**Run in specific environments:**
+```powershell
+# Production (default)
+dotnet run --project src\Forker.Service
+
+# Demo environment
+$env:ASPNETCORE_ENVIRONMENT="Demo"
+dotnet run --project src\Forker.Service
+
+# SlowDrive test environment
+$env:ASPNETCORE_ENVIRONMENT="SlowDrive"
+dotnet run --project src\Forker.Service
+```
+
+---
+
+## Database Monitoring
+
+**For demos and development:**
+- **Database path:** `C:\ForkerDemo\forker.db` (Demo) or `C:\ProgramData\ForkerDotNet\forker.db` (Production)
+- **Tools:** DataGrip (recommended) or DB Browser for SQLite
+- **Key tables:** FileJobs, TargetOutcomes, QuarantineEntries
+
+**Query examples:** See [CONFIGURATION.md](CONFIGURATION.md#database-locations-summary)
+
+---
 
 This project emphasizes **proof** at every level - comprehensive test coverage, performance benchmarks, security validation, and reliability evidence suitable for medical data processing environments.

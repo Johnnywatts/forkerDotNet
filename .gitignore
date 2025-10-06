@@ -171,3 +171,13 @@ temp/
 
 # Test data directory with large medical imaging files
 tests/TestData/source/
+
+# Demo and test environment data directories
+C:\ForkerDemo/
+E:\ForkerDotNetTestVolume/
+C:\ProgramData\ForkerDotNet/
+
+# Deleted legacy demo projects (keep ignored to prevent accidental re-addition)
+tests/Forker.Clinical.Demo/
+demo/src/
+demo/Demo.sln

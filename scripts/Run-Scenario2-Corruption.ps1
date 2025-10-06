@@ -30,6 +30,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# Ensure Demo environment is used
+$env:ASPNETCORE_ENVIRONMENT = "Demo"
+
 # Import demo utilities
 . "$PSScriptRoot\Demo-Utilities.ps1"
 

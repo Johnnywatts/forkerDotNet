@@ -44,7 +44,12 @@
       "Bash(set ASPNETCORE_ENVIRONMENT=SlowDrive)",
       "Bash(Select-String -Pattern \"error|Build succeeded|Build FAILED\" -Context 0,2)",
       "Bash(Select-String -Pattern \"error|Build succeeded\")",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(Get-Location)",
+      "Bash(git log:*)",
+      "Read(//c/ForkerDemo/**)",
+      "Bash(dotnet sln:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []
