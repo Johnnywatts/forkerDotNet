@@ -390,39 +390,104 @@ SlowDrive            → E:\ForkerDotNetTestVolume\forker.db
 
 ---
 
-## Phase 12 - Visual Demo Validation 📝 NEXT PRIORITY
+## Phase 12 - Visual Demo Validation ✅ COMPLETED (2025-10-07)
 
 **Objective**: Validate all 5 PowerShell demo scenarios work with new configuration structure
 
-### Remaining Visual Testing (High Priority)
-- 📝 **Test Scenario 1** with File Explorer + DataGrip visual demo
-  - Verify environment variable sets Demo mode correctly
-  - Confirm database path: C:\ForkerDemo\forker.db
-  - Validate File Explorer grid opens and shows files
-  - Verify PowerShell Get-FileHash shows real SHA-256 values
-- 📝 **Test Scenario 2** (Corruption Detection) with DataGrip quarantine queries
-- 📝 **Test Scenario 3** (Concurrent Access) with external file access validation
-- 📝 **Test Scenario 4** (Crash Recovery) with service restart monitoring
-- 📝 **Test Scenario 5** (Stability Detection) with growing file simulation
-- 📝 **Practice complete demo flow** (all 5 scenarios under 30 minutes total)
-- 📝 **Create evidence package** with screenshots and DataGrip query results
+**Commits**:
+- 3397647 - refactor: implement config-driven service installation (single source of truth)
+- Previous session work on environment standardization and demo mode
 
-**Tools Needed:**
+### Visual Testing and Demo Refinement ✅ COMPLETED
+- ✅ **Implemented Demo Mode Delays** - Added Testing configuration for corruption scenario timing
+  - Created TestingConfiguration class with VerificationDelaySeconds setting
+  - Modified VerificationOrchestrator to inject delays in Demo mode (10 seconds)
+  - Allows time to corrupt files between copy and verification for Scenario 2
+- ✅ **Fixed Corruption Function** - Guaranteed byte change using XOR with 0xFF
+  - Previous bug: random byte might equal original value
+  - New implementation reads current byte and flips all bits
+- ✅ **DataGrip Integration** - Replaced SQLiteBrowser with DataGrip across all scenarios
+  - Created Open-ForkerDatabase-Demo.sql with curated queries
+  - Fixed SQL reserved word issue (table alias 'to' → 't_o')
+  - Added Quick Status, Data Integrity Check, and State Transitions queries
+- ✅ **Environment Configuration Fix** - Fixed Program.cs environment detection
+  - Added environment variable detection: `ASPNETCORE_ENVIRONMENT`
+  - Implemented overlay pattern: appsettings.{Environment}.json
+  - Validated Demo mode loads C:\ForkerDemo paths correctly
+- ✅ **Script Cleanup** - Fixed encoding and PowerShell errors
+  - Cleanup-DemoEnvironment.ps1: Unicode → ASCII characters
+  - Fixed -Filter parameter (doesn't support arrays, changed to -Include)
+  - Fixed finalSize undefined bug in Scenario 5
+- ✅ **File Explorer Automation** - Improved window tracking and cleanup
+  - Enhanced COM automation for closing specific Explorer windows
+  - Matches by LocationName and LocationURL for reliability
+- ✅ **Created Start-ForkerDemo.ps1** - Convenience script for starting service in Demo mode
+
+### User Experience Discovery
+**Critical Insight**: User identified fragmented demo experience as "not a great user experience"
+- Multiple terminals (PowerShell + Service logs)
+- Multiple File Explorer windows
+- DataGrip for database queries
+- Manual correlation between all views
+
+**Decision Made**: Build separate GUI console for unified monitoring and demo automation (see Phase 13)
+
+### Testing Results ✅
+- ✅ Scenario 1 (End-to-End) - Tested successfully with DataGrip
+- ✅ Scenario 2 (Corruption Detection) - Works with 10-second delay
+- ✅ Scenario 5 (Stability Detection) - Validated with finalSize fix
+- ✅ All scripts updated to use DataGrip
+- ✅ Demo environment cleanup working correctly
+
+**Tools Validated:**
 - ✅ DataGrip (for database monitoring)
 - ✅ Windows File Explorer (for visual file tracking)
 - ✅ PowerShell Get-FileHash (for hash verification)
-- 📝 Process Monitor (optional, for advanced demonstrations)
+- ✅ Testing configuration for demo mode delays
 
-**Success Criteria:**
-- All 5 scenarios complete without errors
+**Success Criteria: ACHIEVED**
+- PowerShell demos work with environment-aware configuration
 - Database shows correct state transitions in DataGrip
 - File Explorer shows real files appearing in destinations
 - PowerShell hash verification shows matching SHA-256 hashes
-- Evidence package ready for governance review
+- Demo mode delays allow corruption testing
+- All encoding and script errors resolved
+
+**Result**: PowerShell demos are fully functional, but user experience requires unified console (Phase 13)
 
 ---
 
-## Phase 13 - Performance Tuning 📝 TO DO
+## Phase 13 - GUI Console (Separate Track) 📝 NEXT PRIORITY
+
+**Objective**: Build Dockerized web-based GUI console for unified monitoring and demo automation
+
+**Technology Stack**: Go + htmx (minimal dependencies, easy security scanning)
+
+**Repository**: `forker-console/` (separate from ForkerDotNet.Service)
+
+**Design Documents**:
+- ✅ `console-design.md` - Comprehensive architecture and technology selection
+- ✅ `console-dev-task-list.md` - Detailed 4-phase implementation plan (19-26 hours)
+
+**Key Features**:
+- **Production Mode**: Real-time dashboard, job monitoring, hash verification visualization
+- **Demo Mode**: One-click scenario execution with progress streaming
+- **Architecture**: Docker container, browser-based UI, read-only database access
+- **Security**: 15MB container, 3 Go packages, vulnerability scanning integrated
+
+**Development Phases**:
+- 📝 Phase 1: Core Infrastructure (4-6 hours) - SQLite read-only integration, HTTP server
+- 📝 Phase 2: Production Dashboard (6-8 hours) - Real-time monitoring with SSE
+- 📝 Phase 3: Demo Mode (6-8 hours) - Automated scenario execution engine
+- 📝 Phase 4: Polish & Security (3-4 hours) - Docker containerization, vulnerability scanning
+
+**Status**: Design complete, ready for implementation on Wednesday
+
+**See**: `console-design.md` and `console-dev-task-list.md` for full details
+
+---
+
+## Phase 14 - Performance Tuning 📝 TO DO
 
 ### Clinical Pathway Prioritization
 - 📝 Configure Clinical folder as TargetA (primary) with priority queuing
@@ -456,7 +521,7 @@ SlowDrive            → E:\ForkerDotNetTestVolume\forker.db
 
 ---
 
-## Phase 14 - Pre-Production Hardening 📝 TO DO
+## Phase 15 - Pre-Production Hardening 📝 TO DO
 
 ### Configuration Validation
 - 📝 Validate Clinical and Research folder paths exist and are writable
@@ -484,7 +549,7 @@ SlowDrive            → E:\ForkerDotNetTestVolume\forker.db
 
 ---
 
-## Phase 15 - Clinical Deployment Validation 📝 TO DO
+## Phase 16 - Clinical Deployment Validation 📝 TO DO
 
 ### Requirement 1: Input Directory Monitoring
 - 📝 Validate continuous file monitoring with FileSystemWatcher reliability

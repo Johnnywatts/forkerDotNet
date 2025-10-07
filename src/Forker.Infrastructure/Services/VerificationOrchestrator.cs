@@ -2,7 +2,9 @@ using System.Diagnostics;
 using Forker.Domain;
 using Forker.Domain.Services;
 using Forker.Domain.Repositories;
+using Forker.Infrastructure.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Forker.Infrastructure.Services;
 
@@ -18,19 +20,22 @@ public sealed class VerificationOrchestrator : IVerificationOrchestrator
     private readonly IJobRepository _jobRepository;
     private readonly ITargetOutcomeRepository _targetOutcomeRepository;
     private readonly ILogger<VerificationOrchestrator> _logger;
+    private readonly TestingConfiguration _testingConfig;
 
     public VerificationOrchestrator(
         IVerificationService verificationService,
         IQuarantineService quarantineService,
         IJobRepository jobRepository,
         ITargetOutcomeRepository targetOutcomeRepository,
-        ILogger<VerificationOrchestrator> logger)
+        ILogger<VerificationOrchestrator> logger,
+        IOptions<TestingConfiguration> testingConfig)
     {
         _verificationService = verificationService ?? throw new ArgumentNullException(nameof(verificationService));
         _quarantineService = quarantineService ?? throw new ArgumentNullException(nameof(quarantineService));
         _jobRepository = jobRepository ?? throw new ArgumentNullException(nameof(jobRepository));
         _targetOutcomeRepository = targetOutcomeRepository ?? throw new ArgumentNullException(nameof(targetOutcomeRepository));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _testingConfig = testingConfig?.Value ?? new TestingConfiguration();
     }
 
     public async Task<JobVerificationResult> VerifyJobAsync(FileJob fileJob,
@@ -325,6 +330,20 @@ public sealed class VerificationOrchestrator : IVerificationOrchestrator
         {
             _logger.LogDebug("Verifying target {TargetId} for job {JobId}",
                 targetOutcome.TargetId, targetOutcome.JobId);
+
+            // Demo mode delay - allows time for manual file corruption testing
+            if (_testingConfig.EnableTestMode && _testingConfig.VerificationDelaySeconds > 0)
+            {
+                _logger.LogInformation(
+                    "[DEMO MODE] Delaying verification for {DelaySeconds} seconds to allow manual testing (target: {TargetId}, job: {JobId})",
+                    _testingConfig.VerificationDelaySeconds, targetOutcome.TargetId, targetOutcome.JobId);
+
+                await Task.Delay(TimeSpan.FromSeconds(_testingConfig.VerificationDelaySeconds), cancellationToken);
+
+                _logger.LogInformation(
+                    "[DEMO MODE] Verification delay complete, starting hash verification (target: {TargetId})",
+                    targetOutcome.TargetId);
+            }
 
             var verificationResult = await _verificationService.VerifyTargetOutcomeAsync(
                 targetOutcome, expectedHash, cancellationToken);

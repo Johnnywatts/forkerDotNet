@@ -165,16 +165,24 @@ function New-CorruptedFile {
     $fileSize = (Get-Item $DestinationPath).Length
     $corruptPosition = [math]::Floor($fileSize / 2)
 
-    $stream = [System.IO.File]::Open($DestinationPath, [System.IO.FileMode]::Open)
+    $stream = [System.IO.File]::Open($DestinationPath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::ReadWrite)
     try {
+        # Read the current byte
         $stream.Seek($corruptPosition, [System.IO.SeekOrigin]::Begin) | Out-Null
-        $corruptByte = [byte](Get-Random -Minimum 0 -Maximum 256)
+        $originalByte = $stream.ReadByte()
+
+        # Flip the byte (XOR with 0xFF ensures it's different)
+        $corruptByte = [byte]($originalByte -bxor 0xFF)
+
+        # Write the corrupted byte
+        $stream.Seek($corruptPosition, [System.IO.SeekOrigin]::Begin) | Out-Null
         $stream.WriteByte($corruptByte)
+        $stream.Flush()
     } finally {
         $stream.Close()
     }
 
-    Write-DemoStatus "Corrupted 1 byte at position $corruptPosition" "Info"
+    Write-DemoStatus "Corrupted 1 byte at position $corruptPosition (0x$($originalByte.ToString('X2')) -> 0x$($corruptByte.ToString('X2')))" "Info"
 }
 
 # UI functions
