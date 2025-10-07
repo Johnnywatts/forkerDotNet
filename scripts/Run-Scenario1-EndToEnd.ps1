@@ -63,12 +63,13 @@ Start-FileExplorerGrid -Paths @(
     "$DemoPath\DestinationB"
 ) -Labels @("Source (Reservoir)", "Target A", "Target B")
 
-# Step 3: Open SQLite Browser to ForkerDotNet database
+# Step 3: Open DataGrip to monitor database
 Write-Host ""
-Write-DemoStep "3" "Opening SQLite Browser to monitor state transitions"
+Write-DemoStep "3" "Opening DataGrip to monitor state transitions"
 $dbPath = Get-ForkerDatabasePath
+$sqlFile = Join-Path $PSScriptRoot "Open-ForkerDatabase-Demo.sql"
 if (Test-Path $dbPath) {
-    Start-SqliteBrowser -DatabasePath $dbPath
+    Start-DataGrip -SqlFilePath $sqlFile
     Write-DemoStatus "Watch the FileJobs and TargetOutcomes tables" "Info"
 } else {
     Write-DemoStatus "Database not found - service may not be running" "Warning"
@@ -197,7 +198,7 @@ Key Observations:
 Evidence:
 - File Explorer: Visual confirmation of dual replication
 - PowerShell Get-FileHash: Cryptographic integrity proof
-- SQLite Browser: State machine audit trail (DISCOVERED -> VERIFIED)
+- DataGrip: State machine audit trail (DISCOVERED -> VERIFIED)
 - File system timestamps: Replication timing data
 
 Next Steps:

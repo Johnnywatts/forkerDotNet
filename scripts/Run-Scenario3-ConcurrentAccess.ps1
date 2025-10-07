@@ -58,12 +58,13 @@ Start-FileExplorerGrid -Paths @(
     "$DemoPath\DestinationB"
 ) -Labels @("Input", "Destination A", "Destination B")
 
-# Step 3: Open SQLite Browser
+# Step 3: Open DataGrip to monitor copy progress
 Write-Host ""
-Write-DemoStep "3" "Opening SQLite Browser to monitor copy progress"
+Write-DemoStep "3" "Opening DataGrip to monitor copy progress"
 $dbPath = Get-ForkerDatabasePath
+$sqlFile = Join-Path $PSScriptRoot "Open-ForkerDatabase-Demo.sql"
 if (Test-Path $dbPath) {
-    Start-SqliteBrowser -DatabasePath $dbPath
+    Start-DataGrip -SqlFilePath $sqlFile
 }
 
 # Step 4: Move file to Input to trigger processing

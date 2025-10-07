@@ -5,11 +5,15 @@ using Forker.Service;
 using Serilog;
 
 // Configure Serilog from configuration
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables()
     .Build();
+
+Log.Information("Starting with environment: {Environment}", environment);
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(configuration)

@@ -157,8 +157,10 @@ function New-CorruptedFile {
         [string]$DestinationPath
     )
 
-    # Copy file and corrupt a random byte in the middle
-    Copy-Item -Path $SourcePath -Destination $DestinationPath -Force
+    # Copy file if source and destination are different, otherwise corrupt in place
+    if ($SourcePath -ne $DestinationPath) {
+        Copy-Item -Path $SourcePath -Destination $DestinationPath -Force
+    }
 
     $fileSize = (Get-Item $DestinationPath).Length
     $corruptPosition = [math]::Floor($fileSize / 2)
@@ -176,7 +178,7 @@ function New-CorruptedFile {
 }
 
 # UI functions
-$script:FileExplorerProcesses = @()
+$script:FileExplorerWindows = @()
 
 function Start-FileExplorerGrid {
     param(
@@ -197,15 +199,13 @@ function Start-FileExplorerGrid {
         if (Test-Path $path) {
             Write-DemoStatus "Opening: $label ($path)" "Info"
 
-            # Launch File Explorer
-            $process = Start-Process -FilePath "explorer.exe" -ArgumentList $path -PassThru
-            $script:FileExplorerProcesses += $process
+            # Launch File Explorer and track the folder name for cleanup
+            Start-Process -FilePath "explorer.exe" -ArgumentList $path
+            $folderName = Split-Path $path -Leaf
+            $script:FileExplorerWindows += $folderName
 
             # Wait for window to appear
             Start-Sleep -Milliseconds 500
-
-            # Position window (requires Windows API - optional, may not work in all environments)
-            # This is best-effort positioning
         } else {
             Write-DemoStatus "Path not found: $path" "Warning"
         }
@@ -215,46 +215,79 @@ function Start-FileExplorerGrid {
 }
 
 function Stop-FileExplorerGrid {
-    foreach ($process in $script:FileExplorerProcesses) {
-        if (-not $process.HasExited) {
-            $process.CloseMainWindow() | Out-Null
-            Start-Sleep -Milliseconds 200
-            if (-not $process.HasExited) {
-                $process.Kill()
+    Write-Host "Closing File Explorer windows..." -ForegroundColor Gray
+
+    # Use PowerShell to close Explorer windows by folder name
+    $shell = New-Object -ComObject Shell.Application
+    $windows = $shell.Windows()
+
+    foreach ($folderName in $script:FileExplorerWindows) {
+        $closed = $false
+        try {
+            foreach ($window in $windows) {
+                # Try matching by LocationName or LocationURL
+                $matches = $false
+
+                if ($window.LocationName -eq $folderName) {
+                    $matches = $true
+                } elseif ($window.LocationURL -like "*$folderName*") {
+                    $matches = $true
+                }
+
+                if ($matches) {
+                    $window.Quit()
+                    Write-Host "  Closed: $folderName" -ForegroundColor DarkGray
+                    $closed = $true
+                    break
+                }
             }
+
+            if (-not $closed) {
+                Write-Host "  Could not find window: $folderName" -ForegroundColor DarkGray
+            }
+        } catch {
+            Write-Host "  Error closing window: $folderName - $($_.Exception.Message)" -ForegroundColor DarkGray
         }
     }
 
-    $script:FileExplorerProcesses = @()
+    $script:FileExplorerWindows = @()
 }
 
-function Start-SqliteBrowser {
-    param([string]$DatabasePath)
+function Start-DataGrip {
+    param([string]$SqlFilePath)
 
-    # Try to find SQLite Browser in common locations
-    $sqliteBrowserPaths = @(
-        "C:\Program Files\DB Browser for SQLite\DB Browser for SQLite.exe",
-        "C:\Program Files (x86)\DB Browser for SQLite\DB Browser for SQLite.exe",
-        "$env:LOCALAPPDATA\Programs\DB Browser for SQLite\DB Browser for SQLite.exe"
+    # Try to find DataGrip in common locations
+    $dataGripPaths = @(
+        "C:\Program Files\JetBrains\DataGrip*\bin\datagrip64.exe",
+        "$env:LOCALAPPDATA\Programs\DataGrip\bin\datagrip64.exe"
     )
 
-    $sqliteBrowser = $null
-    foreach ($path in $sqliteBrowserPaths) {
-        if (Test-Path $path) {
-            $sqliteBrowser = $path
+    $dataGrip = $null
+    foreach ($pathPattern in $dataGripPaths) {
+        $resolved = Get-Item $pathPattern -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($resolved) {
+            $dataGrip = $resolved.FullName
             break
         }
     }
 
-    if ($sqliteBrowser) {
-        Start-Process -FilePath $sqliteBrowser -ArgumentList $DatabasePath
-        Write-DemoStatus "Opened SQLite Browser" "Success"
-    } else {
-        Write-DemoStatus "SQLite Browser not found - download from https://sqlitebrowser.org/" "Warning"
+    if ($dataGrip) {
+        Start-Process -FilePath $dataGrip -ArgumentList $SqlFilePath
+        Write-DemoStatus "Opened DataGrip with SQL queries" "Success"
         Write-Host ""
-        Write-Host "Alternative: Use PowerShell to query database:" -ForegroundColor Yellow
-        Write-Host "  Install-Module -Name PSSQLite" -ForegroundColor Gray
-        Write-Host "  Invoke-SqliteQuery -Database '$DatabasePath' -Query 'SELECT * FROM FileJobs'" -ForegroundColor Gray
+        Write-Host "  In DataGrip:" -ForegroundColor Yellow
+        Write-Host "    1. Create SQLite data source if prompted" -ForegroundColor Gray
+        Write-Host "    2. Point to database: C:\ForkerDemo\forker.db" -ForegroundColor Gray
+        Write-Host "    3. Execute queries to monitor FileJobs, TargetOutcomes, Events tables" -ForegroundColor Gray
+    } else {
+        Write-DemoStatus "DataGrip not found - opening SQL file in default editor" "Warning"
+        Start-Process -FilePath $SqlFilePath
+        Write-Host ""
+        Write-Host "  Manual DataGrip setup:" -ForegroundColor Yellow
+        Write-Host "    1. Open DataGrip" -ForegroundColor Gray
+        Write-Host "    2. New Data Source -> SQLite" -ForegroundColor Gray
+        Write-Host "    3. File: C:\ForkerDemo\forker.db" -ForegroundColor Gray
+        Write-Host "    4. Open: scripts\Open-ForkerDatabase-Demo.sql" -ForegroundColor Gray
     }
 }
 

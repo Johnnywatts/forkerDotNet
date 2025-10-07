@@ -62,12 +62,13 @@ Start-FileExplorerGrid -Paths @(
     "$DemoPath\DestinationB"
 ) -Labels @("Input (growing file)", "Destination A", "Destination B")
 
-# Step 3: Open SQLite Browser
+# Step 3: Open DataGrip to monitor stability detection
 Write-Host ""
-Write-DemoStep "3" "Opening SQLite Browser to monitor stability detection"
+Write-DemoStep "3" "Opening DataGrip to monitor stability detection"
 $dbPath = Get-ForkerDatabasePath
+$sqlFile = Join-Path $PSScriptRoot "Open-ForkerDatabase-Demo.sql"
 if (Test-Path $dbPath) {
-    Start-SqliteBrowser -DatabasePath $dbPath
+    Start-DataGrip -SqlFilePath $sqlFile
     Write-DemoStatus "Watch the FileJobs table for DISCOVERED -> QUEUED transition" "Info"
     Write-DemoStatus "QUEUED state will wait until file is stable" "Info"
 }
@@ -150,8 +151,9 @@ try {
 }
 
 $stableTime = Get-Date
+$finalSize = (Get-Item $inputFile).Length
 Write-DemoStatus "File growth stopped at $($stableTime.ToString('HH:mm:ss'))" "Success"
-Write-DemoStatus "Final size: $([math]::Round((Get-Item $inputFile).Length / 1MB, 2)) MB" "Success"
+Write-DemoStatus "Final size: $([math]::Round($finalSize / 1MB, 2)) MB" "Success"
 
 # Calculate final hash
 Write-Host ""
@@ -203,7 +205,8 @@ if (-not $processingStarted) {
 Write-Host ""
 Write-DemoStep "8" "Monitoring copy completion"
 
-$expectedSize = (Get-Item $inputFile).Length
+# File may have been moved by service already, use final size
+$expectedSize = $finalSize
 
 Write-Host ""
 Write-Host "Waiting for replication to complete..." -ForegroundColor Cyan
@@ -300,7 +303,7 @@ Technical Implementation:
 Evidence:
 - File Explorer: Visual confirmation of delayed processing
 - PowerShell Get-FileHash: Data integrity maintained
-- SQLite Browser: State transitions show stability wait
+- DataGrip: State transitions show stability wait
 - Timestamps: Stability detection timing measured
 
 NHS Digital Assessment:
@@ -314,7 +317,7 @@ If stability detection is too slow or too fast, adjust:
 - MinimumFileSizeBytes (ignore tiny transient files)
 
 Next Steps:
-- Review SQLite database for stability detection audit trail
+- Review DataGrip database queries for stability detection audit trail
 - Test with real DICOM/SVS scanner output
 - Adjust stability configuration based on network characteristics
 - Export evidence package for governance review

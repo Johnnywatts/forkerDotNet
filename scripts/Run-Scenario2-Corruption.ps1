@@ -62,12 +62,13 @@ Start-FileExplorerGrid -Paths @(
     "$DemoPath\Quarantine"
 ) -Labels @("Input", "Destination A (will be corrupted)", "Quarantine")
 
-# Step 3: Open SQLite Browser
+# Step 3: Open DataGrip to monitor quarantine state
 Write-Host ""
-Write-DemoStep "3" "Opening SQLite Browser to monitor quarantine state"
+Write-DemoStep "3" "Opening DataGrip to monitor quarantine state"
 $dbPath = Get-ForkerDatabasePath
+$sqlFile = Join-Path $PSScriptRoot "Open-ForkerDatabase-Demo.sql"
 if (Test-Path $dbPath) {
-    Start-SqliteBrowser -DatabasePath $dbPath
+    Start-DataGrip -SqlFilePath $sqlFile
     Write-DemoStatus "Watch the FileJobs table for QUARANTINED state" "Info"
 }
 

@@ -72,7 +72,7 @@ $directories = @(
 
 foreach ($dir in $directories) {
     if (Test-Path $dir) {
-        $files = Get-ChildItem -Path $dir -File -Filter "*.svs", "*.tiff", "*.ndpi", "*.scn"
+        $files = Get-ChildItem -Path $dir -File -Include "*.svs", "*.tiff", "*.ndpi", "*.scn" -Recurse
         $fileCount = $files.Count
 
         if ($fileCount -gt 0) {
@@ -175,10 +175,10 @@ Write-Host ""
 Write-DemoSummary @"
 Demo Environment Cleanup Complete
 
-✓ Test files removed from all demo directories
-✓ Old log files cleaned
-$(if (-not $KeepEvidence) { "✓ Evidence exports removed" } else { "• Evidence exports preserved" })
-$(if ($ResetDatabase) { "✓ Database reset (backup created)" } else { "• Database preserved (use -ResetDatabase to reset)" })
+[OK] Test files removed from all demo directories
+[OK] Old log files cleaned
+$(if (-not $KeepEvidence) { "[OK] Evidence exports removed" } else { "[INFO] Evidence exports preserved" })
+$(if ($ResetDatabase) { "[OK] Database reset (backup created)" } else { "[INFO] Database preserved (use -ResetDatabase to reset)" })
 
 Demo environment is ready for next demonstration!
 

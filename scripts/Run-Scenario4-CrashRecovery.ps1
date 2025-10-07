@@ -75,12 +75,13 @@ Start-FileExplorerGrid -Paths @(
     "$DemoPath\DestinationB"
 ) -Labels @("Input", "Destination A", "Destination B")
 
-# Step 3: Open SQLite Browser
+# Step 3: Open DataGrip to monitor crash recovery
 Write-Host ""
-Write-DemoStep "3" "Opening SQLite Browser to monitor crash recovery"
+Write-DemoStep "3" "Opening DataGrip to monitor crash recovery"
 $dbPath = Get-ForkerDatabasePath
+$sqlFile = Join-Path $PSScriptRoot "Open-ForkerDatabase-Demo.sql"
 if (Test-Path $dbPath) {
-    Start-SqliteBrowser -DatabasePath $dbPath
+    Start-DataGrip -SqlFilePath $sqlFile
     Write-DemoStatus "Watch the FileJobs table for state during crash and recovery" "Info"
     Write-DemoStatus "Note the State column: IN_PROGRESS -> (crash) -> IN_PROGRESS -> VERIFIED" "Info"
 }
