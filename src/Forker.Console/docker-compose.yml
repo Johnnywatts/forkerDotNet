@@ -9,8 +9,8 @@ services:
     ports:
       - "127.0.0.1:5000:5000"  # Localhost only
     volumes:
-      # Mount ForkerDemo database as read-only
-      - C:\ForkerDemo\forker.db:/data/forker.db:ro
+      # Mount ForkerDemo database directory (allows WAL files for read-only access)
+      - C:\ForkerDemo:/data
     environment:
       - FORKER_DB_PATH=/data/forker.db
       - FORKER_MODE=demo

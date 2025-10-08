@@ -14,9 +14,9 @@ type Database struct {
 
 // NewDatabase opens a SQLite database in read-only mode
 func NewDatabase(path string) (*Database, error) {
-	// Open SQLite in read-only mode with immutable flag
-	// This prevents any write operations and ensures safe concurrent reads
-	connString := fmt.Sprintf("file:%s?mode=ro&immutable=1", path)
+	// Open SQLite with nolock mode for cross-platform container access
+	// This prevents WAL locking issues when accessing Windows DB from Linux container
+	connString := fmt.Sprintf("file:%s?mode=ro&nolock=1", path)
 
 	conn, err := sql.Open("sqlite", connString)
 	if err != nil {

@@ -17,6 +17,7 @@ func NewRouter() http.Handler {
 
 	// Health endpoint
 	mux.HandleFunc("/health", handleHealth)
+	mux.HandleFunc("/api/system-info", handleSystemInfo)
 
 	// Dashboard
 	mux.HandleFunc("/", handleDashboard)

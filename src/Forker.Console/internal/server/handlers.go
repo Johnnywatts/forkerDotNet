@@ -40,6 +40,35 @@ func handleHealth(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func handleSystemInfo(w http.ResponseWriter, r *http.Request) {
+	log.Printf("[DEBUG] handleSystemInfo called, HX-Request=%s", r.Header.Get("HX-Request"))
+
+	info := map[string]interface{}{
+		"database_path": GetDatabasePath(),
+		"timestamp":     time.Now().Format("2006-01-02 15:04:05"),
+		"service":       "forker-console",
+		"version":       "1.0.0",
+	}
+
+	// Check if htmx request (wants HTML fragment) or regular request (wants JSON)
+	if r.Header.Get("HX-Request") == "true" {
+		log.Printf("[DEBUG] Returning HTML fragment")
+		// Return HTML fragment for htmx
+		w.Header().Set("Content-Type", "text/html")
+		if err := templates.ExecuteTemplate(w, "system-info", info); err != nil {
+			log.Printf("[ERROR] Template execution failed: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+		log.Printf("[DEBUG] Template executed successfully")
+	} else {
+		log.Printf("[DEBUG] Returning JSON")
+		// Return JSON for API consumers
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(info)
+	}
+}
+
 func handleDashboard(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{
 		"Title": "Dashboard",

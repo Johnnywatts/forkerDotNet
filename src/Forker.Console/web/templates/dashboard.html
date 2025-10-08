@@ -2,6 +2,13 @@
 <div class="dashboard">
     <h2>Production Monitoring Dashboard</h2>
 
+    <div id="system-info" hx-get="/api/system-info" hx-trigger="load" hx-swap="innerHTML">
+        <div class="system-info-card">
+            <p><strong>Database:</strong> <span class="loading">Loading...</span></p>
+            <p><strong>Last Update:</strong> <span class="loading">Loading...</span></p>
+        </div>
+    </div>
+
     <div id="jobs-table"
          hx-ext="sse"
          sse-connect="/api/stream"

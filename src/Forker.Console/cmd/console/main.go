@@ -38,6 +38,7 @@ func main() {
 
 	// Store database in context for handlers to access
 	server.SetDatabase(db)
+	server.SetDatabasePath(dbPath)
 
 	// Initialize HTML templates
 	if err := server.InitTemplates(); err != nil {
