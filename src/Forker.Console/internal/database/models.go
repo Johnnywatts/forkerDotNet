@@ -1,7 +1,5 @@
 package database
 
-import "time"
-
 // FileJob represents a file copy job
 type FileJob struct {
 	ID           string
@@ -9,7 +7,7 @@ type FileJob struct {
 	State        string
 	InitialSize  int64
 	SourceHash   *string
-	CreatedAt    time.Time
+	CreatedAt    string // SQLite stores as TEXT
 	VersionToken int
 }
 
@@ -20,7 +18,7 @@ type TargetOutcome struct {
 	State            string
 	Hash             *string
 	BytesCopied      *int64
-	LastTransitionAt time.Time
+	LastTransitionAt string // SQLite stores as TEXT
 }
 
 // JobDetails combines a job with its targets

@@ -221,14 +221,26 @@ type JobDisplay struct {
 func enrichJobsForDisplay(jobs []database.FileJob) []JobDisplay {
 	result := make([]JobDisplay, len(jobs))
 	for i, job := range jobs {
+		// Parse CreatedAt from SQLite TEXT format
+		createdAt, err := time.Parse("2006-01-02 15:04:05", job.CreatedAt)
+		if err != nil {
+			// Try RFC3339 format as fallback
+			createdAt, _ = time.Parse(time.RFC3339, job.CreatedAt)
+		}
+
+		duration := "N/A"
+		if !createdAt.IsZero() {
+			duration = time.Since(createdAt).Round(time.Second).String()
+		}
+
 		result[i] = JobDisplay{
 			ID:              job.ID,
 			SourceFile:      filepath.Base(job.SourcePath),
 			SizeFormatted:   formatBytes(job.InitialSize),
 			State:           job.State,
 			ProgressPercent: calculateProgress(job.State),
-			StartedAt:       job.CreatedAt.Format("2006-01-02 15:04:05"),
-			Duration:        time.Since(job.CreatedAt).Round(time.Second).String(),
+			StartedAt:       job.CreatedAt, // Already a string
+			Duration:        duration,
 		}
 	}
 	return result

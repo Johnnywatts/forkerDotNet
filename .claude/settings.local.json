@@ -49,7 +49,16 @@
       "Bash(git log:*)",
       "Read(//c/ForkerDemo/**)",
       "Bash(dotnet sln:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(tasklist)",
+      "Bash(findstr:*)",
+      "Bash(Test-Path C:ForkerDemo)",
+      "Bash(go mod:*)",
+      "Bash(go build:*)",
+      "Bash(pwsh:*)",
+      "Bash(docker-compose logs:*)",
+      "Bash(docker-compose exec forker-console ls:*)",
+      "Bash(FORKER_DB_PATH=\"C:/ForkerDemo/forker.db\" timeout 5 pwsh -Command \"docker run --rm -v \"\"$PWD:/app\"\" -w /app golang:1.23-alpine sh -c ''./console 2>&1''\")"
     ],
     "deny": [],
     "ask": []
