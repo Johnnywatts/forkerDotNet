@@ -1,4 +1,4 @@
-/* ForkerDotNet Console - Minimal Professional CSS */
+/* ForkerDotNet Console - Medical-Grade UI Styles */
 
 * {
     margin: 0;
@@ -8,9 +8,9 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #f5f7fa;
+    color: #2c3e50;
     line-height: 1.6;
-    color: #333;
-    background: #f5f5f5;
 }
 
 header {
@@ -27,20 +27,38 @@ header h1 {
 
 nav {
     margin-top: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 nav a {
-    color: #ecf0f1;
+    color: white;
     text-decoration: none;
     margin-right: 1.5rem;
-    padding: 0.25rem 0;
-    border-bottom: 2px solid transparent;
-    transition: border-color 0.2s;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background 0.2s;
 }
 
-nav a:hover {
-    border-bottom-color: #3498db;
+nav a:hover, nav a.active {
+    background: rgba(255,255,255,0.2);
 }
+
+#stats-bar {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+    padding: 0.75rem 0;
+}
+
+.stat {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.stat-total { color: #3498db; }
+.stat-active { color: #f39c12; }
+.stat-completed { color: #27ae60; }
+.stat-failed { color: #e74c3c; }
 
 main {
     max-width: 1400px;
@@ -50,104 +68,108 @@ main {
 
 h2 {
     color: #2c3e50;
-    margin-bottom: 1rem;
-    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
 }
 
-/* Cards and panels */
-.card {
+.jobs-table {
+    width: 100%;
     background: white;
     border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-collapse: collapse;
+    overflow: hidden;
 }
 
-/* Status badges */
+.jobs-table th {
+    background: #34495e;
+    color: white;
+    text-align: left;
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.jobs-table td {
+    padding: 1rem;
+    border-top: 1px solid #ecf0f1;
+}
+
+.jobs-table tr:hover {
+    background: #f8f9fa;
+}
+
 .badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
     border-radius: 4px;
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
-.badge-verified {
-    background: #27ae60;
-    color: white;
-}
+.badge-Discovered { background: #fff3cd; color: #856404; }
+.badge-Queued { background: #d1ecf1; color: #0c5460; }
+.badge-InProgress { background: #cfe2ff; color: #084298; }
+.badge-Partial { background: #e7d4f8; color: #6610f2; }
+.badge-Verified { background: #d1e7dd; color: #0f5132; }
+.badge-Failed { background: #f8d7da; color: #842029; }
+.badge-Quarantined { background: #dc3545; color: white; }
 
-.badge-failed {
-    background: #e74c3c;
-    color: white;
-}
-
-.badge-quarantined {
-    background: #e67e22;
-    color: white;
-}
-
-.badge-inprogress {
-    background: #f39c12;
-    color: white;
-}
-
-.badge-discovered {
-    background: #3498db;
-    color: white;
-}
-
-/* Tables */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-}
-
-th {
+.progress-bar {
+    width: 100px;
+    height: 8px;
     background: #ecf0f1;
-    padding: 0.75rem;
-    text-align: left;
-    font-weight: 600;
-    color: #2c3e50;
-    border-bottom: 2px solid #bdc3c7;
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.5rem;
 }
 
-td {
-    padding: 0.75rem;
-    border-bottom: 1px solid #ecf0f1;
+.progress-fill {
+    height: 100%;
+    background: #3498db;
 }
 
-tr:hover {
-    background: #f8f9fa;
-    cursor: pointer;
+.progress-text {
+    font-size: 0.85rem;
+    color: #6c757d;
 }
 
-/* Loading state */
-.loading {
-    text-align: center;
-    padding: 2rem;
-    color: #7f8c8d;
-    font-style: italic;
-}
-
-/* Buttons */
-button {
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
     background: #3498db;
     color: white;
-    border: none;
-    padding: 0.5rem 1rem;
+    text-decoration: none;
     border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
     transition: background 0.2s;
 }
 
-button:hover {
+.btn:hover {
     background: #2980b9;
 }
 
-button:disabled {
-    background: #95a5a6;
-    cursor: not-allowed;
+.btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+.loading, .no-data {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+footer {
+    background: #2c3e50;
+    height: 4px;
+    margin-top: 4rem;
 }

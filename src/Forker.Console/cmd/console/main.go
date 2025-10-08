@@ -39,6 +39,12 @@ func main() {
 	// Store database in context for handlers to access
 	server.SetDatabase(db)
 
+	// Initialize HTML templates
+	if err := server.InitTemplates(); err != nil {
+		log.Fatalf("[FATAL] Failed to load templates: %v", err)
+	}
+	log.Printf("[INFO] HTML templates loaded")
+
 	// Create HTTP router
 	router := server.NewRouter()
 
