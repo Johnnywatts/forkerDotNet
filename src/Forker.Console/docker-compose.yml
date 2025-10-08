@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  forker-console:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: forker-console
+    ports:
+      - "127.0.0.1:5000:5000"  # Localhost only
+    volumes:
+      # Mount ForkerDemo database as read-only
+      - C:\ForkerDemo\forker.db:/data/forker.db:ro
+    environment:
+      - FORKER_DB_PATH=/data/forker.db
+      - FORKER_MODE=demo
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    # Read-only root filesystem for security
+    read_only: true
+    # Temporary filesystem for any runtime files
+    tmpfs:
+      - /tmp
+    # Drop all capabilities (we only need network)
+    cap_drop:
+      - ALL
+    # Resource limits
+    mem_limit: 256m
+    cpus: 0.5

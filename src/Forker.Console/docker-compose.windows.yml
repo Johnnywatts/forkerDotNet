@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  forker-console:
+    build:
+      context: .
+      dockerfile: Dockerfile.windows
+    container_name: forker-console
+    ports:
+      - "127.0.0.1:5000:5000"
+    volumes:
+      # Windows path format for volume mount
+      - type: bind
+        source: C:\ForkerDemo\forker.db
+        target: C:\data\forker.db
+        read_only: true
+    environment:
+      - FORKER_DB_PATH=C:\data\forker.db
+      - FORKER_MODE=production
+    restart: unless-stopped
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M

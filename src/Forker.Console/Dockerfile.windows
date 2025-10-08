@@ -1,0 +1,33 @@
+# escape=`
+# Windows Container Dockerfile for ForkerDotNet Console
+# For NHS servers running Docker without WSL (Windows containers only)
+
+# Stage 1: Build Go binary
+FROM golang:1.23-windowsservercore-ltsc2022 AS builder
+
+WORKDIR C:\build
+
+# Copy Go module files
+COPY go.mod go.sum .\
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build static Windows binary
+RUN go build -ldflags="-s -w" -o console.exe .\cmd\console
+
+# Stage 2: Runtime image (minimal Windows Server Core)
+FROM mcr.microsoft.com/windows/nanoserver:ltsc2022
+
+WORKDIR C:\app
+
+# Copy binary and web assets
+COPY --from=builder C:\build\console.exe .
+COPY --from=builder C:\build\web .\web
+
+# Expose HTTP port
+EXPOSE 5000
+
+# Run console
+ENTRYPOINT ["C:\\app\\console.exe"]

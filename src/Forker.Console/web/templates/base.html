@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - ForkerDotNet Console</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10/dist/ext/sse.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>ForkerDotNet Console</h1>
+        <nav>
+            <a href="/" {{if eq .Page "dashboard"}}class="active"{{end}}>Dashboard</a>
+            <a href="/demo" {{if eq .Page "demo"}}class="active"{{end}}>Demo Mode</a>
+        </nav>
+        <div id="stats-bar" hx-get="/api/stats" hx-trigger="load, every 10s" hx-swap="innerHTML">
+            <span class="stat">Loading stats...</span>
+        </div>
+    </header>
+    <main>
+        {{template "content" .}}
+    </main>
+    <footer>
+        <p>ForkerDotNet Console | Medical File Replication Monitor | NHS-Grade Security</p>
+    </footer>
+</body>
+</html>

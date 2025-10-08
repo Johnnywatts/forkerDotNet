@@ -1,0 +1,25 @@
+# Ignore unnecessary files during Docker build
+*.md
+.git
+.gitignore
+.dockerignore
+docker-compose.yml
+Dockerfile
+
+# Go build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test and benchmark files
+*_test.go
+*.test
+*.prof
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+*~

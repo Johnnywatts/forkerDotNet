@@ -1,0 +1,14 @@
+{{define "content"}}
+<div class="dashboard">
+    <h2>Production Monitoring Dashboard</h2>
+
+    <div id="jobs-table"
+         hx-ext="sse"
+         sse-connect="/api/stream"
+         sse-swap="job-update"
+         hx-get="/api/jobs"
+         hx-trigger="load">
+        <div class="loading">Loading jobs...</div>
+    </div>
+</div>
+{{end}}

@@ -1,0 +1,7 @@
+{{define "stats-bar"}}
+<span class="stat stat-total">Total: {{.TotalJobs}}</span>
+<span class="stat stat-active">Active: {{.ActiveJobs}}</span>
+<span class="stat stat-completed">Completed: {{.CompletedJobs}}</span>
+<span class="stat stat-failed">Failed: {{.FailedJobs}}</span>
+<span class="stat stat-throughput">Throughput: {{.ThroughputMBps}} MB/s</span>
+{{end}}

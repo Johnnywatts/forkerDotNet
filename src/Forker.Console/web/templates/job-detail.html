@@ -1,0 +1,63 @@
+{{define "content"}}
+<div class="job-detail">
+    <h2>Job Details</h2>
+
+    <div class="job-header">
+        <div class="job-info">
+            <h3>{{.Job.SourceFile}}</h3>
+            <span class="badge badge-{{.Job.State}}">{{.Job.State}}</span>
+        </div>
+        <div class="job-meta">
+            <span class="job-id">ID: {{.Job.ID}}</span>
+            <span class="file-size">Size: {{.Job.SizeFormatted}}</span>
+        </div>
+    </div>
+
+    <div class="targets-grid">
+        <div class="target-card">
+            <h4>Target A</h4>
+            <div class="target-status">
+                <span class="badge badge-{{.Job.TargetA.State}}">{{.Job.TargetA.State}}</span>
+            </div>
+            <div class="target-details">
+                <p><strong>Destination:</strong> {{.Job.TargetA.Path}}</p>
+                <p><strong>Progress:</strong> {{.Job.TargetA.BytesCopied}} / {{.Job.SizeFormatted}}</p>
+                <p><strong>Hash:</strong> <code>{{.Job.TargetA.Hash}}</code></p>
+            </div>
+        </div>
+
+        <div class="target-card">
+            <h4>Target B</h4>
+            <div class="target-status">
+                <span class="badge badge-{{.Job.TargetB.State}}">{{.Job.TargetB.State}}</span>
+            </div>
+            <div class="target-details">
+                <p><strong>Destination:</strong> {{.Job.TargetB.Path}}</p>
+                <p><strong>Progress:</strong> {{.Job.TargetB.BytesCopied}} / {{.Job.SizeFormatted}}</p>
+                <p><strong>Hash:</strong> <code>{{.Job.TargetB.Hash}}</code></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="timeline">
+        <h3>Event Timeline</h3>
+        <ul class="timeline-list">
+            {{range .Job.Events}}
+            <li class="timeline-item event-{{.Type}}">
+                <span class="event-time">{{.Timestamp}}</span>
+                <span class="event-type">{{.Type}}</span>
+                <span class="event-message">{{.Message}}</span>
+            </li>
+            {{else}}
+            <li class="timeline-item">
+                <span class="event-message">No events recorded</span>
+            </li>
+            {{end}}
+        </ul>
+    </div>
+
+    <div class="actions">
+        <a href="/" class="btn">← Back to Dashboard</a>
+    </div>
+</div>
+{{end}}

@@ -1,0 +1,43 @@
+{{define "job-list"}}
+<table class="jobs-table">
+    <thead>
+        <tr>
+            <th>Job ID</th>
+            <th>Source File</th>
+            <th>Size</th>
+            <th>State</th>
+            <th>Progress</th>
+            <th>Started</th>
+            <th>Duration</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{range .Jobs}}
+        <tr class="job-row state-{{.State}}" id="job-{{.ID}}">
+            <td class="job-id"><a href="/jobs/{{.ID}}">{{.ID}}</a></td>
+            <td class="source-file">{{.SourceFile}}</td>
+            <td class="file-size">{{.SizeFormatted}}</td>
+            <td class="state">
+                <span class="badge badge-{{.State}}">{{.State}}</span>
+            </td>
+            <td class="progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{.ProgressPercent}}%"></div>
+                </div>
+                <span class="progress-text">{{.ProgressPercent}}%</span>
+            </td>
+            <td class="started-at">{{.StartedAt}}</td>
+            <td class="duration">{{.Duration}}</td>
+            <td class="actions">
+                <a href="/jobs/{{.ID}}" class="btn btn-sm">Details</a>
+            </td>
+        </tr>
+        {{else}}
+        <tr>
+            <td colspan="8" class="no-data">No jobs found</td>
+        </tr>
+        {{end}}
+    </tbody>
+</table>
+{{end}}
