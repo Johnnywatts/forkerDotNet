@@ -1,12 +1,12 @@
 # ForkerDotNet GUI Console - Development Task List
 
-**Technology Stack:** Go 1.23+ | stdlib HTTP | htmx 1.9+ | Docker | SQLite read-only access (modernc.org/sqlite)
+**Technology Stack:** Go 1.23+ | stdlib HTTP | htmx 1.9+ | Docker | ForkerDotNet HTTP API + Direct Filesystem Access
 
-**Estimated Total Effort:** 19-26 hours
-**Actual Time:** Phase 1: ~2h | Phase 2: ~3h | **Total: ~5h** (vs 10-14h estimated)
+**Estimated Total Effort:** 29-38 hours (updated with Phase 3 API redesign)
+**Actual Time:** Phase 1: ~2h | Phase 2: ~3h | **Total: ~5h** | Phase 3: 🔄 IN PROGRESS
 
 **Repository:** `src/Forker.Console/` (within forkerDotNet repo)
-**Status:** Phase 1 ✅ COMPLETE | Phase 2 ✅ COMPLETE | Phase 3-4 PENDING
+**Status:** Phase 1 ✅ COMPLETE | Phase 2 ✅ COMPLETE | Phase 3 🔄 IN PROGRESS | Phase 4-5 PENDING
 
 > **📖 Implementation Details:** See [IMPLEMENTATION-DETAILS.md](src/Forker.Console/IMPLEMENTATION-DETAILS.md) for code examples and technical specifications.
 
@@ -200,7 +200,7 @@
 
 ## Phase 2 Summary
 
-**Status:** ✅ **COMPLETE**
+**Status:** ✅ **COMPLETE** (with architectural lessons learned)
 **Time Spent:** ~3 hours (vs estimated 6-8h)
 **Files Created/Updated:** 6 total
 - 5 HTML templates (base, dashboard, job-list, job-detail, stats-bar)
@@ -224,11 +224,242 @@
 
 **Container:** 16.5MB (was 13.6MB in Phase 1, +2.9MB for templates)
 
+**⚠️ CRITICAL ISSUE DISCOVERED: SQLite WAL Locking**
+- **Problem**: Windows ForkerDotNet uses WAL mode, Linux Docker container cannot read WAL files reliably
+- **Attempted Solutions**:
+  1. `mode=ro&immutable=1` - Works but shows stale data (snapshot at container start)
+  2. `mode=ro` without immutable - Disk I/O errors (4618) due to WAL file access issues
+  3. `mode=ro&cache=shared` - Still causes WAL locking problems across OS boundary
+- **Root Cause**: Cross-platform filesystem incompatibility (Windows NTFS + Docker volume mounts)
+- **Decision**: Abandon direct SQLite access, redesign to use HTTP API
+
+**Next Phase**: Implement API-first architecture (ForkerDotNet exposes monitoring API)
+
 ---
 
-## Phase 3: Demo Mode (6-8 hours) ⏳ PENDING
+## Phase 3: API-First Architecture Redesign (10-12 hours) 🔄 IN PROGRESS
 
-### Task 3.1: Demo Mode UI ⏳ PENDING
+**Objective:** Replace direct SQLite access with HTTP API + filesystem approach
+
+**Architecture Changes:**
+- **ForkerDotNet**: Add MonitoringService (HTTP API on port 8081)
+- **Console**: Replace database client with HTTP client + filesystem scanner
+- **Docker**: Configure `extra_hosts: host-gateway` for Windows/WSL compatibility
+
+### Task 3.1: ForkerDotNet Monitoring API (C#) ⏳ PENDING
+**Estimated Time:** 3-4 hours | **Status:** Not started
+
+**Files to Create:**
+- [ ] `src/Forker.Service/MonitoringService.cs` - HTTP service on port 8081
+- [ ] `src/Forker.Service/Models/MonitoringModels.cs` - API response DTOs
+- [ ] Update `src/Forker.Service/Program.cs` - Register MonitoringService
+
+**API Endpoints to Implement:**
+1. `GET /api/monitoring/health` → Service PID, uptime, memory, DB path, last activity
+2. `GET /api/monitoring/stats` → Job counts (total, active, verified, failed, quarantined)
+3. `GET /api/monitoring/jobs?state={state}&limit={n}` → Filtered job list
+4. `GET /api/monitoring/jobs/{jobId}` → Job details with target outcomes
+5. `POST /api/monitoring/requeue` → Move files from Failed → Input, reset job state
+
+**Configuration:**
+- Bind to `0.0.0.0:8081` (accept Docker connections)
+- CORS enabled for `localhost:5000`
+- No authentication (Phase 3 - defer to later if needed)
+
+**Success Criteria:**
+- All 5 endpoints return correct JSON data
+- API accessible from Docker via `host.docker.internal:8081`
+- CORS headers allow console to call API
+
+---
+
+### Task 3.2: Console HTTP Client (Go) ⏳ PENDING
+**Estimated Time:** 2 hours | **Status:** Not started
+
+**Files to Create/Modify:**
+- [ ] Remove: `internal/database/sqlite.go` (SQLite client)
+- [ ] Create: `internal/client/forker_api.go` - HTTP client for monitoring API
+- [ ] Create: `internal/client/models.go` - API response models
+- [ ] Update: `internal/server/context.go` - Store API client instead of DB
+
+**HTTP Client Functions:**
+```go
+func GetHealth() (*HealthResponse, error)
+func GetStats() (*StatsResponse, error)
+func GetJobs(state string, limit int) ([]JobResponse, error)
+func GetJobDetails(id string) (*JobDetailsResponse, error)
+func RequeueFiles(fileIds []string) error
+```
+
+**Configuration:**
+- API base URL from env var: `FORKER_API_URL` (default: `http://host.docker.internal:8081`)
+- Timeout: 10 seconds
+- Retry: 3 attempts with exponential backoff
+
+**Success Criteria:**
+- HTTP client successfully calls all 5 API endpoints
+- Error handling for API unavailability
+- Retries work correctly
+
+---
+
+### Task 3.3: Filesystem Scanner (Go) ⏳ PENDING
+**Estimated Time:** 1 hour | **Status:** Not started
+
+**Files to Create:**
+- [ ] `internal/filesystem/scanner.go` - Direct folder scanning
+
+**Functions:**
+```go
+func ScanFolder(path string) ([]FileInfo, error)
+func GetFolderStats(path string) (*FolderStats, error)
+```
+
+**FileInfo struct:**
+- Name (filename)
+- Size (bytes)
+- ModifiedTime (timestamp)
+- Age (human-readable, e.g., "2 mins ago")
+
+**Folders to scan:**
+- `/data/Input` → C:\ForkerDemo\Input
+- `/data/DestinationA` → C:\ForkerDemo\DestinationA
+- `/data/DestinationB` → C:\ForkerDemo\DestinationB
+- `/data/Failed` → C:\ForkerDemo\Failed
+
+**Sorting:** Descending by modified time (newest first)
+
+**Success Criteria:**
+- Scanner returns file listings for all 4 folders
+- Files sorted correctly (newest first)
+- Performance: Scans complete in < 100ms for 1000 files
+
+---
+
+### Task 3.4: Update UI Templates (4 Folder Panes) ⏳ PENDING
+**Estimated Time:** 3 hours | **Status:** Not started
+
+**Files to Create:**
+- [ ] `web/templates/folder-view.html` - 4 explorer-style panes
+- [ ] `web/templates/transaction-view.html` - 2-pane state view
+- [ ] `web/templates/file-list.html` - Reusable file list component
+
+**Files to Update:**
+- [ ] `web/templates/dashboard.html` - Add view toggle + folder/transaction views
+- [ ] `web/templates/system-info.html` - Show service health from API
+- [ ] `web/static/style.css` - Explorer pane styles
+
+**Folder View Layout:**
+```
+┌─ Input (5 files) ─┐  ┌─ Dest A (23 files) ─┐
+│ 484763.svs 2.3GB  │  │ 484750.svs 2.1GB    │
+│ 484762.svs 2.1GB  │  │ 484751.svs 2.4GB    │
+│ ... (scrollable)  │  │ ... (scrollable)    │
+└───────────────────┘  └─────────────────────┘
+
+┌─ Dest B (23 files)┐  ┌─ Failed (2 files) ─┐
+│ 484750.svs 2.1GB  │  │ 484748.svs 1.9GB    │
+│ ... (scrollable)  │  │ [✓] Re-queue        │
+└───────────────────┘  └─────────────────────┘
+```
+
+**Transaction View Layout:**
+```
+┌─ In Progress ─────┐  ┌─ Completed ────────┐
+│ 484763.svs Copying│  │ 484750.svs Verified│
+│ 484762.svs Queued │  │ 484751.svs Verified│
+│ ... (scrollable)  │  │ ... (scrollable)   │
+└───────────────────┘  └────────────────────┘
+```
+
+**Success Criteria:**
+- 4 folder panes display live file listings
+- Files sorted by descending age
+- Panes are scrollable
+- View toggle works
+- Updates every 2 seconds (configurable)
+
+---
+
+### Task 3.5: Update Docker Configuration ⏳ PENDING
+**Estimated Time:** 30 minutes | **Status:** Not started
+
+**Files to Update:**
+- [ ] `docker-compose.yml` - Add extra_hosts, update volumes
+
+**Changes:**
+```yaml
+services:
+  forker-console:
+    volumes:
+      - C:\ForkerDemo:/data:ro  # Entire folder (not just DB file)
+    environment:
+      - FORKER_API_URL=http://host.docker.internal:8081
+      - FORKER_MODE=demo
+      - REFRESH_INTERVAL=2
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Works on Windows + WSL
+```
+
+**Remove:**
+- `FORKER_DB_PATH` environment variable (no longer needed)
+
+**Success Criteria:**
+- Console container can access ForkerDotNet API via `host.docker.internal:8081`
+- Console container can read filesystem at `/data/*`
+- Works on both Windows Docker Desktop and WSL Docker
+
+---
+
+### Task 3.6: Integration Testing ⏳ PENDING
+**Estimated Time:** 2 hours | **Status:** Not started
+
+**Test Scenarios:**
+1. ✅ Start ForkerDotNet service with Demo data
+2. ✅ Start console container
+3. ✅ Verify folder views show correct file listings
+4. ✅ Verify transaction view shows correct job states
+5. ✅ Verify service health panel shows PID, uptime, memory
+6. ✅ Verify stats update every 2 seconds
+7. ✅ Trigger file copy, watch it appear/disappear from folders
+8. ✅ Test re-queue operation (Failed → Input)
+9. ✅ Test on Windows Docker Desktop
+10. ✅ Test on WSL Docker
+
+**Success Criteria:**
+- All tests pass
+- No SQLite WAL errors
+- Dashboard shows live updates (not stale data)
+- Re-queue operation works without errors
+
+---
+
+## Phase 3 Summary
+
+**Status:** 🔄 **IN PROGRESS**
+**Estimated Time:** 10-12 hours
+**Tasks:** 6 total (0 complete, 6 pending)
+
+**Key Deliverables:**
+- ForkerDotNet Monitoring API (5 endpoints on port 8081)
+- Console HTTP client + filesystem scanner
+- 4-pane folder view UI (explorer-style)
+- 2-pane transaction view UI
+- Re-queue operation
+- Docker configuration with `extra_hosts`
+
+**Architecture Benefits:**
+- ✅ No SQLite WAL locking issues
+- ✅ Separation of concerns (DB is ForkerDotNet's internal detail)
+- ✅ Works on Windows + WSL Docker
+- ✅ Console has no write access (security)
+- ✅ All file operations audited through API
+
+---
+
+## Phase 4: Demo Mode (6-8 hours) ⏳ PENDING
+
+### Task 4.1: Demo Mode UI ⏳ PENDING
 **Estimated Time:** 2-3 hours | **Status:** Not started
 
 **Files to Create:**

@@ -1,8 +1,8 @@
 # ForkerDotNet Management Console - Design Document
 
-**Version:** 1.0
-**Date:** 2025-10-07
-**Status:** Approved Design - Ready for Implementation
+**Version:** 1.1
+**Date:** 2025-10-08
+**Status:** Updated Design - API-First Architecture
 
 ---
 
@@ -44,10 +44,10 @@ The ForkerDotNet Management Console is a **web-based monitoring and demonstratio
 - No build pipeline, no npm/webpack complexity
 - Alpine.js: Optional 15KB library for client-side interactivity
 
-**Database Access:** Read-only SQLite
-- Direct read access to ForkerDotNet.Service database
-- No write operations (monitoring only)
-- Mounted as read-only volume in Docker
+**Data Access:** HTTP API + Filesystem
+- HTTP API for database queries (job states, statistics, service health)
+- Direct filesystem access for folder views (Input, DestA, DestB, Failed)
+- Read-only access to all data sources
 
 **Deployment:** Docker container
 - Self-contained, isolated environment
@@ -61,45 +61,61 @@ The ForkerDotNet Management Console is a **web-based monitoring and demonstratio
 ### System Context
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│ Windows Server / Workstation                                    │
-│                                                                  │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │ ForkerDotNet.Service (Native Windows Service)            │  │
-│  │                                                           │  │
-│  │ • Pure .NET 8 C# service                                 │  │
-│  │ • SQLite database with WAL mode                          │  │
-│  │ • HTTP API on localhost:8080 (optional)                  │  │
-│  │ • Windows Event Log + structured logs                    │  │
-│  │                                                           │  │
-│  │ ✅ Production-critical path                              │  │
-│  │ ✅ Minimal dependencies                                  │  │
-│  │ ✅ No external packages except Microsoft.Data.Sqlite     │  │
-│  └──────────────────────────────────────────────────────────┘  │
-│                          ▲                                       │
-│                          │ (reads)                               │
-│                          │                                       │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │ Docker Desktop                                           │  │
-│  │                                                           │  │
-│  │  ┌────────────────────────────────────────────────────┐ │  │
-│  │  │ ForkerDotNet.Console (Docker Container)            │ │  │
-│  │  │                                                     │ │  │
-│  │  │ • Go web server                                    │ │  │
-│  │  │ • htmx-powered UI                                  │ │  │
-│  │  │ • HTTP server on localhost:5000                    │ │  │
-│  │  │                                                     │ │  │
-│  │  │ Mounted Volumes:                                   │ │  │
-│  │  │ • /app/data/forker.db (read-only)                  │ │  │
-│  │  │                                                     │ │  │
-│  │  │ ✅ Monitoring and demo tool                        │ │  │
-│  │  │ ✅ Non-critical (service works without it)         │ │  │
-│  │  │ ✅ Isolated in container                           │ │  │
-│  │  └────────────────────────────────────────────────────┘ │  │
-│  └──────────────────────────────────────────────────────────┘  │
-│                                                                  │
-│  User accesses: http://localhost:5000 in Edge/Chrome           │
-└─────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│ Windows Server / Workstation                                     │
+│                                                                   │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │ ForkerDotNet.Service (Native Windows Service)             │  │
+│  │                                                            │  │
+│  │ • Pure .NET 8 C# service                                  │  │
+│  │ • SQLite database with WAL mode                           │  │
+│  │ • HealthService API on localhost:8080                     │  │
+│  │ • MonitoringService API on 0.0.0.0:8081 (NEW)             │  │
+│  │ • Manages file operations (copy, verify, requeue)         │  │
+│  │                                                            │  │
+│  │ API Endpoints (port 8081):                                │  │
+│  │   GET  /api/monitoring/health                             │  │
+│  │   GET  /api/monitoring/stats                              │  │
+│  │   GET  /api/monitoring/jobs?state={state}                 │  │
+│  │   GET  /api/monitoring/jobs/{id}                          │  │
+│  │   POST /api/monitoring/requeue                            │  │
+│  │                                                            │  │
+│  │ ✅ Production-critical path                               │  │
+│  │ ✅ Minimal dependencies                                   │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                          ▲ HTTP API (8081)                       │
+│                          │                                        │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │ Docker Desktop                                            │  │
+│  │                                                            │  │
+│  │  ┌─────────────────────────────────────────────────────┐ │  │
+│  │  │ ForkerDotNet.Console (Docker Container)             │ │  │
+│  │  │                                                      │ │  │
+│  │  │ • Go web server (port 5000)                         │ │  │
+│  │  │ • htmx-powered UI                                   │ │  │
+│  │  │ • HTTP client for ForkerDotNet API                  │ │  │
+│  │  │ • Filesystem scanner for folder views               │ │  │
+│  │  │                                                      │ │  │
+│  │  │ Data Access:                                        │ │  │
+│  │  │ • HTTP: host.docker.internal:8081 (DB queries)      │ │  │
+│  │  │ • Filesystem: /data/* (read-only folders)           │ │  │
+│  │  │                                                      │ │  │
+│  │  │ Mounted Volumes:                                    │ │  │
+│  │  │ • C:\ForkerDemo:/data:ro (read-only)                │ │  │
+│  │  │                                                      │ │  │
+│  │  │ Network Config:                                     │ │  │
+│  │  │ • extra_hosts: host.docker.internal:host-gateway    │ │  │
+│  │  │   (Works on Windows Docker Desktop + WSL Docker)    │ │  │
+│  │  │                                                      │ │  │
+│  │  │ ✅ Monitoring and demo tool                         │ │  │
+│  │  │ ✅ Non-critical (service works without it)          │ │  │
+│  │  │ ✅ Isolated in container (zero-CVE requirement)     │ │  │
+│  │  │ ✅ No direct database access (prevents WAL issues)  │ │  │
+│  │  └─────────────────────────────────────────────────────┘ │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                                                                   │
+│  User accesses: http://localhost:5000 in Edge/Chrome            │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 ### Separation of Concerns
@@ -110,9 +126,11 @@ The ForkerDotNet Management Console is a **web-based monitoring and demonstratio
 - Console failure ≠ Service failure
 
 **Monitoring Layer:**
-- Console reads database (read-only)
+- Console queries ForkerDotNet HTTP API (database access)
+- Console reads filesystem directly (folder views)
 - Console can stop/restart without affecting service
 - Updates to console don't require service changes
+- No SQLite WAL locking issues (HTTP API abstracts database)
 
 ---
 
@@ -225,22 +243,38 @@ The ForkerDotNet Management Console is a **web-based monitoring and demonstratio
 
 ---
 
-### Decision 6: Read-Only Database Access from Console
+### Decision 6: API-First Data Access (Not Direct SQLite)
 
-**Decision:** Console mounts SQLite database as read-only volume
+**Decision:** Console uses HTTP API for database queries, direct filesystem for folder views
 
 **Rationale:**
-- ✅ **Safety:** Console cannot corrupt database
-- ✅ **No Lock Contention:** Read-only = no write locks
-- ✅ **Audit Trail:** All writes come from service (single source of truth)
+- ✅ **No WAL Issues:** HTTP API eliminates cross-platform SQLite WAL locking problems
+- ✅ **Separation of Concerns:** Database is ForkerDotNet's internal implementation detail
+- ✅ **Flexible:** Can change database schema without breaking console
+- ✅ **Auditable:** All database operations go through service (single source of truth)
+- ✅ **Simple Folder Views:** Direct filesystem reads for file listings (no DB queries needed)
 
-**Docker Volume Mount:**
+**Docker Configuration:**
 ```yaml
 volumes:
-  - C:\ForkerDemo\forker.db:/app/data/forker.db:ro  # :ro = read-only
+  - C:\ForkerDemo:/data:ro  # Read-only filesystem access
+
+environment:
+  - FORKER_API_URL=http://host.docker.internal:8081
+
+extra_hosts:
+  - "host.docker.internal:host-gateway"  # Works on Windows + WSL
 ```
 
-**Exception:** Demo mode may write test files to filesystem, but never to database
+**Data Access Pattern:**
+- **Database queries** → HTTP GET `http://host.docker.internal:8081/api/monitoring/*`
+- **Folder views** → Direct filesystem read of `/data/Input`, `/data/DestinationA`, etc.
+- **File operations** → HTTP POST `http://host.docker.internal:8081/api/monitoring/requeue`
+
+**Why This Approach:**
+- **Initial attempt:** Direct SQLite access with `immutable=1` - caused stale data (snapshot)
+- **Second attempt:** SQLite with `mode=ro` - WAL locking errors across Windows/Linux boundary
+- **Final solution:** HTTP API for DB + filesystem for folders - works reliably on both platforms
 
 ---
 
@@ -542,37 +576,71 @@ environment:
 
 ## Implementation Approach
 
-### Phase 1: Core Infrastructure (4-6 hours)
+### Phase 1: Core Infrastructure (4-6 hours) ✅ COMPLETE
 
 **Deliverables:**
-- Go web server with basic routing
-- SQLite read-only database access
-- Docker multi-stage build
-- Health endpoint
-- Static file serving (htmx, CSS)
+- ✅ Go web server with stdlib HTTP routing (zero third-party HTTP CVEs)
+- ✅ Docker multi-stage build (16.5MB final size)
+- ✅ Health endpoint
+- ✅ Static file serving (htmx, CSS)
+- ✅ Template system (8 HTML templates)
+- ✅ Dual-platform Docker support (Linux + Windows containers)
+- ⚠️ SQLite integration attempted (WAL locking issues discovered)
 
 **Success Criteria:**
-- Container builds successfully
-- Can query database and display jobs in HTML table
-- Health check passes
-- Container size < 20MB
+- ✅ Container builds successfully
+- ✅ Health check passes
+- ✅ Container size: 16.5MB (< 20MB target)
+- ✅ Docker Scout: 0C 0H 0M 0L (zero vulnerabilities)
+- ⚠️ SQLite direct access abandoned (cross-platform WAL incompatibility)
 
 ---
 
 ### Phase 2: Production Monitoring Dashboard (6-8 hours)
 
+**UI Layout (Based on Mockup1.jpg):**
+
+**Top Panel:**
+- **Service Health Info:** PID, uptime, memory usage, database path, last activity
+
+**Main Dashboard - Two View Modes:**
+
+**A) Folder View (Explorer-Style):**
+- 4 scrollable panes showing file listings:
+  1. **Input** - Files waiting/being copied (sorted by descending age)
+  2. **Dest A** - Verified copies at destination A
+  3. **Dest B** - Verified copies at destination B
+  4. **Failed** - Permanent copy failures after retries
+- Each pane shows: filename, size, age/modified time
+- Pane title shows count (e.g., "Input (5 files)")
+- Updates every 2 seconds (configurable)
+
+**B) Transaction View (State-Based):**
+- 2 scrollable panes showing job states:
+  1. **In Progress** - Discovered/Queued/InProgress/Partial states
+  2. **Completed** - Verified/Failed/Quarantined terminal states
+- Each row shows: filename, current state, timestamp
+- Color-coded badges for states
+
+**Stats Bar (Always Visible):**
+- Total jobs, Active, Verified, Failed, Quarantined counts
+- Throughput (MB/s) if available
+
 **Deliverables:**
-- Real-time job monitoring table (htmx auto-refresh)
-- Service status panel (uptime, last job, database size)
-- Statistics dashboard (processed, verified, failed counts)
-- Directory monitoring (file counts for Input/DestinationA/DestinationB/Quarantine)
-- Live event feed (Server-Sent Events)
+- Folder view with 4 explorer-style panes (direct filesystem reads)
+- Transaction view with 2 state panes (HTTP API data)
+- Service health panel (HTTP API data)
+- Stats bar with live updates (htmx polling)
+- Re-queue button for failed files (HTTP POST to API)
+- View toggle button (Folder View ↔ Transaction View)
 
 **Success Criteria:**
 - Dashboard updates every 2 seconds automatically
-- Can see job state transitions in real-time
-- Can click job to see detailed view
-- Can filter/sort jobs by state
+- Folder views show live file listings (newest first)
+- Transaction view shows correct job states
+- Re-queue operation moves files from Failed → Input
+- Works on both Windows Docker Desktop and WSL Docker
+- No SQLite WAL locking errors
 
 ---
 
