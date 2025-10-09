@@ -69,11 +69,11 @@ The ForkerDotNet Management Console is a **web-based monitoring and demonstratio
 │  │                                                            │  │
 │  │ • Pure .NET 8 C# service                                  │  │
 │  │ • SQLite database with WAL mode                           │  │
-│  │ • HealthService API on localhost:8080                     │  │
-│  │ • MonitoringService API on 0.0.0.0:8081 (NEW)             │  │
+│  │ • HealthService API on localhost:8080 (✅ CURRENT)        │  │
+│  │ • MonitoringService API on 0.0.0.0:8081 (⏳ Phase 3)      │  │
 │  │ • Manages file operations (copy, verify, requeue)         │  │
 │  │                                                            │  │
-│  │ API Endpoints (port 8081):                                │  │
+│  │ API Endpoints on port 8081 (⏳ PLANNED - Phase 3):        │  │
 │  │   GET  /api/monitoring/health                             │  │
 │  │   GET  /api/monitoring/stats                              │  │
 │  │   GET  /api/monitoring/jobs?state={state}                 │  │
@@ -93,24 +93,28 @@ The ForkerDotNet Management Console is a **web-based monitoring and demonstratio
 │  │  │                                                      │ │  │
 │  │  │ • Go web server (port 5000)                         │ │  │
 │  │  │ • htmx-powered UI                                   │ │  │
-│  │  │ • HTTP client for ForkerDotNet API                  │ │  │
-│  │  │ • Filesystem scanner for folder views               │ │  │
+│  │  │ • SQLite client (Phase 2) → HTTP client (Phase 3)   │ │  │
+│  │  │ • Filesystem scanner (Phase 3)                      │ │  │
 │  │  │                                                      │ │  │
-│  │  │ Data Access:                                        │ │  │
+│  │  │ Data Access (CURRENT - Phase 2):                    │ │  │
+│  │  │ • Direct SQLite: /data/forker.db (mode=ro&nolock=1) │ │  │
+│  │  │ • ⚠️  WAL locking issues discovered                 │ │  │
+│  │  │                                                      │ │  │
+│  │  │ Data Access (PLANNED - Phase 3):                    │ │  │
 │  │  │ • HTTP: host.docker.internal:8081 (DB queries)      │ │  │
 │  │  │ • Filesystem: /data/* (read-only folders)           │ │  │
 │  │  │                                                      │ │  │
 │  │  │ Mounted Volumes:                                    │ │  │
-│  │  │ • C:\ForkerDemo:/data:ro (read-only)                │ │  │
+│  │  │ • C:\ForkerDemo:/data (Phase 2: ro implied)         │ │  │
 │  │  │                                                      │ │  │
-│  │  │ Network Config:                                     │ │  │
+│  │  │ Network Config (Phase 3 Task 3.5):                  │ │  │
 │  │  │ • extra_hosts: host.docker.internal:host-gateway    │ │  │
 │  │  │   (Works on Windows Docker Desktop + WSL Docker)    │ │  │
 │  │  │                                                      │ │  │
 │  │  │ ✅ Monitoring and demo tool                         │ │  │
 │  │  │ ✅ Non-critical (service works without it)          │ │  │
 │  │  │ ✅ Isolated in container (zero-CVE requirement)     │ │  │
-│  │  │ ✅ No direct database access (prevents WAL issues)  │ │  │
+│  │  │ ⏳ Phase 3: HTTP API (eliminates WAL issues)        │ │  │
 │  │  └─────────────────────────────────────────────────────┘ │  │
 │  └───────────────────────────────────────────────────────────┘  │
 │                                                                   │
@@ -126,11 +130,12 @@ The ForkerDotNet Management Console is a **web-based monitoring and demonstratio
 - Console failure ≠ Service failure
 
 **Monitoring Layer:**
-- Console queries ForkerDotNet HTTP API (database access)
-- Console reads filesystem directly (folder views)
+- **Phase 2 (CURRENT):** Console uses direct SQLite read-only access (WAL issues discovered)
+- **Phase 3 (PLANNED):** Console will query ForkerDotNet HTTP API for database access
+- **Phase 3 (PLANNED):** Console will read filesystem directly for folder views
 - Console can stop/restart without affecting service
 - Updates to console don't require service changes
-- No SQLite WAL locking issues (HTTP API abstracts database)
+- HTTP API approach eliminates SQLite WAL locking issues
 
 ---
 
@@ -245,7 +250,11 @@ The ForkerDotNet Management Console is a **web-based monitoring and demonstratio
 
 ### Decision 6: API-First Data Access (Not Direct SQLite)
 
-**Decision:** Console uses HTTP API for database queries, direct filesystem for folder views
+**Decision:** Console will use HTTP API for database queries, direct filesystem for folder views
+
+**Implementation Status:**
+- **Phase 2 (✅ COMPLETE):** Direct SQLite with `mode=ro&nolock=1` - WAL issues discovered
+- **Phase 3 (⏳ IN PROGRESS):** Migrating to HTTP API approach
 
 **Rationale:**
 - ✅ **No WAL Issues:** HTTP API eliminates cross-platform SQLite WAL locking problems
@@ -254,7 +263,7 @@ The ForkerDotNet Management Console is a **web-based monitoring and demonstratio
 - ✅ **Auditable:** All database operations go through service (single source of truth)
 - ✅ **Simple Folder Views:** Direct filesystem reads for file listings (no DB queries needed)
 
-**Docker Configuration:**
+**Docker Configuration (Phase 3 Task 3.5):**
 ```yaml
 volumes:
   - C:\ForkerDemo:/data:ro  # Read-only filesystem access
@@ -266,15 +275,16 @@ extra_hosts:
   - "host.docker.internal:host-gateway"  # Works on Windows + WSL
 ```
 
-**Data Access Pattern:**
+**Data Access Pattern (Phase 3):**
 - **Database queries** → HTTP GET `http://host.docker.internal:8081/api/monitoring/*`
 - **Folder views** → Direct filesystem read of `/data/Input`, `/data/DestinationA`, etc.
 - **File operations** → HTTP POST `http://host.docker.internal:8081/api/monitoring/requeue`
 
-**Why This Approach:**
-- **Initial attempt:** Direct SQLite access with `immutable=1` - caused stale data (snapshot)
-- **Second attempt:** SQLite with `mode=ro` - WAL locking errors across Windows/Linux boundary
-- **Final solution:** HTTP API for DB + filesystem for folders - works reliably on both platforms
+**Evolution:**
+- **Phase 2 attempt 1:** Direct SQLite access with `immutable=1` - caused stale data (snapshot)
+- **Phase 2 attempt 2:** SQLite with `mode=ro` - WAL locking errors across Windows/Linux boundary
+- **Phase 2 attempt 3:** SQLite with `mode=ro&nolock=1` - works but still has WAL read staleness
+- **Phase 3 solution:** HTTP API for DB + filesystem for folders - eliminates all WAL issues
 
 ---
 

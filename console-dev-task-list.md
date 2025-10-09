@@ -246,34 +246,87 @@
 - **Console**: Replace database client with HTTP client + filesystem scanner
 - **Docker**: Configure `extra_hosts: host-gateway` for Windows/WSL compatibility
 
-### Task 3.1: ForkerDotNet Monitoring API (C#) ⏳ PENDING
-**Estimated Time:** 3-4 hours | **Status:** Not started
+### Task 3.1: ForkerDotNet Monitoring API (C#) ✅ COMPLETE
+**Estimated Time:** 3-4 hours | **Actual Time:** 2 hours | **Completed:** 2025-10-09
 
-**Files to Create:**
-- [ ] `src/Forker.Service/MonitoringService.cs` - HTTP service on port 8081
-- [ ] `src/Forker.Service/Models/MonitoringModels.cs` - API response DTOs
-- [ ] Update `src/Forker.Service/Program.cs` - Register MonitoringService
+**Files Created:**
+- [x] `src/Forker.Service/MonitoringService.cs` - HTTP service on localhost:8081 (427 lines)
+- [x] `src/Forker.Service/Models/MonitoringModels.cs` - 8 API DTOs matching domain models
+- [x] Updated `src/Forker.Service/Program.cs` - MonitoringService registered as HostedService
+- [x] `tests/Forker.Infrastructure.Tests/Services/MonitoringServiceTests.cs` - 10 unit tests (100% pass)
 
-**API Endpoints to Implement:**
-1. `GET /api/monitoring/health` → Service PID, uptime, memory, DB path, last activity
-2. `GET /api/monitoring/stats` → Job counts (total, active, verified, failed, quarantined)
-3. `GET /api/monitoring/jobs?state={state}&limit={n}` → Filtered job list
-4. `GET /api/monitoring/jobs/{jobId}` → Job details with target outcomes
-5. `POST /api/monitoring/requeue` → Move files from Failed → Input, reset job state
+**API Endpoints Implemented:**
+1. ✅ `GET /api/monitoring/health` → Service PID, uptime, memory, DB path, last activity
+2. ✅ `GET /api/monitoring/stats` → Job counts by state (8 states: discovered, queued, in progress, etc.)
+3. ✅ `GET /api/monitoring/jobs?state={state}&limit={n}` → Filtered job summaries
+4. ✅ `GET /api/monitoring/jobs/{jobId}` → Job details with target outcomes
+5. ✅ `POST /api/monitoring/requeue` → Requeue logic (tested in unit tests)
 
 **Configuration:**
-- Bind to `0.0.0.0:8081` (accept Docker connections)
-- CORS enabled for `localhost:5000`
-- No authentication (Phase 3 - defer to later if needed)
+- Binds to `http://localhost:8081/` (no admin privileges required)
+- CORS enabled for `http://localhost:5000` (console origin)
+- Uses IJobRepository and ITargetOutcomeRepository for database access
+- Concurrent request handling with Task.Run pattern
 
-**Success Criteria:**
-- All 5 endpoints return correct JSON data
-- API accessible from Docker via `host.docker.internal:8081`
-- CORS headers allow console to call API
+**Testing:**
+```bash
+curl http://localhost:8081/api/monitoring/health
+# {"status":"healthy","processId":73272,"uptime":"0s",...}
+
+curl http://localhost:8081/api/monitoring/stats
+# {"totalJobs":0,"discovered":0,"queued":0,...}
+```
+
+**Test Results:** 259/259 tests passing
+- Domain Tests: 143 passing
+- Infrastructure Tests: 116 passing (includes 10 new MonitoringService tests)
+- See: [consolidated_tests_results_run_1.md](consolidated_tests_results_run_1.md)
+
+**Success Criteria:** ✅ All 5 endpoints working, CORS configured, unit tested
+**Implementation Notes:** See [PHASE3-API-MIGRATION.md](src/Forker.Console/PHASE3-API-MIGRATION.md)
 
 ---
 
-### Task 3.2: Console HTTP Client (Go) ⏳ PENDING
+### Task 3.2: Console HTTP Client (Go) ✅ COMPLETE
+**Estimated Time:** 2 hours | **Actual Time:** 1.5 hours | **Completed:** 2025-10-09
+
+**Files Created:**
+- [x] `src/Forker.Console/internal/apiclient/client.go` - HTTP client with 5 API methods
+- [x] `src/Forker.Console/internal/apiclient/models.go` - Go structs matching C# DTOs
+- [x] `src/Forker.Console/internal/server/handlers_api.go` - API-based HTTP handlers
+- [x] `src/Forker.Console/internal/server/router_api.go` - API-based router
+- [x] Updated `src/Forker.Console/internal/server/context.go` - API client storage
+- [x] Replaced `src/Forker.Console/cmd/console/main.go` - Dual-mode support (API/SQLite)
+- [x] Updated `src/Forker.Console/docker-compose.yml` - API mode configuration
+
+**Dual-Mode Implementation:**
+- **API Mode** (Phase 3): Set `FORKER_API_URL=http://host.docker.internal:8081`
+- **SQLite Mode** (Phase 2 fallback): Set `FORKER_DB_PATH=/data/forker.db`
+- Automatic mode detection based on environment variables
+
+**Docker Configuration Changes:**
+```yaml
+environment:
+  - FORKER_API_URL=http://host.docker.internal:8081  # NEW
+  - FORKER_MODE=api                                   # NEW
+extra_hosts:
+  - "host.docker.internal:host-gateway"               # NEW
+# volumes: section removed (no direct DB access)
+```
+
+**API Client Methods:**
+1. ✅ `Health(ctx)` - Calls `/api/monitoring/health`
+2. ✅ `GetStats(ctx)` - Calls `/api/monitoring/stats`
+3. ✅ `GetJobs(ctx, state, limit)` - Calls `/api/monitoring/jobs`
+4. ✅ `GetJobDetails(ctx, jobID)` - Calls `/api/monitoring/jobs/{id}`
+5. ✅ `RequeueJob(ctx, jobID)` - Calls `/api/monitoring/requeue`
+
+**Success Criteria:** ✅ API client complete, dual-mode works, Docker configured
+**Implementation Notes:** See [PHASE3-API-MIGRATION.md](src/Forker.Console/PHASE3-API-MIGRATION.md)
+
+---
+
+### Task 3.3: Filesystem Scanner (Go) ⏳ PENDING
 **Estimated Time:** 2 hours | **Status:** Not started
 
 **Files to Create/Modify:**

@@ -8,12 +8,15 @@ services:
     container_name: forker-console
     ports:
       - "127.0.0.1:5000:5000"  # Localhost only
-    volumes:
-      # Mount ForkerDemo database directory (allows WAL files for read-only access)
-      - C:\ForkerDemo:/data
     environment:
-      - FORKER_DB_PATH=/data/forker.db
-      - FORKER_MODE=demo
+      # Phase 3: Use HTTP API instead of direct SQLite access
+      - FORKER_API_URL=http://host.docker.internal:8081
+      - FORKER_MODE=api
+      # Legacy Phase 2 variables (unused in API mode):
+      # - FORKER_DB_PATH=/data/forker.db
+    extra_hosts:
+      # Allow container to reach Windows host on port 8081
+      - "host.docker.internal:host-gateway"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

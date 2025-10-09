@@ -53,6 +53,7 @@ try
     // Add hosted services
     builder.Services.AddHostedService<Worker>();
     builder.Services.AddHostedService<HealthService>();
+    builder.Services.AddHostedService<MonitoringService>();
 
     var host = builder.Build();
 
