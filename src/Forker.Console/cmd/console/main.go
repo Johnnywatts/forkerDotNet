@@ -84,10 +84,10 @@ func runAPIMode(apiURL string) {
 	log.Println("[INFO] Shutting down console...")
 
 	// Graceful shutdown with 5 second timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer shutdownCancel()
 
-	if err := srv.Shutdown(ctx); err != nil {
+	if err := srv.Shutdown(shutdownCtx); err != nil {
 		log.Printf("[ERROR] Server forced to shutdown: %v", err)
 	}
 
@@ -156,10 +156,10 @@ func runSQLiteMode() {
 	log.Println("[INFO] Shutting down console...")
 
 	// Graceful shutdown with 5 second timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer shutdownCancel()
 
-	if err := srv.Shutdown(ctx); err != nil {
+	if err := srv.Shutdown(shutdownCtx); err != nil {
 		log.Printf("[ERROR] Server forced to shutdown: %v", err)
 	}
 
