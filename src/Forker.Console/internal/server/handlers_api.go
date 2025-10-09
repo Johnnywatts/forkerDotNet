@@ -108,6 +108,152 @@ func handleDashboardAPI(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleFoldersPage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+
+	// Write the HTML directly since template composition is complex
+	html := `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folder Scanner - ForkerDotNet Console</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .folders-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .folder-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+        .folder-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 1.2em;
+        }
+        .folder-stats {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #e9e9e9;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .file-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .file-item {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .file-item:hover {
+            background: #f0f0f0;
+        }
+        .file-name {
+            font-weight: 500;
+            color: #0066cc;
+        }
+        .file-details {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ForkerDotNet Console</h1>
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/folders" class="active">Folders</a>
+        </nav>
+    </header>
+    <main>
+        <h2>ForkerDemo Folder Scanner</h2>
+        <div id="folders-container" hx-get="/api/folders" hx-trigger="load, every 5s" hx-swap="none">
+            <div class="loading">Loading folders...</div>
+        </div>
+    </main>
+    <script>
+    document.body.addEventListener('htmx:afterRequest', function(evt) {
+        if (evt.detail.target.id === 'folders-container') {
+            try {
+                const data = JSON.parse(evt.detail.xhr.responseText);
+                const html = renderFolders(data);
+                evt.detail.target.innerHTML = html;
+            } catch (e) {
+                console.error('Failed to parse folder data:', e, evt.detail.xhr.responseText);
+                evt.detail.target.innerHTML = '<div class="loading">Error loading folders: ' + e.message + '</div>';
+            }
+        }
+    });
+
+    function renderFolders(data) {
+        if (!data || Object.keys(data).length === 0) {
+            return '<div class="loading">No folders found</div>';
+        }
+
+        // Render in specific order: Input, DestinationA, Failed, DestinationB
+        const folderOrder = ['input', 'destinationA', 'failed', 'destinationB'];
+        let html = '<div class="folders-grid">';
+
+        folderOrder.forEach(folderKey => {
+            const folderData = data[folderKey];
+            if (!folderData) return;
+
+            const folderName = folderKey.charAt(0).toUpperCase() + folderKey.slice(1);
+            html += ` + "`" + `
+                <div class="folder-card">
+                    <h3>${folderName}</h3>
+                    <div class="folder-stats">
+                        <strong>${folderData.count}</strong> files
+                    </div>
+                    <div class="file-list">
+            ` + "`" + `;
+
+            if (folderData.files && folderData.files.length > 0) {
+                folderData.files.forEach(file => {
+                    html += ` + "`" + `
+                        <div class="file-item">
+                            <span class="file-name">${file.name}</span>
+                            <div class="file-details">
+                                <span>${file.sizeFormatted}</span>
+                                <span>${file.age}</span>
+                            </div>
+                        </div>
+                    ` + "`" + `;
+                });
+            } else {
+                html += '<div class="file-item">No files</div>';
+            }
+
+            html += ` + "`" + `
+                    </div>
+                </div>
+            ` + "`" + `;
+        });
+
+        html += '</div>';
+        return html;
+    }
+    </script>
+</body>
+</html>`
+
+	w.Write([]byte(html))
+}
+
 func handleDashboardEnhancedAPI(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{
 		"Title": "ForkerDotNet Console",

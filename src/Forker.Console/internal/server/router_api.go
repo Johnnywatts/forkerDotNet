@@ -13,8 +13,9 @@ func NewAPIRouter() http.Handler {
 	mux.HandleFunc("/api/system-info", handleSystemInfoAPI)
 
 	// Dashboard
-	mux.HandleFunc("/", handleDashboardEnhancedAPI)
-	mux.HandleFunc("/dashboard", handleDashboardAPI) // Legacy Phase 2 dashboard
+	mux.HandleFunc("/", handleDashboardAPI)
+	mux.HandleFunc("/dashboard", handleDashboardAPI)
+	mux.HandleFunc("/folders", handleFoldersPage)
 
 	// API endpoints
 	mux.HandleFunc("/api/jobs", handleJobListAPI)

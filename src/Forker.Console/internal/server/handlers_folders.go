@@ -138,31 +138,7 @@ func handleAllFolders(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	// Check if htmx request (wants HTML fragment) or regular request (wants JSON)
-	if r.Header.Get("HX-Request") == "true" {
-		// Return HTML with all 4 folder panes
-		data := map[string]interface{}{
-			"InputFiles":      inputFiles,
-			"InputCount":      len(inputFiles),
-			"InputStats":      inputStats,
-			"DestAFiles":      destAFiles,
-			"DestACount":      len(destAFiles),
-			"DestAStats":      destAStats,
-			"DestBFiles":      destBFiles,
-			"DestBCount":      len(destBFiles),
-			"DestBStats":      destBStats,
-			"FailedFiles":     failedFiles,
-			"FailedCount":     len(failedFiles),
-			"FailedStats":     failedStats,
-		}
-		w.Header().Set("Content-Type", "text/html")
-		if err := templates.ExecuteTemplate(w, "folders-view", data); err != nil {
-			log.Printf("[ERROR] Template execution failed: %v", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		}
-	} else {
-		// Return JSON for API consumers
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(response)
-	}
+	// Always return JSON - JavaScript will handle HTML rendering
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
 }
