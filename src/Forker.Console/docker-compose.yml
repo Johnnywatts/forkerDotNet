@@ -8,10 +8,14 @@ services:
     container_name: forker-console
     ports:
       - "127.0.0.1:5000:5000"  # Localhost only
+    volumes:
+      # Mount ForkerDemo folder for filesystem scanner (read-only)
+      - C:\ForkerDemo:/data:ro
     environment:
       # Phase 3: Use HTTP API instead of direct SQLite access
       - FORKER_API_URL=http://host.docker.internal:8081
       - FORKER_MODE=api
+      - FORKER_DATA_PATH=/data  # Path to ForkerDemo mount
       # Legacy Phase 2 variables (unused in API mode):
       # - FORKER_DB_PATH=/data/forker.db
     extra_hosts:

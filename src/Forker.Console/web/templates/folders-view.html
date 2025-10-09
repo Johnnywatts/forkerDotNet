@@ -1,0 +1,139 @@
+{{define "folders-view"}}
+<div class="folders-container">
+    <!-- Input Folder Pane -->
+    <div class="folder-pane">
+        <div class="folder-header">
+            <h3>Input ({{.InputCount}} files)</h3>
+            {{if .InputStats}}
+            <span class="folder-stats">{{.InputStats.TotalSizeFormatted}}</span>
+            {{end}}
+        </div>
+        <div class="folder-content">
+            {{if eq .InputCount 0}}
+            <p class="empty-folder">No files</p>
+            {{else}}
+            <table class="folder-table">
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Size</th>
+                        <th>Age</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .InputFiles}}
+                    <tr>
+                        <td class="filename">{{.Name}}</td>
+                        <td class="filesize">{{.SizeFormatted}}</td>
+                        <td class="fileage">{{.Age}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            {{end}}
+        </div>
+    </div>
+
+    <!-- Destination A Pane -->
+    <div class="folder-pane">
+        <div class="folder-header">
+            <h3>Destination A ({{.DestACount}} files)</h3>
+            {{if .DestAStats}}
+            <span class="folder-stats">{{.DestAStats.TotalSizeFormatted}}</span>
+            {{end}}
+        </div>
+        <div class="folder-content">
+            {{if eq .DestACount 0}}
+            <p class="empty-folder">No files</p>
+            {{else}}
+            <table class="folder-table">
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Size</th>
+                        <th>Age</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .DestAFiles}}
+                    <tr>
+                        <td class="filename">{{.Name}}</td>
+                        <td class="filesize">{{.SizeFormatted}}</td>
+                        <td class="fileage">{{.Age}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            {{end}}
+        </div>
+    </div>
+
+    <!-- Destination B Pane -->
+    <div class="folder-pane">
+        <div class="folder-header">
+            <h3>Destination B ({{.DestBCount}} files)</h3>
+            {{if .DestBStats}}
+            <span class="folder-stats">{{.DestBStats.TotalSizeFormatted}}</span>
+            {{end}}
+        </div>
+        <div class="folder-content">
+            {{if eq .DestBCount 0}}
+            <p class="empty-folder">No files</p>
+            {{else}}
+            <table class="folder-table">
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Size</th>
+                        <th>Age</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .DestBFiles}}
+                    <tr>
+                        <td class="filename">{{.Name}}</td>
+                        <td class="filesize">{{.SizeFormatted}}</td>
+                        <td class="fileage">{{.Age}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            {{end}}
+        </div>
+    </div>
+
+    <!-- Failed Folder Pane -->
+    <div class="folder-pane">
+        <div class="folder-header">
+            <h3>Failed ({{.FailedCount}} files)</h3>
+            {{if .FailedStats}}
+            <span class="folder-stats">{{.FailedStats.TotalSizeFormatted}}</span>
+            {{end}}
+        </div>
+        <div class="folder-content">
+            {{if eq .FailedCount 0}}
+            <p class="empty-folder">No files</p>
+            {{else}}
+            <table class="folder-table">
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Size</th>
+                        <th>Age</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .FailedFiles}}
+                    <tr class="failed-file">
+                        <td class="filename">{{.Name}}</td>
+                        <td class="filesize">{{.SizeFormatted}}</td>
+                        <td class="fileage">{{.Age}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            {{end}}
+        </div>
+    </div>
+</div>
+{{end}}

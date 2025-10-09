@@ -13,7 +13,8 @@ func NewAPIRouter() http.Handler {
 	mux.HandleFunc("/api/system-info", handleSystemInfoAPI)
 
 	// Dashboard
-	mux.HandleFunc("/", handleDashboardAPI)
+	mux.HandleFunc("/", handleDashboardEnhancedAPI)
+	mux.HandleFunc("/dashboard", handleDashboardAPI) // Legacy Phase 2 dashboard
 
 	// API endpoints
 	mux.HandleFunc("/api/jobs", handleJobListAPI)
@@ -33,6 +34,17 @@ func NewAPIRouter() http.Handler {
 	mux.HandleFunc("/jobs/", func(w http.ResponseWriter, r *http.Request) {
 		id := PathParam(r.URL.Path, "/jobs/")
 		handleJobDetailAPI(w, r, id)
+	})
+
+	// Folder scanning endpoints (Phase 3 Task 3.3)
+	mux.HandleFunc("/api/folders", handleAllFolders)
+	mux.HandleFunc("/api/folders/", func(w http.ResponseWriter, r *http.Request) {
+		folderName := PathParam(r.URL.Path, "/api/folders/")
+		if folderName == "" {
+			handleAllFolders(w, r)
+			return
+		}
+		handleFolderView(w, r, folderName)
 	})
 
 	// Static files

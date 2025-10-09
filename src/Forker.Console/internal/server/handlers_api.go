@@ -109,6 +109,23 @@ func handleDashboardAPI(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleDashboardEnhancedAPI(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{
+		"Title": "ForkerDotNet Console",
+		"Page":  "dashboard",
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	// Try dashboard-enhanced.html first, fall back to dashboard.html
+	if err := templates.ExecuteTemplate(w, "dashboard-enhanced.html", data); err != nil {
+		log.Printf("[WARN] Enhanced dashboard template not found, using basic dashboard: %v", err)
+		if err := templates.ExecuteTemplate(w, "base.html", data); err != nil {
+			log.Printf("[ERROR] Template execution failed: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+	}
+}
+
 func handleJobListAPI(w http.ResponseWriter, r *http.Request) {
 	client := GetAPIClient()
 	if client == nil {

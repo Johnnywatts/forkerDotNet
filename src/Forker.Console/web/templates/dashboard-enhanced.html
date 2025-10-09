@@ -1,0 +1,176 @@
+{{define "content"}}
+<div class="dashboard-enhanced">
+    <h2>ForkerDotNet Production Console</h2>
+
+    <!-- Top Section: 4-Pane Folder View -->
+    <section class="folders-section">
+        <h3>Folder Views</h3>
+        <div id="folders-view"
+             hx-get="/api/folders"
+             hx-trigger="load, every 5s"
+             hx-swap="innerHTML">
+            <div class="loading">Loading folder views...</div>
+        </div>
+    </section>
+
+    <!-- Bottom Section: Transaction History (Recent Jobs) -->
+    <section class="transactions-section">
+        <h3>Recent Transactions</h3>
+        <div id="jobs-table"
+             hx-ext="sse"
+             sse-connect="/api/stream"
+             sse-swap="job-update"
+             hx-get="/api/jobs"
+             hx-trigger="load">
+            <div class="loading">Loading transactions...</div>
+        </div>
+    </section>
+</div>
+
+<style>
+.dashboard-enhanced {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.folders-section,
+.transactions-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.folders-section h3,
+.transactions-section h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 0.5rem;
+}
+
+.folders-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.folder-pane {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 400px;
+}
+
+.folder-header {
+    background: #f8f9fa;
+    padding: 0.75rem;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.folder-header h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #2c3e50;
+    border: none;
+    padding: 0;
+}
+
+.folder-stats {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    font-weight: normal;
+}
+
+.folder-content {
+    overflow-y: auto;
+    flex: 1;
+}
+
+.folder-table {
+    width: 100%;
+    font-size: 0.85rem;
+}
+
+.folder-table thead {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+}
+
+.folder-table th {
+    padding: 0.5rem;
+    text-align: left;
+    font-weight: 600;
+    color: #34495e;
+    border-bottom: 2px solid #ecf0f1;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.folder-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.filename {
+    font-family: 'Courier New', monospace;
+    word-break: break-all;
+}
+
+.filesize {
+    text-align: right;
+    color: #7f8c8d;
+    white-space: nowrap;
+}
+
+.fileage {
+    text-align: right;
+    color: #95a5a6;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.failed-file {
+    background-color: #fee;
+}
+
+.failed-file .filename {
+    color: #c0392b;
+    font-weight: 500;
+}
+
+.empty-folder {
+    text-align: center;
+    padding: 2rem;
+    color: #95a5a6;
+    font-style: italic;
+}
+
+.transactions-section {
+    min-height: 300px;
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 1200px) {
+    .folders-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .folders-container {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{{end}}
