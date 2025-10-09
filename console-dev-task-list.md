@@ -399,22 +399,42 @@ environment:
 
 ---
 
-### Task 3.4: Update UI Templates (4 Folder Panes) ⚠️ PARTIALLY COMPLETE
-**Estimated Time:** 3 hours | **Actual Time:** 1 hour | **Status:** Templates created, integration pending
+### Task 3.4: Update UI Templates (Folders + Transactions) ⚠️ PARTIALLY COMPLETE
+**Estimated Time:** 3 hours | **Actual Time:** 5 hours | **Status:** Folders ✅ WORKING | Transactions ⚠️ BUGGY
 
-**Files Created:**
-- [x] `web/templates/folders-view.html` (145 lines) - 4-pane grid layout
-- [x] `web/templates/dashboard-enhanced.html` (189 lines) - Enhanced dashboard with folders + transactions
-- [x] `internal/server/handlers_api.go` - handleDashboardEnhancedAPI()
+**Files Created/Updated:**
+- [x] `internal/server/handlers_api.go` - Standalone HTML page handlers (478 lines)
+  - `handleFoldersPage()` - ✅ WORKING
+  - `handleTransactionsPage()` - ⚠️ BUGGY (see issues below)
+- [x] `internal/server/handlers_folders.go` - Fixed JSON-only response (no htmx HTML)
+- [x] `internal/server/router_api.go` - Added `/folders` and `/transactions` routes
+- [x] `internal/apiclient/client.go` - Added `fixHostHeader()` for Docker networking
+- [x] `src/Forker.Service/MonitoringService.cs` - Fixed to bind to `localhost` only
+- [x] `src/Forker.Infrastructure/Services/FileDiscoveryService.cs` - **FIXED CRITICAL BUG** (removed bogus pending timeout)
 
-**Files Updated:**
-- [x] `internal/server/router_api.go` - Dashboard routes (temporarily using basic dashboard)
+**Folders Page - ✅ FULLY WORKING:**
+- Fixed 2x2 grid layout: Input (top-left), DestinationA (top-right), Failed (bottom-left), DestinationB (bottom-right)
+- Displays 11 SVS files from ForkerDemo folders (1-3.5GB each, 26.2GB total per destination)
+- Correct explicit ordering via `folderOrder` array
+- Auto-refresh every 5 seconds via htmx
+- JSON API integration working (`/api/folders` → 48ms response)
+- Fixed grid CSS to always show 2 columns (no responsive breakage)
+- Navigation button works
 
-**Known Issue:**
-- ⚠️ Enhanced dashboard template integration incomplete
-- Template not rendering in browser (blank page)
-- Workaround: Using basic Phase 2 dashboard template
-- Fix required: Proper Go template block structure
+**Transactions Page - ⚠️ BUGGY (Needs fixing tomorrow):**
+- Layout renders correctly (2x2 grid: Pending, Copied, Verified, Failed)
+- JSON API integration working (`/api/jobs`)
+- State filtering implemented (camelCase: InProgress, Verified, etc.)
+- **BUG 1:** "Pending" pane always empty because files process too fast (Discovered→Queued→InProgress→Verified in 3-24 seconds, faster than 5s htmx refresh)
+- **BUG 2:** Files show as "undefined" with "NaN" sizes when database has old/stale data (missing sourcePath/sizeBytes fields)
+- **BUG 3:** User expectation issue - 2-3GB files copy so fast they're rarely visible in intermediate states
+- Navigation button works (Folders ↔ Transactions)
+
+**Critical Bug Fixed - FileDiscoveryService "Giving Up" Issue:**
+- **Problem**: Files were timing out after 20 seconds (MaxStabilityChecks × StabilityCheckInterval) even when stable and just waiting in queue for processing
+- **Root Cause**: Code checked total pending time BEFORE calling stability checker, so stable files waiting their turn would timeout
+- **Fix**: Removed lines 369-379 (bogus "pending timeout" logic), stability checker already handles growing/locked file detection properly
+- **Result**: Files now wait indefinitely in queue without being abandoned, only fail if actually growing/locked after stability checks
 
 **Folder View Layout:**
 ```
@@ -521,6 +541,59 @@ services:
 - ✅ API tests pass (20/20)
 - ⏸️ Dashboard visual verification (interrupted)
 - ⏸️ Re-queue operation (not tested yet)
+
+---
+
+### Task 3.7: Refactor to Proper Go Templates 🔲 TODO
+**Estimated Time:** 2-3 hours | **Priority:** Medium | **Technical Debt**
+
+**Current Problem:**
+- HTML embedded as strings in Go handlers (478 lines in handlers_api.go)
+- Navigation/header duplicated across handleFoldersPage, handleTransactionsPage, handleDashboard
+- Mixed concerns: HTML mixed with Go logic
+- Harder to maintain: UI changes require editing Go source code
+- **Root Cause:** Took shortcut to bypass `template.Clone()` error during implementation
+
+**Goal:** Implement proper Go template composition with base layout
+
+**Files to Create/Update:**
+- [ ] `web/templates/base.html` - Shared layout, navigation, CSS
+- [ ] `web/templates/folders.html` - Folder-specific content only (no header/nav)
+- [ ] `web/templates/transactions.html` - Transaction-specific content only
+- [ ] Update `internal/server/handlers_api.go` - Simplify handlers to use templates
+
+**Expected Handler Simplification:**
+```go
+// Before: 200+ lines of embedded HTML string
+func handleFoldersPage(w http.ResponseWriter, r *http.Request) {
+    html := `<!DOCTYPE html>...` // massive string
+    w.Write([]byte(html))
+}
+
+// After: ~10 lines using proper templates
+func handleFoldersPage(w http.ResponseWriter, r *http.Request) {
+    templates.ExecuteTemplate(w, "folders", nil)
+}
+```
+
+**Benefits:**
+- ✅ DRY principle: One base template, no duplicated navigation/header code
+- ✅ Separation of concerns: HTML in .html files, Go logic in .go files
+- ✅ Maintainability: UI changes don't require recompiling Go code
+- ✅ Designer-friendly: Non-programmers can edit HTML files
+
+**Success Criteria:**
+- Base template with shared layout working
+- All 3 pages (dashboard, folders, transactions) extend base template
+- No duplicated HTML code
+- Handlers simplified to <20 lines each
+- Template cloning error resolved
+
+**Implementation Notes:**
+- Research proper Go template composition pattern (define/block/template)
+- May need to use `{{define "content"}}` blocks instead of Clone()
+- Consider template caching for performance
+- See Go template documentation: https://pkg.go.dev/html/template
 
 ---
 

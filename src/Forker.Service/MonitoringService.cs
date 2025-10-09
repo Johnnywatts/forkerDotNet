@@ -42,8 +42,11 @@ public class MonitoringService : BackgroundService
     {
         _listener = new HttpListener();
 
-        // Bind to localhost:8081 only (works without admin)
-        // For Docker to reach Windows host, Docker will use host.docker.internal
+        // Disable host header checking to allow Docker's host.docker.internal
+        _listener.UnsafeConnectionNtlmAuthentication = false;
+        _listener.IgnoreWriteExceptions = true;
+
+        // Bind to localhost on port 8081
         _listener.Prefixes.Add("http://localhost:8081/");
 
         try

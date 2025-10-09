@@ -26,6 +26,12 @@ func NewClient(baseURL string) *Client {
 	}
 }
 
+// fixHostHeader overrides the Host header to "localhost:8081" for Windows HttpListener compatibility
+// Windows HttpListener rejects "host.docker.internal" as an invalid hostname
+func fixHostHeader(req *http.Request) {
+	req.Host = "localhost:8081"
+}
+
 // Health checks the API health endpoint
 func (c *Client) Health(ctx context.Context) (*HealthResponse, error) {
 	url := fmt.Sprintf("%s/api/monitoring/health", c.baseURL)
@@ -34,6 +40,8 @@ func (c *Client) Health(ctx context.Context) (*HealthResponse, error) {
 	if err != nil {
 		return nil, fmt.Errorf("create request: %w", err)
 	}
+
+	fixHostHeader(req)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -62,6 +70,8 @@ func (c *Client) GetStats(ctx context.Context) (*StatsResponse, error) {
 	if err != nil {
 		return nil, fmt.Errorf("create request: %w", err)
 	}
+
+	fixHostHeader(req)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -93,6 +103,8 @@ func (c *Client) GetJobs(ctx context.Context, state string, limit int) ([]JobSum
 	if err != nil {
 		return nil, fmt.Errorf("create request: %w", err)
 	}
+
+	fixHostHeader(req)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {

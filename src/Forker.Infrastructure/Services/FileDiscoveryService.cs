@@ -366,32 +366,24 @@ public sealed class FileDiscoveryService : IFileDiscoveryService, IAsyncDisposab
                         continue;
                     }
 
-                    // Check if file has been pending too long
-                    var pendingTime = DateTime.UtcNow - firstSeen;
-                    var maxPendingTime = TimeSpan.FromSeconds(_monitoring.MaxStabilityChecks * _monitoring.StabilityCheckInterval);
-
-                    if (pendingTime > maxPendingTime)
-                    {
-                        _logger.LogWarning("File {FilePath} has been pending for {PendingTime}, giving up",
-                            filePath, pendingTime);
-                        filesToRemove.Add(filePath);
-                        continue;
-                    }
-
                     // Check stability with cancellation support
+                    // The stability checker will handle its own timeout logic based on MaxStabilityChecks
                     var stabilityResult = await _stabilityChecker.WaitForStabilityAsync(filePath, cancellationToken);
 
                     if (stabilityResult.IsStable)
                     {
+                        // File is stable (not growing, not locked) - ready for processing
                         filesToRemove.Add(filePath);
                         await NotifyFileDiscovered(filePath);
                     }
                     else if (stabilityResult.ChecksPerformed >= _monitoring.MaxStabilityChecks)
                     {
-                        _logger.LogWarning("File {FilePath} failed stability check: {Reason}",
-                            filePath, stabilityResult.UnstableReason);
+                        // File failed stability check after max attempts (still growing or locked)
+                        _logger.LogWarning("File {FilePath} failed stability check after {Checks} attempts: {Reason}",
+                            filePath, stabilityResult.ChecksPerformed, stabilityResult.UnstableReason);
                         filesToRemove.Add(filePath);
                     }
+                    // If stability check is incomplete (< MaxStabilityChecks), file stays in pending queue for next iteration
                 }
                 catch (OperationCanceledException)
                 {

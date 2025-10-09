@@ -1,8 +1,8 @@
 # ForkerDotNet Management Console - Design Document
 
-**Version:** 1.1
-**Date:** 2025-10-08
-**Status:** Updated Design - API-First Architecture
+**Version:** 1.2
+**Date:** 2025-10-09
+**Status:** Phase 2 Partially Complete - Folder Scanner Working, Transactions Buggy
 
 ---
 
@@ -606,51 +606,136 @@ environment:
 
 ---
 
-### Phase 2: Production Monitoring Dashboard (6-8 hours)
+### Phase 2: Production Monitoring Dashboard (6-8 hours) ✅ PARTIALLY COMPLETE
 
 **UI Layout (Based on Mockup1.jpg):**
 
 **Top Panel:**
 - **Service Health Info:** PID, uptime, memory usage, database path, last activity
 
-**Main Dashboard - Two View Modes:**
+**Main Dashboard - Separate Page Navigation:**
 
-**A) Folder View (Explorer-Style):**
-- 4 scrollable panes showing file listings:
-  1. **Input** - Files waiting/being copied (sorted by descending age)
-  2. **Dest A** - Verified copies at destination A
-  3. **Dest B** - Verified copies at destination B
-  4. **Failed** - Permanent copy failures after retries
-- Each pane shows: filename, size, age/modified time
+**A) Folder View (Explorer-Style):** ✅ FULLY WORKING
+- 4 scrollable panes in 2x2 grid (fixed layout):
+  1. **Input** (top-left) - Files waiting/being copied (sorted by descending age)
+  2. **DestinationA** (top-right) - Verified copies at destination A
+  3. **Failed** (bottom-left) - Permanent copy failures after retries
+  4. **DestinationB** (bottom-right) - Verified copies at destination B
+- Each pane shows: filename, size (GB), age/modified time
 - Pane title shows count (e.g., "Input (5 files)")
-- Updates every 2 seconds (configurable)
+- Updates every 5 seconds via htmx polling
+- **Implementation:** Standalone HTML in handlers_api.go (handleFoldersPage)
+- **Data Source:** Direct filesystem reads + HTTP API for metadata
+- **Status:** Production-ready, displaying 11 SVS files (2.3-3.5GB each, 26.2GB total)
 
-**B) Transaction View (State-Based):**
-- 2 scrollable panes showing job states:
-  1. **In Progress** - Discovered/Queued/InProgress/Partial states
-  2. **Completed** - Verified/Failed/Quarantined terminal states
-- Each row shows: filename, current state, timestamp
-- Color-coded badges for states
+**B) Transaction View (State-Based):** ⚠️ BUGGY (Needs fixing)
+- 4 scrollable panes in 2x2 grid:
+  1. **Pending** (top-left) - Discovered/Queued states
+  2. **Copied** (top-right) - InProgress/Partial states
+  3. **Verified** (bottom-left) - Verified state
+  4. **Failed** (bottom-right) - Failed/Quarantined states
+- Each row shows: filename, current state, size, timestamp
+- Color-coded badges for states (green/yellow/red)
+- **Implementation:** Standalone HTML in handlers_api.go (handleTransactionsPage)
+- **Data Source:** HTTP API /api/jobs
+- **Known Bugs:**
+  - "Pending" pane always empty (files process too fast: 3-24 seconds for 2-3GB)
+  - Shows "undefined" with "NaN" sizes for stale database entries
+  - User expectation issue: system too fast to observe intermediate states
 
 **Stats Bar (Always Visible):**
 - Total jobs, Active, Verified, Failed, Quarantined counts
 - Throughput (MB/s) if available
+- **Status:** ⚠️ Not loading (Docker networking issue - low priority)
+
+**Navigation:**
+- Dashboard (home) → Folders → Transactions → Demo Mode buttons in header
 
 **Deliverables:**
-- Folder view with 4 explorer-style panes (direct filesystem reads)
-- Transaction view with 2 state panes (HTTP API data)
-- Service health panel (HTTP API data)
-- Stats bar with live updates (htmx polling)
-- Re-queue button for failed files (HTTP POST to API)
-- View toggle button (Folder View ↔ Transaction View)
+- ✅ Folder view with 4 explorer-style panes (direct filesystem reads)
+- ⚠️ Transaction view with 4 state panes (HTTP API data) - partially working
+- ✅ Service health panel (HTTP API data)
+- ⚠️ Stats bar with live updates (htmx polling) - not loading
+- ⏳ Re-queue button for failed files (HTTP POST to API) - planned
+- ✅ Navigation buttons between pages (Dashboard ↔ Folders ↔ Transactions ↔ Demo Mode)
 
 **Success Criteria:**
-- Dashboard updates every 2 seconds automatically
-- Folder views show live file listings (newest first)
-- Transaction view shows correct job states
-- Re-queue operation moves files from Failed → Input
-- Works on both Windows Docker Desktop and WSL Docker
-- No SQLite WAL locking errors
+- ✅ Dashboard updates every 5 seconds automatically
+- ✅ Folder views show live file listings (newest first)
+- ⚠️ Transaction view shows job states (buggy for fast processing)
+- ⏳ Re-queue operation moves files from Failed → Input
+- ✅ Works on both Windows Docker Desktop and WSL Docker
+- ✅ No SQLite WAL locking errors (using HTTP API approach)
+
+**Critical Implementation Details:**
+
+**1. Standalone HTML Handlers (Not Go Templates):**
+- Abandoned Go template composition (`template.Clone()` fails after execution)
+- Embedded HTML directly in handler functions (handlers_api.go lines 111-478)
+- JavaScript uses htmx:afterRequest event to parse JSON and render HTML client-side
+- **Benefit:** Eliminates template complexity, faster development
+
+**2. Docker Networking - Host Header Override:**
+- Windows HttpListener bound to `localhost:8081`, rejects `host.docker.internal` Host header
+- **Fix:** Added `fixHostHeader()` in client.go to override `req.Host = "localhost:8081"`
+- **Config:** `extra_hosts: host.docker.internal:host-gateway` in docker-compose.yml
+- **Result:** Container-to-host HTTP API calls work correctly
+
+**3. Fixed Grid Layout (2x2):**
+- CSS: `grid-template-columns: 1fr 1fr` (not responsive auto-fit)
+- Prevents layout breaking when browser width changes
+- Explicit folder order via JavaScript array: `['input', 'destinationA', 'failed', 'destinationB']`
+
+**4. JSON API Always Returns JSON (Not HTML):**
+- Removed htmx header detection in handlers (was causing "Unexpected token '<'" errors)
+- `/api/folders` and `/api/jobs` always return `Content-Type: application/json`
+- JavaScript manually renders HTML from JSON response
+
+**5. Critical Bug Fixed: FileDiscoveryService "Giving Up" on Stable Files:**
+- **Location:** `src/Forker.Infrastructure/Services/FileDiscoveryService.cs` (lines 369-379 removed)
+- **Problem:** Code checked total pending time BEFORE stability check, so stable files waiting in queue would timeout after 20 seconds and be abandoned
+- **Initial Bad Fix:** Increased MaxStabilityChecks from 10 to 300 (600 second timeout) - rejected as hack
+- **Proper Fix:** Removed bogus pending timeout logic entirely
+- **Rationale:** FileStabilityChecker already handles growing/locked files with its own timeout logic
+- **Result:** Stable files can now wait indefinitely in queue, only fail if actually growing/locked after stability checks
+- **Config Reverted:** `MaxStabilityChecks` restored to 10 (was temporarily 300)
+
+**Buggy Code (REMOVED):**
+```csharp
+// Check if file has been pending too long
+var pendingTime = DateTime.UtcNow - firstSeen;
+var maxPendingTime = TimeSpan.FromSeconds(_monitoring.MaxStabilityChecks * _monitoring.StabilityCheckInterval);
+
+if (pendingTime > maxPendingTime)
+{
+    _logger.LogWarning("File {FilePath} has been pending for {PendingTime}, giving up",
+        filePath, pendingTime);
+    filesToRemove.Add(filePath);
+    continue;
+}
+```
+
+**Proper Logic (CURRENT):**
+```csharp
+// Check stability with cancellation support
+// The stability checker will handle its own timeout logic based on MaxStabilityChecks
+var stabilityResult = await _stabilityChecker.WaitForStabilityAsync(filePath, cancellationToken);
+
+if (stabilityResult.IsStable)
+{
+    // File is stable (not growing, not locked) - ready for processing
+    filesToRemove.Add(filePath);
+    await NotifyFileDiscovered(filePath);
+}
+else if (stabilityResult.ChecksPerformed >= _monitoring.MaxStabilityChecks)
+{
+    // File failed stability check after max attempts (still growing or locked)
+    _logger.LogWarning("File {FilePath} failed stability check after {Checks} attempts: {Reason}",
+        filePath, stabilityResult.ChecksPerformed, stabilityResult.UnstableReason);
+    filesToRemove.Add(filePath);
+}
+// If stability check is incomplete (< MaxStabilityChecks), file stays in pending queue for next iteration
+```
 
 ---
 
@@ -688,7 +773,25 @@ environment:
 
 ---
 
-**Total Implementation Effort:** 19-26 hours
+**Total Implementation Effort:** 19-26 hours (estimated) | **Actual:** 13 hours (Phase 1: 4h, Phase 2: 9h)
+
+**Current Status Summary:**
+- ✅ **Phase 1 Complete:** Core infrastructure working (Go server, Docker, health endpoint)
+- ✅ **Phase 2 Partially Complete:** Folder scanner fully working, Transactions page buggy
+- ⏳ **Phase 3 Pending:** Demo Mode implementation
+- ⏳ **Phase 4 Pending:** Polish & Security hardening
+
+**Key Achievements:**
+- Eliminated SQLite WAL locking issues by using HTTP API approach
+- Fixed critical FileDiscoveryService bug (files no longer abandoned when queuing)
+- Standalone HTML handlers working (bypassed Go template complexity)
+- Docker networking working with Host header override
+- 11 SVS files (2.3-3.5GB each) displaying correctly in Folder View
+
+**Outstanding Issues:**
+- Transaction page "Pending" pane always empty (files process too fast)
+- Transaction page shows "undefined" for stale database entries
+- Stats bar not loading (Docker networking issue - low priority)
 
 ---
 

@@ -177,6 +177,8 @@ func handleFoldersPage(w http.ResponseWriter, r *http.Request) {
         <nav>
             <a href="/">Dashboard</a>
             <a href="/folders" class="active">Folders</a>
+            <a href="/transactions">Transactions</a>
+            <a href="/demo">Demo Mode</a>
         </nav>
     </header>
     <main>
@@ -254,6 +256,229 @@ func handleFoldersPage(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(html))
 }
 
+func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+
+	html := `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions - ForkerDotNet Console</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .transactions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .transaction-pane {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+        .transaction-pane h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 1.2em;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 10px;
+        }
+        .transaction-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .transaction-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+        }
+        .transaction-item:hover {
+            background: #f0f0f0;
+        }
+        .transaction-filename {
+            font-weight: 600;
+            color: #0066cc;
+            margin-bottom: 5px;
+        }
+        .transaction-details {
+            font-size: 0.85em;
+            color: #666;
+        }
+        .no-transactions {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ForkerDotNet Console</h1>
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/folders">Folders</a>
+            <a href="/transactions" class="active">Transactions</a>
+            <a href="/demo">Demo Mode</a>
+        </nav>
+    </header>
+    <main>
+        <h2>File Copy Transactions</h2>
+        <div id="transactions-container" hx-get="/api/jobs" hx-trigger="load, every 5s" hx-swap="none">
+            <div class="loading">Loading transactions...</div>
+        </div>
+    </main>
+    <script>
+    document.body.addEventListener('htmx:afterRequest', function(evt) {
+        if (evt.detail.target.id === 'transactions-container') {
+            try {
+                const data = JSON.parse(evt.detail.xhr.responseText);
+                // API returns {"jobs": [...]} so extract the jobs array
+                const jobs = data.jobs || [];
+                const html = renderTransactions(jobs);
+                evt.detail.target.innerHTML = html;
+            } catch (e) {
+                console.error('Failed to parse transaction data:', e);
+                evt.detail.target.innerHTML = '<div class="loading">Error loading transactions: ' + e.message + '</div>';
+            }
+        }
+    });
+
+    function renderTransactions(jobs) {
+        if (!jobs || jobs.length === 0) {
+            return '<div class="no-transactions">No transactions yet</div>';
+        }
+
+        // Group jobs by state (API returns camelCase: InProgress, Verified, etc.)
+        const pending = jobs.filter(j => j.state === 'Queued' || j.state === 'Discovered');
+        const copied = jobs.filter(j => j.state === 'InProgress' || j.state === 'Partial');
+        const verified = jobs.filter(j => j.state === 'Verified');
+        const failed = jobs.filter(j => j.state === 'Failed' || j.state === 'Quarantined');
+
+        let html = '<div class="transactions-grid">';
+
+        // Pending pane
+        html += ` + "`" + `
+            <div class="transaction-pane">
+                <h3>Pending (${pending.length})</h3>
+                <div class="transaction-list">
+        ` + "`" + `;
+
+        if (pending.length > 0) {
+            pending.forEach(job => {
+                html += ` + "`" + `
+                    <div class="transaction-item">
+                        <div class="transaction-filename">${job.filename}</div>
+                        <div class="transaction-details">
+                            State: ${job.state}<br>
+                            Size: ${formatBytes(job.sizeBytes)}
+                        </div>
+                    </div>
+                ` + "`" + `;
+            });
+        } else {
+            html += '<div class="no-transactions">No pending transactions</div>';
+        }
+
+        html += '</div></div>';
+
+        // Copied pane
+        html += ` + "`" + `
+            <div class="transaction-pane">
+                <h3>Copied (${copied.length})</h3>
+                <div class="transaction-list">
+        ` + "`" + `;
+
+        if (copied.length > 0) {
+            copied.forEach(job => {
+                html += ` + "`" + `
+                    <div class="transaction-item">
+                        <div class="transaction-filename">${job.filename}</div>
+                        <div class="transaction-details">
+                            State: ${job.state}<br>
+                            Size: ${formatBytes(job.sizeBytes)}
+                        </div>
+                    </div>
+                ` + "`" + `;
+            });
+        } else {
+            html += '<div class="no-transactions">No copied transactions</div>';
+        }
+
+        html += '</div></div>';
+
+        // Verified pane
+        html += ` + "`" + `
+            <div class="transaction-pane">
+                <h3>Verified (${verified.length})</h3>
+                <div class="transaction-list">
+        ` + "`" + `;
+
+        if (verified.length > 0) {
+            verified.forEach(job => {
+                html += ` + "`" + `
+                    <div class="transaction-item">
+                        <div class="transaction-filename">${job.filename}</div>
+                        <div class="transaction-details">
+                            State: ${job.state}<br>
+                            Size: ${formatBytes(job.sizeBytes)}
+                        </div>
+                    </div>
+                ` + "`" + `;
+            });
+        } else {
+            html += '<div class="no-transactions">No verified transactions</div>';
+        }
+
+        html += '</div></div>';
+
+        // Failed pane
+        html += ` + "`" + `
+            <div class="transaction-pane">
+                <h3>Failed (${failed.length})</h3>
+                <div class="transaction-list">
+        ` + "`" + `;
+
+        if (failed.length > 0) {
+            failed.forEach(job => {
+                html += ` + "`" + `
+                    <div class="transaction-item">
+                        <div class="transaction-filename">${job.filename}</div>
+                        <div class="transaction-details">
+                            State: ${job.state}<br>
+                            Size: ${formatBytes(job.sizeBytes)}
+                        </div>
+                    </div>
+                ` + "`" + `;
+            });
+        } else {
+            html += '<div class="no-transactions">No failed transactions</div>';
+        }
+
+        html += '</div></div></div>';
+        return html;
+    }
+
+    function formatBytes(bytes) {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    </script>
+</body>
+</html>`
+
+	w.Write([]byte(html))
+}
+
 func handleDashboardEnhancedAPI(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{
 		"Title": "ForkerDotNet Console",
@@ -288,22 +513,11 @@ func handleJobListAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Check if htmx request (wants HTML fragment) or regular request (wants JSON)
-	if r.Header.Get("HX-Request") == "true" {
-		data := map[string]interface{}{
-			"Jobs": enrichAPIJobsForDisplay(jobs),
-		}
-		w.Header().Set("Content-Type", "text/html")
-		if err := templates.ExecuteTemplate(w, "job-list", data); err != nil {
-			log.Printf("[ERROR] Template execution failed: %v", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		}
-	} else {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]interface{}{
-			"jobs": jobs,
-		})
-	}
+	// Always return JSON - JavaScript will handle HTML rendering
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"jobs": jobs,
+	})
 }
 
 func handleJobDetailAPI(w http.ResponseWriter, r *http.Request, id string) {

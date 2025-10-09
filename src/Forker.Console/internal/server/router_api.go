@@ -16,6 +16,7 @@ func NewAPIRouter() http.Handler {
 	mux.HandleFunc("/", handleDashboardAPI)
 	mux.HandleFunc("/dashboard", handleDashboardAPI)
 	mux.HandleFunc("/folders", handleFoldersPage)
+	mux.HandleFunc("/transactions", handleTransactionsPage)
 
 	// API endpoints
 	mux.HandleFunc("/api/jobs", handleJobListAPI)
