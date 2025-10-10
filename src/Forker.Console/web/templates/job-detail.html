@@ -56,6 +56,52 @@
         </ul>
     </div>
 
+    <div class="state-history">
+        <h3>State History</h3>
+        <table class="state-history-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Entity</th>
+                    <th>Transition</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .StateHistory}}
+                <tr class="state-transition">
+                    <td class="state-time">{{.TimestampFormatted}}</td>
+                    <td class="state-entity">
+                        {{if .EntityID}}
+                            {{.EntityType}} {{.EntityID}}
+                        {{else}}
+                            {{.EntityType}}
+                        {{end}}
+                    </td>
+                    <td class="state-change">
+                        {{if .OldState}}
+                            <span class="badge badge-{{.OldState}}">{{.OldState}}</span>
+                            →
+                        {{end}}
+                        <span class="badge badge-{{.NewState}}">{{.NewState}}</span>
+                    </td>
+                    <td class="state-duration">
+                        {{if .DurationMs}}
+                            {{.DurationMs}}ms
+                        {{else}}
+                            -
+                        {{end}}
+                    </td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td colspan="4" class="no-data">No state history available</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+
     <div class="actions">
         <a href="/" class="btn">← Back to Dashboard</a>
     </div>
