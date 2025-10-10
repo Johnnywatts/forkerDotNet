@@ -1,0 +1,916 @@
+[15:17:06.848] ===================================
+[15:17:06.861] API State Debugging Harness Started
+[15:17:06.863] ===================================
+[15:17:06.864] Poll Interval: 500 ms
+[15:17:06.865] Duration: 10 seconds
+[15:17:06.866] Log File: api-debug-20251010-151706.log
+[15:17:06.867] 
+[15:17:06.868] STEP 1: Copying files from C:\ForkerDemo\DestinationA to C:\ForkerDemo\Input
+[15:17:06.875] Found 7 files to copy
+[15:17:07.737]   Copied: 484759.svs
+[15:17:08.841]   Copied: 484765.svs
+[15:17:14.771]   Copied: 484769.svs
+[15:17:15.514]   Copied: 484771.svs
+[15:17:27.312]   Copied: 484775.svs
+[15:17:34.182]   Copied: 484779.svs
+[15:17:34.261]   Copied: test-1760104306.svs
+[15:17:34.262] File copy complete - processing should start now
+[15:17:34.264] 
+[15:17:34.298] STEP 2: Polling APIs every 500 ms for 10 seconds
+[15:17:34.300] 
+[15:17:34.303] ===== POLL #1 =====
+[15:17:34.304] --- C# API (port 8081) ---
+[15:17:34.633] Jobs List Response:
+[15:17:34.635] [
+  {
+    "jobId": "c0122a84-571a-4f3b-b105-3cb0d2677289",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T14:17:30.0191197Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2afd1c58-207e-4c32-9dbd-2ea15137ac9f",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T14:17:22.4920929Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "eaaca151-870a-42a1-adb4-41fda2039a0f",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T14:17:14.1704858Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "bc362f33-0ded-48bb-8c6b-ee2e5eef208d",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:08:28.346345Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "eab4bc2a-bcee-4237-95fb-0bfaaf7cbbb2",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:08:16.6841787Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "9f08dcb8-d8a5-4a20-bda2-a8dcbcb6bfa6",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:08:12.5008346Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "6e3a9b9c-5fde-4f3d-a4d3-97fd70c3294a",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:08:08.1013592Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "451df7a0-7637-4ebd-88bd-c5784a97c979",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:08:04.0965623Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "d92268c1-5053-4d65-a8b3-7a1c071989fb",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:08:00.0661676Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "895dca4a-4deb-4409-97f4-f7942fb22063",
+    "sourcePath": "C:\\ForkerDemo\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:07:56.0304169Z",
+    "sourceHash": "395b340421b3793a4ca28433e02e509a7eee1a494e54298927605094a70986be"
+  },
+  {
+    "jobId": "b1787e48-8e49-41c5-b98d-78557347c371",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:05:10.1287931Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "36274119-a57d-422f-acbe-b6a66bbc4af0",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:05:04.4965088Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "93d7828d-61f2-4f9c-8fbf-d0fb00dfc1af",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:04:54.1329969Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "82745197-3cd7-495c-8e04-f7dc926a929a",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:04:50.1166554Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "a8be35cb-1248-4b7b-b357-25c4c4a57b52",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:04:46.0701009Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "46e182fe-8fed-4ad8-8527-5d8b6fafad26",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:04:42.0469551Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "9630f884-4850-4194-87e8-34921f07eaa5",
+    "sourcePath": "C:\\ForkerDemo\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:04:38.0229613Z",
+    "sourceHash": "395b340421b3793a4ca28433e02e509a7eee1a494e54298927605094a70986be"
+  },
+  {
+    "jobId": "fe00b5bf-adbe-4d3e-bacf-ad9045f6eacf",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:02:39.60818Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "ea919fe3-e855-4c77-98ee-8250233aa6bc",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:02:32.1873798Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "04584964-fc52-4715-9691-64d26678580b",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:02:28.1779041Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "35f1a450-9781-498b-8170-645e5e3f6c72",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:02:24.0874608Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "69551acd-84ee-4f41-a2c7-bf38a66f2638",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:02:20.0674287Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "3c264a3d-3cc2-4d28-ac56-04edf759e1e1",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:02:16.0492228Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "36e34de2-a3fb-4c39-996d-37ce55ef551d",
+    "sourcePath": "C:\\ForkerDemo\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "Verified",
+    "createdAt": "2025-10-10T14:02:12.0184005Z",
+    "sourceHash": "395b340421b3793a4ca28433e02e509a7eee1a494e54298927605094a70986be"
+  },
+  {
+    "jobId": "7be5bd85-ca2b-44ef-a1eb-f993e36cd150",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:59:43.1098811Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "578e1b54-c2ea-482d-a901-01123142199b",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:59:39.0917313Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "801fc532-b100-47fa-a9af-5b1cc208d396",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:59:35.0759335Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "53f0533f-07b7-490a-9773-284a6e2b3463",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:59:23.0188554Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "8e98830f-d625-42c8-9598-01e20ae57a21",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:59:18.0540555Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "36d82620-3be4-47e1-bf5c-577e4fdfbb12",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:59:14.0304316Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "afbd9da2-c3ac-4a82-bc35-171e86e2fe6a",
+    "sourcePath": "C:\\ForkerDemo\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:59:10.0075317Z",
+    "sourceHash": "395b340421b3793a4ca28433e02e509a7eee1a494e54298927605094a70986be"
+  },
+  {
+    "jobId": "0035ee61-5231-438b-b487-58c9ab0580f1",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:57:27.0984532Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "b7335e1a-764a-4c5a-a6e1-3db08562886f",
+    "sourcePath": "C:\\ForkerDemo\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:57:12.002832Z",
+    "sourceHash": "395b340421b3793a4ca28433e02e509a7eee1a494e54298927605094a70986be"
+  },
+  {
+    "jobId": "cbe00e13-889f-4d47-9136-99ed3b9de031",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:57:02.6657529Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "57ed3f6c-f72d-4806-aaf7-8dd80c958bed",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:56:22.3436668Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "b013e57d-b42c-49b2-a4cb-93738b496178",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:55:44.8566367Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "2463c691-f6c1-42ab-abf8-128df257ff8f",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:55:37.2193557Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "1f176c71-f1ab-45d4-a25c-885cc0ed3271",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:55:27.5850013Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "966f681d-96f7-495f-8b32-aac169381a65",
+    "sourcePath": "C:\\ForkerDemo\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:51:52.2732082Z",
+    "sourceHash": "395b340421b3793a4ca28433e02e509a7eee1a494e54298927605094a70986be"
+  },
+  {
+    "jobId": "132bbb08-a79f-471e-aef0-5cc91d06c433",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:37:04.1749399Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "460e07f4-9a0c-488f-8ffb-b113f6ba91c4",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:36:59.516254Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "6ea45de8-1514-4438-8d05-68d26c8a8d1a",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:36:52.3815868Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "40efc8d5-6f18-4037-a123-532370827053",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:36:48.2890864Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "0faf37b4-6ba8-431d-aac1-ef5c6c0d8512",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:36:44.2807742Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "3998b56a-48f5-4b23-b304-00b5c5cb95c6",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:36:40.263433Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "a203ba4e-6929-4740-a963-5791841bad3a",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:19:40.1886391Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "6f354946-78f9-4807-ad68-4a2ea368c0ac",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:19:35.3656982Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "3033f917-44e6-48fa-892c-3bcb30a0b835",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:19:25.2615172Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "b8fe73c2-b90b-41ce-9d6f-925e40c303df",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:19:20.3057413Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "592df80e-2cdc-4946-9bb2-db209f8e47b5",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:19:16.2871726Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "c1a46e54-73fb-47d8-b8a2-ec96bc68911e",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:19:12.2740456Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "71de9b95-a911-480d-b45a-8542781ada17",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:11:24.7592623Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "84c86641-f866-480c-8b9a-d1cb5ccdd0fc",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:10:56.2550821Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "3c6ed498-21c1-48bc-a601-30a241e7a26a",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:10:47.5439869Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "f119e40e-c317-43e7-9cae-7b3bea65a061",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:10:42.3416665Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "a17325c5-38ca-438c-8f57-7da3d39637d8",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:10:38.3052481Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "c999fa6d-f0f2-4493-bbb6-eac5820567c0",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:10:34.2921019Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "f61b9d4f-5c9b-4cba-8352-bd0a5160cdea",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:06:19.5137647Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "b9f9ce9e-2842-47e9-80fc-7125a55de6d2",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:06:14.7100235Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "598d4c70-c00a-45a9-b4d8-ac7bf4c3b4f1",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:06:02.4140612Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "b94e2723-8cb1-4495-b622-ed82b507b56e",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:05:58.3978913Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "22b4f926-0ea3-4923-9e5d-30ccb168d05a",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:05:54.366247Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "463873cf-4e12-4f43-8d6b-48922de8151e",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:05:50.2897829Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "b59ed6b2-16a3-49d7-b9ea-194b3219cebb",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:02:16.2589062Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "15b2a6ce-4a95-44ab-b7f8-0fa640efcd29",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:00:59.4929208Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "90915513-fa12-4235-8319-f72ea705c5bc",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:00:55.4757858Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "11721f7d-5ff1-41cc-8026-eadb9dc99fd7",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:00:51.4712527Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "e39647c6-81aa-4125-be68-f2b532571eb1",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:00:42.4007876Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "df7d55fd-606e-4618-a844-bef6df58cc11",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:00:38.3665431Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "30313316-4890-4997-9f98-94852f1d460d",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T13:00:34.278865Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "78f1eece-64b7-42fa-bd17-86060d2043bc",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:55:09.8283084Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "ed263fc2-7e25-46b8-91a9-4f87ced6a9d7",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:55:05.7424255Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "b9d34cc2-0189-4df9-9204-678660e8fbce",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:54:59.6934061Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "7406bd1a-3f87-476c-97eb-e6e073b2bbd8",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:54:54.3379297Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "551d06f1-8b91-4a36-a666-553627a48334",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:54:50.3044514Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "55929cd8-a014-4f1b-82d2-9630acb86c50",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:54:46.2751313Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "1d30a04d-affe-4c53-abb6-27b3d577a18a",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:37:19.1769332Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "e267a279-9b4b-483f-bca6-c94cfa570976",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:37:14.8454925Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "a67c9f7a-a985-4639-9bab-ec140dab2799",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:37:09.3003905Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "b25d00a4-a15d-4536-ac59-9632422093da",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:37:04.3654753Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "be4fcf91-0db3-4c88-af85-b67558e7e978",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:37:00.3367814Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "ec35e98c-b9ed-4717-bb29-fa722c1f948f",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T12:36:56.3102071Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "93416733-e7af-430c-9bc6-d2b6ed0a39f8",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:14:33.068549Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "3d7b6aa1-beae-4278-b9fd-81ec19686ea8",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:14:28.2223814Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "c98c081c-956c-44fe-a11c-a059f0e7ced1",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:14:20.6361721Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "618d6688-8a0f-48a5-aefd-f0df568f3a1e",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:14:12.3832485Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "837c8d1d-1ac6-49c1-94c3-f68d81832569",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:14:08.3517369Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "469591cc-f76b-4459-bcd2-2e4bf320f752",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:14:04.3081307Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "fe7603af-8496-44f8-9168-d79978d19181",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:11:02.558531Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "f5aeb49a-7945-4f36-9496-29e1d0a26a83",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:10:55.824482Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "08eaf7f0-aa31-4a47-bd74-f619c7cf2089",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:10:45.5209967Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "0e394f73-4199-424a-b3e1-7cd70bebbc0f",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:10:33.5811004Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "fd805c02-4a05-4324-9a16-4b312290e949",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:10:28.3369765Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "e93b59a2-e6b1-4957-a5bf-f862c41e4de5",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T11:10:24.2905898Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  },
+  {
+    "jobId": "bb93cb89-fe73-41c2-aa70-d2872b108754",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "Verified",
+    "createdAt": "2025-10-10T10:00:31.1566871Z",
+    "sourceHash": "da075a84f54442c5272352af5e5539612dae5290f93a3c1543406c74cf7e364d"
+  },
+  {
+    "jobId": "ee5f7bdb-eddd-4941-b177-85f8017ddcba",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "Verified",
+    "createdAt": "2025-10-10T10:00:26.655716Z",
+    "sourceHash": "170b466b7810fa78396f17e85deed9a6cf96ee3f0eb356f73d8752eb78fc5578"
+  },
+  {
+    "jobId": "7e99c087-887c-4065-8091-09ee6f7301ac",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "Verified",
+    "createdAt": "2025-10-10T10:00:18.3683555Z",
+    "sourceHash": "6282c59fe366820adcd10ccedd45204e1846c629f6b5fd35a1c833cec6fd6a45"
+  },
+  {
+    "jobId": "299e0b32-6b77-429b-8693-eb32504637c8",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "Verified",
+    "createdAt": "2025-10-10T10:00:10.9893592Z",
+    "sourceHash": "33a71beb08a9d6a57d6dbac7778e7fd30d51bb2fd7e1e6ba76d4c177a04f4ea7"
+  },
+  {
+    "jobId": "280632d7-255f-4fcb-b2a9-0d03d5b6b476",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "Verified",
+    "createdAt": "2025-10-10T10:00:06.3516503Z",
+    "sourceHash": "8c7fd03c360fd00912f0f508a40c33636e4d08216129eea626b61c8eaeed2988"
+  },
+  {
+    "jobId": "89f2d665-4cb8-4f3b-adb6-7ecfbbeee628",
+    "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "Verified",
+    "createdAt": "2025-10-10T10:00:02.3163865Z",
+    "sourceHash": "f9bc2385a80a2698f4cef73dcdad2f2e5b0c00614a76023883a56b112c3909ba"
+  }
+]
+[15:17:34.640] Active jobs: 3
+[15:17:34.641] Job Details (C# API): c0122a84-571a-4f3b-b105-3cb0d2677289
+[15:17:34.648] {
+  "jobId": "c0122a84-571a-4f3b-b105-3cb0d2677289",
+  "sourcePath": "C:\\ForkerDemo\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T14:17:30.0191197Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T14:17:30.0907774Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T14:17:30.090879Z"
+    }
+  ]
+}
+[15:17:34.649] Job Details (C# API): 2afd1c58-207e-4c32-9dbd-2ea15137ac9f
+[15:17:34.653] {
+  "jobId": "2afd1c58-207e-4c32-9dbd-2ea15137ac9f",
+  "sourcePath": "C:\\ForkerDemo\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T14:17:22.4920929Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T14:17:25.4730024Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T14:17:25.473096Z"
+    }
+  ]
+}
+[15:17:34.654] Job Details (C# API): eaaca151-870a-42a1-adb4-41fda2039a0f
+[15:17:34.657] {
+  "jobId": "eaaca151-870a-42a1-adb4-41fda2039a0f",
+  "sourcePath": "C:\\ForkerDemo\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T14:17:14.1704858Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T14:17:14.1720771Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T14:17:14.1721352Z"
+    }
+  ]
+}
+[15:17:34.657] 
+[15:17:34.658] --- Go Console API (port 5000) ---
+[15:17:34.659] Job Details (Go API): c0122a84-571a-4f3b-b105-3cb0d2677289

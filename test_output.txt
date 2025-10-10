@@ -1,0 +1,26 @@
+* Host localhost:8081 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying [::1]:8081...
+* Connected to localhost (::1) port 8081
+* using HTTP/1.x
+> GET /api/monitoring/jobs HTTP/1.1
+> Host: localhost:8081
+> User-Agent: curl/8.15.0
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Content-Length: 2
+< Content-Type: application/json
+< Server: Microsoft-HTTPAPI/2.0
+< Access-Control-Allow-Origin: http://localhost:5000
+< Access-Control-Allow-Methods: GET, POST, OPTIONS
+< Access-Control-Allow-Headers: Content-Type
+< Date: Thu, 09 Oct 2025 16:45:37 GMT
+< 
+{ [2 bytes data]
+100     2  100     2    0     0     27      0 --:--:-- --:--:-- --:--:--    28[]
+* Connection #0 to host localhost left intact

@@ -1,0 +1,4746 @@
+[16:02:19.830] ===================================
+[16:02:19.835] API State Debugging Harness Started
+[16:02:19.836] ===================================
+[16:02:19.838] Poll Interval: 100 ms
+[16:02:19.839] Idle Timeout: 30 seconds (stops when no active jobs for this duration)
+[16:02:19.840] Max Duration: 300 seconds (safety limit)
+[16:02:19.841] Log File: api-debug-20251010-160219.log
+[16:02:19.842] 
+[16:02:19.843] STEP 1: Copying files from E:\ForkerDotNetTestVolume\DestinationA to E:\ForkerDotNetTestVolume\Input
+[16:02:19.847] Found 2 files to copy
+[16:02:21.221]   Copied: test-20251002-182107.svs (10 MB)
+[16:02:22.469]   Copied: test-20251002-182301.svs (10 MB)
+[16:02:22.470] File copy complete - processing should start now
+[16:02:22.472] 
+[16:02:22.474] STEP 2: Polling APIs every 100 ms until no activity for 30 seconds
+[16:02:22.475] 
+[16:02:22.481] ===== POLL #1 =====
+[16:02:22.482] --- C# API (port 8081) ---
+[16:02:22.583] Jobs List Response:
+[16:02:22.585] [
+  {
+    "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.2027826Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1111317Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1098346Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1084194Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1065803Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.9117757Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.8131045Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "b171d443-fe65-4122-8429-f3bf08e743a6",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:23:06.0223126Z",
+    "sourceHash": "601fcf9bafafa242a7763e156499aa6912f18a61558b0c75e0e925b9f4edd882"
+  },
+  {
+    "jobId": "9fde545d-37f7-42d8-9cbc-edce0c690390",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:21:13.5881048Z",
+    "sourceHash": "4c8d9c95d2aa26e7d97d44e40c6e0e62f2edbd15510fe867870eaec7fb4ed180"
+  },
+  {
+    "jobId": "2c58f0c1-642d-4b38-b742-5d6af5261d87",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-181750.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:17:55.6045801Z",
+    "sourceHash": "068bd972a5ecf7c97a3b618fe6d80e5f93049c8f826409fd1c0004aaf9a2aefa"
+  },
+  {
+    "jobId": "3dd565ea-d87c-4c4e-bea0-7aaf50d676fe",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:52:57.7119866Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "208e405d-e30b-4eac-81a5-5d9f63773cdb",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Quarantined",
+    "createdAt": "2025-10-02T16:17:26.483493Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "4def9c95-28de-46cb-8a78-42cbe5d975bf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171354.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:14:01.6877421Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "adbedfba-f1b2-43c9-8ba2-c51726b01789",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-164056.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:41:04.3548513Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "017392ac-6d91-4dc0-996f-b89313cd5dd2",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-163607.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:36:15.1021565Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "48013862-a51d-4b91-84e3-7a9feec47b71",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-161310.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:13:17.4551203Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  }
+]
+[16:02:22.590] Active jobs: 7
+[16:02:22.591] Job Details (C# API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:02:22.596] {
+  "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+  "sizeBytes": 52428800,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.2027826Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2047349Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2049273Z"
+    }
+  ]
+}
+[16:02:22.598] Job Details (C# API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:02:22.601] {
+  "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+  "sizeBytes": 3136540561,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1111317Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1119855Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.112085Z"
+    }
+  ]
+}
+[16:02:22.602] Job Details (C# API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:02:22.606] {
+  "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+  "sizeBytes": 3486943965,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1098346Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1106986Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1107986Z"
+    }
+  ]
+}
+[16:02:22.608] Job Details (C# API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:02:22.612] {
+  "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+  "sizeBytes": 3150181221,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1084194Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1092842Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1093937Z"
+    }
+  ]
+}
+[16:02:22.613] Job Details (C# API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:02:22.616] {
+  "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1065803Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1078406Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1079453Z"
+    }
+  ]
+}
+[16:02:22.618] Job Details (C# API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:02:22.621] {
+  "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.9117757Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.9144041Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.914675Z"
+    }
+  ]
+}
+[16:02:22.622] Job Details (C# API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:02:22.626] {
+  "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.8131045Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.8653903Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.866081Z"
+    }
+  ]
+}
+[16:02:22.628] 
+[16:02:22.629] --- Go Console API (port 5000) ---
+[16:02:22.630] Job Details (Go API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:02:24.665] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:24.669] Job Details (Go API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:02:26.682] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:26.685] Job Details (Go API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:02:28.697] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:28.698] Job Details (Go API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:02:30.710] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:30.713] Job Details (Go API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:02:32.715] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:32.717] Job Details (Go API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:02:34.732] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:34.734] Job Details (Go API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:02:36.740] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:36.741] 
+[16:02:36.741] --- Directory Listings ---
+[16:02:36.751] Input:        Files: 9 | 484759.svs, 484765.svs, 484769.svs, 484771.svs, 484775.svs, 484779.svs, test-1760104306.svs, test-20251002-182107.svs, test-20251002-182301.svs
+[16:02:36.752] DestinationA: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:02:36.754] DestinationB: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:02:36.755] Activity detected - resetting idle timer
+[16:02:36.756] 
+[16:02:36.860] ===== POLL #2 =====
+[16:02:36.862] --- C# API (port 8081) ---
+[16:02:36.866] Jobs List Response:
+[16:02:36.867] [
+  {
+    "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:29.7284396Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:25.7081625Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.2027826Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1111317Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1098346Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1084194Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1065803Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.9117757Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.8131045Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "b171d443-fe65-4122-8429-f3bf08e743a6",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:23:06.0223126Z",
+    "sourceHash": "601fcf9bafafa242a7763e156499aa6912f18a61558b0c75e0e925b9f4edd882"
+  },
+  {
+    "jobId": "9fde545d-37f7-42d8-9cbc-edce0c690390",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:21:13.5881048Z",
+    "sourceHash": "4c8d9c95d2aa26e7d97d44e40c6e0e62f2edbd15510fe867870eaec7fb4ed180"
+  },
+  {
+    "jobId": "2c58f0c1-642d-4b38-b742-5d6af5261d87",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-181750.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:17:55.6045801Z",
+    "sourceHash": "068bd972a5ecf7c97a3b618fe6d80e5f93049c8f826409fd1c0004aaf9a2aefa"
+  },
+  {
+    "jobId": "3dd565ea-d87c-4c4e-bea0-7aaf50d676fe",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:52:57.7119866Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "208e405d-e30b-4eac-81a5-5d9f63773cdb",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Quarantined",
+    "createdAt": "2025-10-02T16:17:26.483493Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "4def9c95-28de-46cb-8a78-42cbe5d975bf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171354.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:14:01.6877421Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "adbedfba-f1b2-43c9-8ba2-c51726b01789",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-164056.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:41:04.3548513Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "017392ac-6d91-4dc0-996f-b89313cd5dd2",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-163607.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:36:15.1021565Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "48013862-a51d-4b91-84e3-7a9feec47b71",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-161310.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:13:17.4551203Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  }
+]
+[16:02:36.868] Active jobs: 9
+[16:02:36.869] Job Details (C# API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:02:36.871] {
+  "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:29.7284396Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7292655Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7293488Z"
+    }
+  ]
+}
+[16:02:36.872] Job Details (C# API): 629dfed1-de64-4427-aea0-619707382d59
+[16:02:36.874] {
+  "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:25.7081625Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.710107Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.7102963Z"
+    }
+  ]
+}
+[16:02:36.875] Job Details (C# API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:02:36.877] {
+  "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+  "sizeBytes": 52428800,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.2027826Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2047349Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2049273Z"
+    }
+  ]
+}
+[16:02:36.878] Job Details (C# API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:02:36.880] {
+  "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+  "sizeBytes": 3136540561,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1111317Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1119855Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.112085Z"
+    }
+  ]
+}
+[16:02:36.881] Job Details (C# API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:02:36.883] {
+  "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+  "sizeBytes": 3486943965,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1098346Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1106986Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1107986Z"
+    }
+  ]
+}
+[16:02:36.884] Job Details (C# API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:02:36.886] {
+  "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+  "sizeBytes": 3150181221,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1084194Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1092842Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1093937Z"
+    }
+  ]
+}
+[16:02:36.887] Job Details (C# API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:02:36.889] {
+  "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1065803Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1078406Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1079453Z"
+    }
+  ]
+}
+[16:02:36.890] Job Details (C# API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:02:36.892] {
+  "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.9117757Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.9144041Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.914675Z"
+    }
+  ]
+}
+[16:02:36.893] Job Details (C# API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:02:36.895] {
+  "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.8131045Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.8653903Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.866081Z"
+    }
+  ]
+}
+[16:02:36.895] 
+[16:02:36.896] --- Go Console API (port 5000) ---
+[16:02:36.897] Job Details (Go API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:02:38.898] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:38.901] Job Details (Go API): 629dfed1-de64-4427-aea0-619707382d59
+[16:02:40.915] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:40.920] Job Details (Go API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:02:42.931] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:42.936] Job Details (Go API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:02:44.947] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:44.951] Job Details (Go API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:02:46.962] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:46.967] Job Details (Go API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:02:48.972] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:48.976] Job Details (Go API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:02:50.993] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:50.996] Job Details (Go API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:02:53.011] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:53.014] Job Details (Go API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:02:55.028] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:55.030] 
+[16:02:55.031] --- Directory Listings ---
+[16:02:55.033] Input:        Files: 9 | 484759.svs, 484765.svs, 484769.svs, 484771.svs, 484775.svs, 484779.svs, test-1760104306.svs, test-20251002-182107.svs, test-20251002-182301.svs
+[16:02:55.034] DestinationA: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:02:55.035] DestinationB: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:02:55.036] Activity detected - resetting idle timer
+[16:02:55.036] 
+[16:02:55.145] ===== POLL #3 =====
+[16:02:55.148] --- C# API (port 8081) ---
+[16:02:55.155] Jobs List Response:
+[16:02:55.156] [
+  {
+    "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:29.7284396Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:25.7081625Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.2027826Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1111317Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1098346Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1084194Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1065803Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.9117757Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.8131045Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "b171d443-fe65-4122-8429-f3bf08e743a6",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:23:06.0223126Z",
+    "sourceHash": "601fcf9bafafa242a7763e156499aa6912f18a61558b0c75e0e925b9f4edd882"
+  },
+  {
+    "jobId": "9fde545d-37f7-42d8-9cbc-edce0c690390",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:21:13.5881048Z",
+    "sourceHash": "4c8d9c95d2aa26e7d97d44e40c6e0e62f2edbd15510fe867870eaec7fb4ed180"
+  },
+  {
+    "jobId": "2c58f0c1-642d-4b38-b742-5d6af5261d87",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-181750.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:17:55.6045801Z",
+    "sourceHash": "068bd972a5ecf7c97a3b618fe6d80e5f93049c8f826409fd1c0004aaf9a2aefa"
+  },
+  {
+    "jobId": "3dd565ea-d87c-4c4e-bea0-7aaf50d676fe",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:52:57.7119866Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "208e405d-e30b-4eac-81a5-5d9f63773cdb",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Quarantined",
+    "createdAt": "2025-10-02T16:17:26.483493Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "4def9c95-28de-46cb-8a78-42cbe5d975bf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171354.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:14:01.6877421Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "adbedfba-f1b2-43c9-8ba2-c51726b01789",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-164056.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:41:04.3548513Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "017392ac-6d91-4dc0-996f-b89313cd5dd2",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-163607.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:36:15.1021565Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "48013862-a51d-4b91-84e3-7a9feec47b71",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-161310.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:13:17.4551203Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  }
+]
+[16:02:55.157] Active jobs: 9
+[16:02:55.158] Job Details (C# API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:02:55.162] {
+  "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:29.7284396Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7292655Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7293488Z"
+    }
+  ]
+}
+[16:02:55.162] Job Details (C# API): 629dfed1-de64-4427-aea0-619707382d59
+[16:02:55.166] {
+  "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:25.7081625Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.710107Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.7102963Z"
+    }
+  ]
+}
+[16:02:55.167] Job Details (C# API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:02:55.169] {
+  "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+  "sizeBytes": 52428800,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.2027826Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2047349Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2049273Z"
+    }
+  ]
+}
+[16:02:55.170] Job Details (C# API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:02:55.173] {
+  "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+  "sizeBytes": 3136540561,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1111317Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1119855Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.112085Z"
+    }
+  ]
+}
+[16:02:55.173] Job Details (C# API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:02:55.176] {
+  "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+  "sizeBytes": 3486943965,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1098346Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1106986Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1107986Z"
+    }
+  ]
+}
+[16:02:55.176] Job Details (C# API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:02:55.179] {
+  "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+  "sizeBytes": 3150181221,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1084194Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1092842Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1093937Z"
+    }
+  ]
+}
+[16:02:55.180] Job Details (C# API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:02:55.192] {
+  "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1065803Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1078406Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1079453Z"
+    }
+  ]
+}
+[16:02:55.193] Job Details (C# API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:02:55.196] {
+  "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.9117757Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.9144041Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.914675Z"
+    }
+  ]
+}
+[16:02:55.197] Job Details (C# API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:02:55.200] {
+  "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.8131045Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.8653903Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.866081Z"
+    }
+  ]
+}
+[16:02:55.200] 
+[16:02:55.201] --- Go Console API (port 5000) ---
+[16:02:55.202] Job Details (Go API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:02:57.213] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:57.213] Job Details (Go API): 629dfed1-de64-4427-aea0-619707382d59
+[16:02:59.227] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:02:59.229] Job Details (Go API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:03:01.229] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:01.232] Job Details (Go API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:03:03.242] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:03.244] Job Details (Go API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:03:05.257] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:05.258] Job Details (Go API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:03:07.275] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:07.277] Job Details (Go API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:03:09.289] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:09.291] Job Details (Go API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:03:11.305] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:11.306] Job Details (Go API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:03:13.321] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:13.324] 
+[16:03:13.325] --- Directory Listings ---
+[16:03:13.327] Input:        Files: 9 | 484759.svs, 484765.svs, 484769.svs, 484771.svs, 484775.svs, 484779.svs, test-1760104306.svs, test-20251002-182107.svs, test-20251002-182301.svs
+[16:03:13.329] DestinationA: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:03:13.330] DestinationB: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:03:13.332] Activity detected - resetting idle timer
+[16:03:13.332] 
+[16:03:13.438] ===== POLL #4 =====
+[16:03:13.442] --- C# API (port 8081) ---
+[16:03:13.446] Jobs List Response:
+[16:03:13.446] [
+  {
+    "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:29.7284396Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:25.7081625Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.2027826Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1111317Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1098346Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1084194Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1065803Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.9117757Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.8131045Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "b171d443-fe65-4122-8429-f3bf08e743a6",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:23:06.0223126Z",
+    "sourceHash": "601fcf9bafafa242a7763e156499aa6912f18a61558b0c75e0e925b9f4edd882"
+  },
+  {
+    "jobId": "9fde545d-37f7-42d8-9cbc-edce0c690390",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:21:13.5881048Z",
+    "sourceHash": "4c8d9c95d2aa26e7d97d44e40c6e0e62f2edbd15510fe867870eaec7fb4ed180"
+  },
+  {
+    "jobId": "2c58f0c1-642d-4b38-b742-5d6af5261d87",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-181750.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:17:55.6045801Z",
+    "sourceHash": "068bd972a5ecf7c97a3b618fe6d80e5f93049c8f826409fd1c0004aaf9a2aefa"
+  },
+  {
+    "jobId": "3dd565ea-d87c-4c4e-bea0-7aaf50d676fe",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:52:57.7119866Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "208e405d-e30b-4eac-81a5-5d9f63773cdb",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Quarantined",
+    "createdAt": "2025-10-02T16:17:26.483493Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "4def9c95-28de-46cb-8a78-42cbe5d975bf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171354.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:14:01.6877421Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "adbedfba-f1b2-43c9-8ba2-c51726b01789",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-164056.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:41:04.3548513Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "017392ac-6d91-4dc0-996f-b89313cd5dd2",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-163607.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:36:15.1021565Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "48013862-a51d-4b91-84e3-7a9feec47b71",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-161310.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:13:17.4551203Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  }
+]
+[16:03:13.448] Active jobs: 9
+[16:03:13.449] Job Details (C# API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:03:13.453] {
+  "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:29.7284396Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7292655Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7293488Z"
+    }
+  ]
+}
+[16:03:13.454] Job Details (C# API): 629dfed1-de64-4427-aea0-619707382d59
+[16:03:13.457] {
+  "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:25.7081625Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.710107Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.7102963Z"
+    }
+  ]
+}
+[16:03:13.457] Job Details (C# API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:03:13.460] {
+  "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+  "sizeBytes": 52428800,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.2027826Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2047349Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2049273Z"
+    }
+  ]
+}
+[16:03:13.461] Job Details (C# API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:03:13.463] {
+  "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+  "sizeBytes": 3136540561,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1111317Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1119855Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.112085Z"
+    }
+  ]
+}
+[16:03:13.464] Job Details (C# API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:03:13.466] {
+  "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+  "sizeBytes": 3486943965,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1098346Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1106986Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1107986Z"
+    }
+  ]
+}
+[16:03:13.466] Job Details (C# API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:03:13.468] {
+  "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+  "sizeBytes": 3150181221,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1084194Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1092842Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1093937Z"
+    }
+  ]
+}
+[16:03:13.469] Job Details (C# API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:03:13.471] {
+  "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1065803Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1078406Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1079453Z"
+    }
+  ]
+}
+[16:03:13.472] Job Details (C# API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:03:13.474] {
+  "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.9117757Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.9144041Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.914675Z"
+    }
+  ]
+}
+[16:03:13.475] Job Details (C# API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:03:13.477] {
+  "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.8131045Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.8653903Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.866081Z"
+    }
+  ]
+}
+[16:03:13.478] 
+[16:03:13.478] --- Go Console API (port 5000) ---
+[16:03:13.479] Job Details (Go API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:03:15.493] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:15.494] Job Details (Go API): 629dfed1-de64-4427-aea0-619707382d59
+[16:03:17.506] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:17.509] Job Details (Go API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:03:19.524] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:19.526] Job Details (Go API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:03:21.541] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:21.544] Job Details (Go API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:03:23.554] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:23.556] Job Details (Go API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:03:25.573] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:25.576] Job Details (Go API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:03:27.585] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:27.587] Job Details (Go API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:03:29.594] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:29.595] Job Details (Go API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:03:31.604] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:31.605] 
+[16:03:31.606] --- Directory Listings ---
+[16:03:31.607] Input:        Files: 9 | 484759.svs, 484765.svs, 484769.svs, 484771.svs, 484775.svs, 484779.svs, test-1760104306.svs, test-20251002-182107.svs, test-20251002-182301.svs
+[16:03:31.608] DestinationA: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:03:31.609] DestinationB: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:03:31.610] Activity detected - resetting idle timer
+[16:03:31.610] 
+[16:03:31.719] ===== POLL #5 =====
+[16:03:31.721] --- C# API (port 8081) ---
+[16:03:31.739] Jobs List Response:
+[16:03:31.740] [
+  {
+    "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:29.7284396Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:25.7081625Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.2027826Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1111317Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1098346Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1084194Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1065803Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.9117757Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.8131045Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "b171d443-fe65-4122-8429-f3bf08e743a6",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:23:06.0223126Z",
+    "sourceHash": "601fcf9bafafa242a7763e156499aa6912f18a61558b0c75e0e925b9f4edd882"
+  },
+  {
+    "jobId": "9fde545d-37f7-42d8-9cbc-edce0c690390",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:21:13.5881048Z",
+    "sourceHash": "4c8d9c95d2aa26e7d97d44e40c6e0e62f2edbd15510fe867870eaec7fb4ed180"
+  },
+  {
+    "jobId": "2c58f0c1-642d-4b38-b742-5d6af5261d87",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-181750.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:17:55.6045801Z",
+    "sourceHash": "068bd972a5ecf7c97a3b618fe6d80e5f93049c8f826409fd1c0004aaf9a2aefa"
+  },
+  {
+    "jobId": "3dd565ea-d87c-4c4e-bea0-7aaf50d676fe",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:52:57.7119866Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "208e405d-e30b-4eac-81a5-5d9f63773cdb",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Quarantined",
+    "createdAt": "2025-10-02T16:17:26.483493Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "4def9c95-28de-46cb-8a78-42cbe5d975bf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171354.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:14:01.6877421Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "adbedfba-f1b2-43c9-8ba2-c51726b01789",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-164056.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:41:04.3548513Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "017392ac-6d91-4dc0-996f-b89313cd5dd2",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-163607.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:36:15.1021565Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "48013862-a51d-4b91-84e3-7a9feec47b71",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-161310.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:13:17.4551203Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  }
+]
+[16:03:31.742] Active jobs: 9
+[16:03:31.743] Job Details (C# API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:03:31.757] {
+  "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:29.7284396Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7292655Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7293488Z"
+    }
+  ]
+}
+[16:03:31.759] Job Details (C# API): 629dfed1-de64-4427-aea0-619707382d59
+[16:03:31.767] {
+  "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:25.7081625Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.710107Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.7102963Z"
+    }
+  ]
+}
+[16:03:31.771] Job Details (C# API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:03:31.778] {
+  "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+  "sizeBytes": 52428800,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.2027826Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2047349Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2049273Z"
+    }
+  ]
+}
+[16:03:31.779] Job Details (C# API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:03:31.786] {
+  "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+  "sizeBytes": 3136540561,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1111317Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1119855Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.112085Z"
+    }
+  ]
+}
+[16:03:31.787] Job Details (C# API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:03:31.792] {
+  "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+  "sizeBytes": 3486943965,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1098346Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1106986Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1107986Z"
+    }
+  ]
+}
+[16:03:31.793] Job Details (C# API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:03:31.799] {
+  "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+  "sizeBytes": 3150181221,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1084194Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1092842Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1093937Z"
+    }
+  ]
+}
+[16:03:31.800] Job Details (C# API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:03:31.806] {
+  "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1065803Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1078406Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1079453Z"
+    }
+  ]
+}
+[16:03:31.808] Job Details (C# API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:03:31.813] {
+  "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.9117757Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.9144041Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.914675Z"
+    }
+  ]
+}
+[16:03:31.815] Job Details (C# API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:03:31.820] {
+  "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.8131045Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.8653903Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.866081Z"
+    }
+  ]
+}
+[16:03:31.822] 
+[16:03:31.823] --- Go Console API (port 5000) ---
+[16:03:31.824] Job Details (Go API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:03:33.848] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:33.849] Job Details (Go API): 629dfed1-de64-4427-aea0-619707382d59
+[16:03:35.856] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:35.861] Job Details (Go API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:03:37.871] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:37.873] Job Details (Go API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:03:39.876] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:39.879] Job Details (Go API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:03:41.894] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:41.896] Job Details (Go API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:03:43.901] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:43.901] Job Details (Go API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:03:45.918] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:45.922] Job Details (Go API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:03:47.931] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:47.933] Job Details (Go API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:03:49.943] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:49.945] 
+[16:03:49.946] --- Directory Listings ---
+[16:03:49.947] Input:        Files: 9 | 484759.svs, 484765.svs, 484769.svs, 484771.svs, 484775.svs, 484779.svs, test-1760104306.svs, test-20251002-182107.svs, test-20251002-182301.svs
+[16:03:49.949] DestinationA: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:03:49.950] DestinationB: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:03:49.950] Activity detected - resetting idle timer
+[16:03:49.951] 
+[16:03:50.063] ===== POLL #6 =====
+[16:03:50.066] --- C# API (port 8081) ---
+[16:03:50.072] Jobs List Response:
+[16:03:50.073] [
+  {
+    "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:29.7284396Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:25.7081625Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.2027826Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1111317Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1098346Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1084194Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1065803Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.9117757Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.8131045Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "b171d443-fe65-4122-8429-f3bf08e743a6",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:23:06.0223126Z",
+    "sourceHash": "601fcf9bafafa242a7763e156499aa6912f18a61558b0c75e0e925b9f4edd882"
+  },
+  {
+    "jobId": "9fde545d-37f7-42d8-9cbc-edce0c690390",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:21:13.5881048Z",
+    "sourceHash": "4c8d9c95d2aa26e7d97d44e40c6e0e62f2edbd15510fe867870eaec7fb4ed180"
+  },
+  {
+    "jobId": "2c58f0c1-642d-4b38-b742-5d6af5261d87",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-181750.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:17:55.6045801Z",
+    "sourceHash": "068bd972a5ecf7c97a3b618fe6d80e5f93049c8f826409fd1c0004aaf9a2aefa"
+  },
+  {
+    "jobId": "3dd565ea-d87c-4c4e-bea0-7aaf50d676fe",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:52:57.7119866Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "208e405d-e30b-4eac-81a5-5d9f63773cdb",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Quarantined",
+    "createdAt": "2025-10-02T16:17:26.483493Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "4def9c95-28de-46cb-8a78-42cbe5d975bf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171354.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:14:01.6877421Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "adbedfba-f1b2-43c9-8ba2-c51726b01789",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-164056.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:41:04.3548513Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "017392ac-6d91-4dc0-996f-b89313cd5dd2",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-163607.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:36:15.1021565Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "48013862-a51d-4b91-84e3-7a9feec47b71",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-161310.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:13:17.4551203Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  }
+]
+[16:03:50.074] Active jobs: 9
+[16:03:50.075] Job Details (C# API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:03:50.078] {
+  "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:29.7284396Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7292655Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7293488Z"
+    }
+  ]
+}
+[16:03:50.079] Job Details (C# API): 629dfed1-de64-4427-aea0-619707382d59
+[16:03:50.081] {
+  "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:25.7081625Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.710107Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.7102963Z"
+    }
+  ]
+}
+[16:03:50.082] Job Details (C# API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:03:50.084] {
+  "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+  "sizeBytes": 52428800,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.2027826Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2047349Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2049273Z"
+    }
+  ]
+}
+[16:03:50.085] Job Details (C# API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:03:50.087] {
+  "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+  "sizeBytes": 3136540561,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1111317Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1119855Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.112085Z"
+    }
+  ]
+}
+[16:03:50.088] Job Details (C# API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:03:50.091] {
+  "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+  "sizeBytes": 3486943965,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1098346Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1106986Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1107986Z"
+    }
+  ]
+}
+[16:03:50.092] Job Details (C# API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:03:50.094] {
+  "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+  "sizeBytes": 3150181221,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1084194Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1092842Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1093937Z"
+    }
+  ]
+}
+[16:03:50.096] Job Details (C# API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:03:50.098] {
+  "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1065803Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1078406Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1079453Z"
+    }
+  ]
+}
+[16:03:50.099] Job Details (C# API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:03:50.101] {
+  "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.9117757Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.9144041Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.914675Z"
+    }
+  ]
+}
+[16:03:50.102] Job Details (C# API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:03:50.104] {
+  "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.8131045Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.8653903Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.866081Z"
+    }
+  ]
+}
+[16:03:50.105] 
+[16:03:50.106] --- Go Console API (port 5000) ---
+[16:03:50.106] Job Details (Go API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:03:52.109] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:52.110] Job Details (Go API): 629dfed1-de64-4427-aea0-619707382d59
+[16:03:54.112] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:54.112] Job Details (Go API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:03:56.122] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:56.124] Job Details (Go API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:03:58.134] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:03:58.137] Job Details (Go API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:04:00.144] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:00.145] Job Details (Go API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:04:02.147] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:02.148] Job Details (Go API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:04:04.155] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:04.158] Job Details (Go API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:04:06.160] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:06.163] Job Details (Go API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:04:08.167] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:08.171] 
+[16:04:08.172] --- Directory Listings ---
+[16:04:08.174] Input:        Files: 9 | 484759.svs, 484765.svs, 484769.svs, 484771.svs, 484775.svs, 484779.svs, test-1760104306.svs, test-20251002-182107.svs, test-20251002-182301.svs
+[16:04:08.176] DestinationA: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:04:08.177] DestinationB: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:04:08.178] Activity detected - resetting idle timer
+[16:04:08.178] 
+[16:04:08.290] ===== POLL #7 =====
+[16:04:08.292] --- C# API (port 8081) ---
+[16:04:08.298] Jobs List Response:
+[16:04:08.300] [
+  {
+    "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:29.7284396Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:25.7081625Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.2027826Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1111317Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1098346Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1084194Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1065803Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.9117757Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.8131045Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "b171d443-fe65-4122-8429-f3bf08e743a6",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:23:06.0223126Z",
+    "sourceHash": "601fcf9bafafa242a7763e156499aa6912f18a61558b0c75e0e925b9f4edd882"
+  },
+  {
+    "jobId": "9fde545d-37f7-42d8-9cbc-edce0c690390",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:21:13.5881048Z",
+    "sourceHash": "4c8d9c95d2aa26e7d97d44e40c6e0e62f2edbd15510fe867870eaec7fb4ed180"
+  },
+  {
+    "jobId": "2c58f0c1-642d-4b38-b742-5d6af5261d87",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-181750.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:17:55.6045801Z",
+    "sourceHash": "068bd972a5ecf7c97a3b618fe6d80e5f93049c8f826409fd1c0004aaf9a2aefa"
+  },
+  {
+    "jobId": "3dd565ea-d87c-4c4e-bea0-7aaf50d676fe",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:52:57.7119866Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "208e405d-e30b-4eac-81a5-5d9f63773cdb",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Quarantined",
+    "createdAt": "2025-10-02T16:17:26.483493Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "4def9c95-28de-46cb-8a78-42cbe5d975bf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171354.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:14:01.6877421Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "adbedfba-f1b2-43c9-8ba2-c51726b01789",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-164056.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:41:04.3548513Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "017392ac-6d91-4dc0-996f-b89313cd5dd2",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-163607.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:36:15.1021565Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "48013862-a51d-4b91-84e3-7a9feec47b71",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-161310.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:13:17.4551203Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  }
+]
+[16:04:08.301] Active jobs: 9
+[16:04:08.302] Job Details (C# API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:04:08.305] {
+  "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:29.7284396Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7292655Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7293488Z"
+    }
+  ]
+}
+[16:04:08.306] Job Details (C# API): 629dfed1-de64-4427-aea0-619707382d59
+[16:04:08.308] {
+  "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:25.7081625Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.710107Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.7102963Z"
+    }
+  ]
+}
+[16:04:08.308] Job Details (C# API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:04:08.310] {
+  "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+  "sizeBytes": 52428800,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.2027826Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2047349Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2049273Z"
+    }
+  ]
+}
+[16:04:08.311] Job Details (C# API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:04:08.313] {
+  "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+  "sizeBytes": 3136540561,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1111317Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1119855Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.112085Z"
+    }
+  ]
+}
+[16:04:08.314] Job Details (C# API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:04:08.317] {
+  "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+  "sizeBytes": 3486943965,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1098346Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1106986Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1107986Z"
+    }
+  ]
+}
+[16:04:08.318] Job Details (C# API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:04:08.319] {
+  "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+  "sizeBytes": 3150181221,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1084194Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1092842Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1093937Z"
+    }
+  ]
+}
+[16:04:08.320] Job Details (C# API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:04:08.323] {
+  "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1065803Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1078406Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1079453Z"
+    }
+  ]
+}
+[16:04:08.324] Job Details (C# API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:04:08.326] {
+  "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.9117757Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.9144041Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.914675Z"
+    }
+  ]
+}
+[16:04:08.326] Job Details (C# API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:04:08.329] {
+  "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.8131045Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.8653903Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.866081Z"
+    }
+  ]
+}
+[16:04:08.329] 
+[16:04:08.330] --- Go Console API (port 5000) ---
+[16:04:08.330] Job Details (Go API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:04:10.336] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:10.338] Job Details (Go API): 629dfed1-de64-4427-aea0-619707382d59
+[16:04:12.344] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:12.346] Job Details (Go API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:04:14.354] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:14.355] Job Details (Go API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:04:16.364] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:16.366] Job Details (Go API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:04:18.366] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:18.367] Job Details (Go API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:04:20.378] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:20.380] Job Details (Go API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:04:22.391] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:22.393] Job Details (Go API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:04:24.397] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:24.399] Job Details (Go API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:04:26.409] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:26.410] 
+[16:04:26.411] --- Directory Listings ---
+[16:04:26.413] Input:        Files: 9 | 484759.svs, 484765.svs, 484769.svs, 484771.svs, 484775.svs, 484779.svs, test-1760104306.svs, test-20251002-182107.svs, test-20251002-182301.svs
+[16:04:26.414] DestinationA: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:04:26.415] DestinationB: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:04:26.416] Activity detected - resetting idle timer
+[16:04:26.417] 
+[16:04:26.526] ===== POLL #8 =====
+[16:04:26.527] --- C# API (port 8081) ---
+[16:04:26.531] Jobs List Response:
+[16:04:26.532] [
+  {
+    "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:29.7284396Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:25.7081625Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.2027826Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1111317Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1098346Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1084194Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1065803Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.9117757Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.8131045Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "b171d443-fe65-4122-8429-f3bf08e743a6",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:23:06.0223126Z",
+    "sourceHash": "601fcf9bafafa242a7763e156499aa6912f18a61558b0c75e0e925b9f4edd882"
+  },
+  {
+    "jobId": "9fde545d-37f7-42d8-9cbc-edce0c690390",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:21:13.5881048Z",
+    "sourceHash": "4c8d9c95d2aa26e7d97d44e40c6e0e62f2edbd15510fe867870eaec7fb4ed180"
+  },
+  {
+    "jobId": "2c58f0c1-642d-4b38-b742-5d6af5261d87",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-181750.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:17:55.6045801Z",
+    "sourceHash": "068bd972a5ecf7c97a3b618fe6d80e5f93049c8f826409fd1c0004aaf9a2aefa"
+  },
+  {
+    "jobId": "3dd565ea-d87c-4c4e-bea0-7aaf50d676fe",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:52:57.7119866Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "208e405d-e30b-4eac-81a5-5d9f63773cdb",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Quarantined",
+    "createdAt": "2025-10-02T16:17:26.483493Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "4def9c95-28de-46cb-8a78-42cbe5d975bf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171354.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:14:01.6877421Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "adbedfba-f1b2-43c9-8ba2-c51726b01789",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-164056.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:41:04.3548513Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "017392ac-6d91-4dc0-996f-b89313cd5dd2",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-163607.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:36:15.1021565Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "48013862-a51d-4b91-84e3-7a9feec47b71",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-161310.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:13:17.4551203Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  }
+]
+[16:04:26.533] Active jobs: 9
+[16:04:26.533] Job Details (C# API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:04:26.536] {
+  "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:29.7284396Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7292655Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7293488Z"
+    }
+  ]
+}
+[16:04:26.537] Job Details (C# API): 629dfed1-de64-4427-aea0-619707382d59
+[16:04:26.539] {
+  "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:25.7081625Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.710107Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.7102963Z"
+    }
+  ]
+}
+[16:04:26.539] Job Details (C# API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:04:26.542] {
+  "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+  "sizeBytes": 52428800,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.2027826Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2047349Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2049273Z"
+    }
+  ]
+}
+[16:04:26.543] Job Details (C# API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:04:26.545] {
+  "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+  "sizeBytes": 3136540561,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1111317Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1119855Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.112085Z"
+    }
+  ]
+}
+[16:04:26.546] Job Details (C# API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:04:26.548] {
+  "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+  "sizeBytes": 3486943965,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1098346Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1106986Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1107986Z"
+    }
+  ]
+}
+[16:04:26.549] Job Details (C# API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:04:26.550] {
+  "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+  "sizeBytes": 3150181221,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1084194Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1092842Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1093937Z"
+    }
+  ]
+}
+[16:04:26.551] Job Details (C# API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:04:26.553] {
+  "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1065803Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1078406Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1079453Z"
+    }
+  ]
+}
+[16:04:26.554] Job Details (C# API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:04:26.556] {
+  "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.9117757Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.9144041Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.914675Z"
+    }
+  ]
+}
+[16:04:26.556] Job Details (C# API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:04:26.558] {
+  "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.8131045Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.8653903Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.866081Z"
+    }
+  ]
+}
+[16:04:26.559] 
+[16:04:26.560] --- Go Console API (port 5000) ---
+[16:04:26.560] Job Details (Go API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:04:28.571] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:28.573] Job Details (Go API): 629dfed1-de64-4427-aea0-619707382d59
+[16:04:30.579] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:30.582] Job Details (Go API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:04:32.592] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:32.594] Job Details (Go API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:04:34.607] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:34.608] Job Details (Go API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:04:36.622] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:36.627] Job Details (Go API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:04:38.632] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:38.635] Job Details (Go API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:04:40.635] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:40.638] Job Details (Go API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:04:42.642] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:42.645] Job Details (Go API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:04:44.656] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:44.658] 
+[16:04:44.659] --- Directory Listings ---
+[16:04:44.660] Input:        Files: 9 | 484759.svs, 484765.svs, 484769.svs, 484771.svs, 484775.svs, 484779.svs, test-1760104306.svs, test-20251002-182107.svs, test-20251002-182301.svs
+[16:04:44.662] DestinationA: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:04:44.665] DestinationB: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:04:44.666] Activity detected - resetting idle timer
+[16:04:44.667] 
+[16:04:44.789] ===== POLL #9 =====
+[16:04:44.792] --- C# API (port 8081) ---
+[16:04:44.799] Jobs List Response:
+[16:04:44.801] [
+  {
+    "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:29.7284396Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:25.7081625Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.2027826Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1111317Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1098346Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1084194Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1065803Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.9117757Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.8131045Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "b171d443-fe65-4122-8429-f3bf08e743a6",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:23:06.0223126Z",
+    "sourceHash": "601fcf9bafafa242a7763e156499aa6912f18a61558b0c75e0e925b9f4edd882"
+  },
+  {
+    "jobId": "9fde545d-37f7-42d8-9cbc-edce0c690390",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:21:13.5881048Z",
+    "sourceHash": "4c8d9c95d2aa26e7d97d44e40c6e0e62f2edbd15510fe867870eaec7fb4ed180"
+  },
+  {
+    "jobId": "2c58f0c1-642d-4b38-b742-5d6af5261d87",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-181750.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:17:55.6045801Z",
+    "sourceHash": "068bd972a5ecf7c97a3b618fe6d80e5f93049c8f826409fd1c0004aaf9a2aefa"
+  },
+  {
+    "jobId": "3dd565ea-d87c-4c4e-bea0-7aaf50d676fe",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:52:57.7119866Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "208e405d-e30b-4eac-81a5-5d9f63773cdb",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Quarantined",
+    "createdAt": "2025-10-02T16:17:26.483493Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "4def9c95-28de-46cb-8a78-42cbe5d975bf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171354.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:14:01.6877421Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "adbedfba-f1b2-43c9-8ba2-c51726b01789",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-164056.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:41:04.3548513Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "017392ac-6d91-4dc0-996f-b89313cd5dd2",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-163607.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:36:15.1021565Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "48013862-a51d-4b91-84e3-7a9feec47b71",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-161310.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:13:17.4551203Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  }
+]
+[16:04:44.802] Active jobs: 9
+[16:04:44.803] Job Details (C# API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:04:44.807] {
+  "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:29.7284396Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7292655Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7293488Z"
+    }
+  ]
+}
+[16:04:44.808] Job Details (C# API): 629dfed1-de64-4427-aea0-619707382d59
+[16:04:44.813] {
+  "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:25.7081625Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.710107Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.7102963Z"
+    }
+  ]
+}
+[16:04:44.814] Job Details (C# API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:04:44.819] {
+  "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+  "sizeBytes": 52428800,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.2027826Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2047349Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2049273Z"
+    }
+  ]
+}
+[16:04:44.821] Job Details (C# API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:04:44.826] {
+  "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+  "sizeBytes": 3136540561,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1111317Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1119855Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.112085Z"
+    }
+  ]
+}
+[16:04:44.828] Job Details (C# API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:04:44.832] {
+  "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+  "sizeBytes": 3486943965,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1098346Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1106986Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1107986Z"
+    }
+  ]
+}
+[16:04:44.834] Job Details (C# API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:04:44.838] {
+  "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+  "sizeBytes": 3150181221,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1084194Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1092842Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1093937Z"
+    }
+  ]
+}
+[16:04:44.839] Job Details (C# API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:04:44.844] {
+  "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1065803Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1078406Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1079453Z"
+    }
+  ]
+}
+[16:04:44.845] Job Details (C# API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:04:44.849] {
+  "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.9117757Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.9144041Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.914675Z"
+    }
+  ]
+}
+[16:04:44.850] Job Details (C# API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:04:44.854] {
+  "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.8131045Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.8653903Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.866081Z"
+    }
+  ]
+}
+[16:04:44.856] 
+[16:04:44.857] --- Go Console API (port 5000) ---
+[16:04:44.857] Job Details (Go API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:04:46.869] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:46.871] Job Details (Go API): 629dfed1-de64-4427-aea0-619707382d59
+[16:04:48.884] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:48.886] Job Details (Go API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:04:50.891] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:50.893] Job Details (Go API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:04:52.897] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:52.900] Job Details (Go API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:04:54.909] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:54.912] Job Details (Go API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:04:56.917] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:56.920] Job Details (Go API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:04:58.924] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:04:58.926] Job Details (Go API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:05:00.934] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:00.937] Job Details (Go API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:05:02.943] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:02.945] 
+[16:05:02.947] --- Directory Listings ---
+[16:05:02.950] Input:        Files: 9 | 484759.svs, 484765.svs, 484769.svs, 484771.svs, 484775.svs, 484779.svs, test-1760104306.svs, test-20251002-182107.svs, test-20251002-182301.svs
+[16:05:02.951] DestinationA: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:05:02.953] DestinationB: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:05:02.953] Activity detected - resetting idle timer
+[16:05:02.954] 
+[16:05:03.061] ===== POLL #10 =====
+[16:05:03.062] --- C# API (port 8081) ---
+[16:05:03.068] Jobs List Response:
+[16:05:03.069] [
+  {
+    "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:29.7284396Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:25.7081625Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.2027826Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1111317Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1098346Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1084194Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1065803Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.9117757Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.8131045Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "b171d443-fe65-4122-8429-f3bf08e743a6",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:23:06.0223126Z",
+    "sourceHash": "601fcf9bafafa242a7763e156499aa6912f18a61558b0c75e0e925b9f4edd882"
+  },
+  {
+    "jobId": "9fde545d-37f7-42d8-9cbc-edce0c690390",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:21:13.5881048Z",
+    "sourceHash": "4c8d9c95d2aa26e7d97d44e40c6e0e62f2edbd15510fe867870eaec7fb4ed180"
+  },
+  {
+    "jobId": "2c58f0c1-642d-4b38-b742-5d6af5261d87",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-181750.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:17:55.6045801Z",
+    "sourceHash": "068bd972a5ecf7c97a3b618fe6d80e5f93049c8f826409fd1c0004aaf9a2aefa"
+  },
+  {
+    "jobId": "3dd565ea-d87c-4c4e-bea0-7aaf50d676fe",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:52:57.7119866Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "208e405d-e30b-4eac-81a5-5d9f63773cdb",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Quarantined",
+    "createdAt": "2025-10-02T16:17:26.483493Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "4def9c95-28de-46cb-8a78-42cbe5d975bf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171354.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:14:01.6877421Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "adbedfba-f1b2-43c9-8ba2-c51726b01789",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-164056.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:41:04.3548513Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "017392ac-6d91-4dc0-996f-b89313cd5dd2",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-163607.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:36:15.1021565Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "48013862-a51d-4b91-84e3-7a9feec47b71",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-161310.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:13:17.4551203Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  }
+]
+[16:05:03.070] Active jobs: 9
+[16:05:03.071] Job Details (C# API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:05:03.074] {
+  "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:29.7284396Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7292655Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7293488Z"
+    }
+  ]
+}
+[16:05:03.075] Job Details (C# API): 629dfed1-de64-4427-aea0-619707382d59
+[16:05:03.077] {
+  "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:25.7081625Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.710107Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.7102963Z"
+    }
+  ]
+}
+[16:05:03.078] Job Details (C# API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:05:03.081] {
+  "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+  "sizeBytes": 52428800,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.2027826Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2047349Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2049273Z"
+    }
+  ]
+}
+[16:05:03.081] Job Details (C# API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:05:03.083] {
+  "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+  "sizeBytes": 3136540561,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1111317Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1119855Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.112085Z"
+    }
+  ]
+}
+[16:05:03.084] Job Details (C# API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:05:03.086] {
+  "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+  "sizeBytes": 3486943965,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1098346Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1106986Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1107986Z"
+    }
+  ]
+}
+[16:05:03.087] Job Details (C# API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:05:03.089] {
+  "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+  "sizeBytes": 3150181221,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1084194Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1092842Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1093937Z"
+    }
+  ]
+}
+[16:05:03.089] Job Details (C# API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:05:03.091] {
+  "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1065803Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1078406Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1079453Z"
+    }
+  ]
+}
+[16:05:03.092] Job Details (C# API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:05:03.094] {
+  "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.9117757Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.9144041Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.914675Z"
+    }
+  ]
+}
+[16:05:03.095] Job Details (C# API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:05:03.097] {
+  "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.8131045Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.8653903Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.866081Z"
+    }
+  ]
+}
+[16:05:03.097] 
+[16:05:03.098] --- Go Console API (port 5000) ---
+[16:05:03.099] Job Details (Go API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:05:05.102] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:05.103] Job Details (Go API): 629dfed1-de64-4427-aea0-619707382d59
+[16:05:07.114] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:07.115] Job Details (Go API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:05:09.120] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:09.122] Job Details (Go API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:05:11.140] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:11.141] Job Details (Go API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:05:13.150] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:13.153] Job Details (Go API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:05:15.154] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:15.156] Job Details (Go API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:05:17.172] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:17.174] Job Details (Go API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:05:19.192] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:19.195] Job Details (Go API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:05:21.210] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:21.214] 
+[16:05:21.215] --- Directory Listings ---
+[16:05:21.217] Input:        Files: 9 | 484759.svs, 484765.svs, 484769.svs, 484771.svs, 484775.svs, 484779.svs, test-1760104306.svs, test-20251002-182107.svs, test-20251002-182301.svs
+[16:05:21.218] DestinationA: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:05:21.219] DestinationB: Files: 2 | test-20251002-182107.svs, test-20251002-182301.svs
+[16:05:21.219] Activity detected - resetting idle timer
+[16:05:21.220] 
+[16:05:21.332] ===== POLL #11 =====
+[16:05:21.336] --- C# API (port 8081) ---
+[16:05:21.341] Jobs List Response:
+[16:05:21.342] [
+  {
+    "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:29.7284396Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:02:25.7081625Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+    "sizeBytes": 52428800,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.2027826Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+    "sizeBytes": 3136540561,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1111317Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+    "sizeBytes": 3486943965,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1098346Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+    "sizeBytes": 3150181221,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1084194Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+    "sizeBytes": 2432655407,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:54.1065803Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+    "sizeBytes": 3631261377,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.9117757Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+    "sizeBytes": 2335432551,
+    "state": "InProgress",
+    "createdAt": "2025-10-10T15:01:53.8131045Z",
+    "sourceHash": null
+  },
+  {
+    "jobId": "b171d443-fe65-4122-8429-f3bf08e743a6",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:23:06.0223126Z",
+    "sourceHash": "601fcf9bafafa242a7763e156499aa6912f18a61558b0c75e0e925b9f4edd882"
+  },
+  {
+    "jobId": "9fde545d-37f7-42d8-9cbc-edce0c690390",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:21:13.5881048Z",
+    "sourceHash": "4c8d9c95d2aa26e7d97d44e40c6e0e62f2edbd15510fe867870eaec7fb4ed180"
+  },
+  {
+    "jobId": "2c58f0c1-642d-4b38-b742-5d6af5261d87",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-181750.svs",
+    "sizeBytes": 10485760,
+    "state": "Verified",
+    "createdAt": "2025-10-02T17:17:55.6045801Z",
+    "sourceHash": "068bd972a5ecf7c97a3b618fe6d80e5f93049c8f826409fd1c0004aaf9a2aefa"
+  },
+  {
+    "jobId": "3dd565ea-d87c-4c4e-bea0-7aaf50d676fe",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:52:57.7119866Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "208e405d-e30b-4eac-81a5-5d9f63773cdb",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171719.svs",
+    "sizeBytes": 104857600,
+    "state": "Quarantined",
+    "createdAt": "2025-10-02T16:17:26.483493Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "4def9c95-28de-46cb-8a78-42cbe5d975bf",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-171354.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T16:14:01.6877421Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "adbedfba-f1b2-43c9-8ba2-c51726b01789",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-164056.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:41:04.3548513Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "017392ac-6d91-4dc0-996f-b89313cd5dd2",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-163607.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:36:15.1021565Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  },
+  {
+    "jobId": "48013862-a51d-4b91-84e3-7a9feec47b71",
+    "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\corrupt-test-20251002-161310.svs",
+    "sizeBytes": 104857600,
+    "state": "Verified",
+    "createdAt": "2025-10-02T15:13:17.4551203Z",
+    "sourceHash": "2f89b84ab62b7a569e25de3ac54ff022fe4fab0571bceac02a8cba4ef4dfb416"
+  }
+]
+[16:05:21.343] Active jobs: 9
+[16:05:21.344] Job Details (C# API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:05:21.347] {
+  "jobId": "66626d96-536b-43b4-97d2-129304d231f5",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182107.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:29.7284396Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7292655Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:29.7293488Z"
+    }
+  ]
+}
+[16:05:21.348] Job Details (C# API): 629dfed1-de64-4427-aea0-619707382d59
+[16:05:21.350] {
+  "jobId": "629dfed1-de64-4427-aea0-619707382d59",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-20251002-182301.svs",
+  "sizeBytes": 10485760,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:02:25.7081625Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.710107Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:02:25.7102963Z"
+    }
+  ]
+}
+[16:05:21.351] Job Details (C# API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:05:21.353] {
+  "jobId": "dd9eeff8-76f9-40b8-90e5-84e8d892c9af",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\test-1760104306.svs",
+  "sizeBytes": 52428800,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.2027826Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2047349Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.2049273Z"
+    }
+  ]
+}
+[16:05:21.353] Job Details (C# API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:05:21.355] {
+  "jobId": "6af20654-c3bd-49a8-8d11-88251acb6c19",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484779.svs",
+  "sizeBytes": 3136540561,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1111317Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1119855Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.112085Z"
+    }
+  ]
+}
+[16:05:21.356] Job Details (C# API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:05:21.358] {
+  "jobId": "a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484775.svs",
+  "sizeBytes": 3486943965,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1098346Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1106986Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1107986Z"
+    }
+  ]
+}
+[16:05:21.359] Job Details (C# API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:05:21.360] {
+  "jobId": "56917444-784d-4a64-bdfc-3a2fa827f041",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484771.svs",
+  "sizeBytes": 3150181221,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1084194Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1092842Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1093937Z"
+    }
+  ]
+}
+[16:05:21.361] Job Details (C# API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:05:21.363] {
+  "jobId": "d3bee82b-4870-44d5-9499-928de545a8d8",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484769.svs",
+  "sizeBytes": 2432655407,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:54.1065803Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1078406Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:54.1079453Z"
+    }
+  ]
+}
+[16:05:21.363] Job Details (C# API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
+[16:05:21.365] {
+  "jobId": "2e1f086e-0477-416d-b1c1-41f44424bfbc",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484765.svs",
+  "sizeBytes": 3631261377,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.9117757Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.9144041Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.914675Z"
+    }
+  ]
+}
+[16:05:21.366] Job Details (C# API): 4a008a66-61dd-4f65-9bf9-16a8a7eccf0c
+[16:05:21.367] {
+  "jobId": "4a008a66-61dd-4f65-9bf9-16a8a7eccf0c",
+  "sourcePath": "E:\\ForkerDotNetTestVolume\\Input\\484759.svs",
+  "sizeBytes": 2335432551,
+  "state": "InProgress",
+  "createdAt": "2025-10-10T15:01:53.8131045Z",
+  "sourceHash": null,
+  "targets": [
+    {
+      "targetId": "TargetA",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.8653903Z"
+    },
+    {
+      "targetId": "TargetB",
+      "copyState": "Copying",
+      "attempts": 0,
+      "hash": null,
+      "finalPath": null,
+      "lastError": null,
+      "lastTransitionAt": "2025-10-10T15:01:53.866081Z"
+    }
+  ]
+}
+[16:05:21.368] 
+[16:05:21.369] --- Go Console API (port 5000) ---
+[16:05:21.369] Job Details (Go API): 66626d96-536b-43b4-97d2-129304d231f5
+[16:05:23.383] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:23.386] Job Details (Go API): 629dfed1-de64-4427-aea0-619707382d59
+[16:05:25.398] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:25.401] Job Details (Go API): dd9eeff8-76f9-40b8-90e5-84e8d892c9af
+[16:05:27.405] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:27.407] Job Details (Go API): 6af20654-c3bd-49a8-8d11-88251acb6c19
+[16:05:29.413] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:29.414] Job Details (Go API): a8583340-c3b8-4e9b-bb16-bd6d3e3b3bbf
+[16:05:31.419] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:31.420] Job Details (Go API): 56917444-784d-4a64-bdfc-3a2fa827f041
+[16:05:33.434] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:33.435] Job Details (Go API): d3bee82b-4870-44d5-9499-928de545a8d8
+[16:05:35.444] ERROR: The request was canceled due to the configured HttpClient.Timeout of 2 seconds elapsing.
+[16:05:35.445] Job Details (Go API): 2e1f086e-0477-416d-b1c1-41f44424bfbc
