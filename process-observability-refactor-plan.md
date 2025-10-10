@@ -445,7 +445,11 @@ Falls back to original behavior (only save final state).
 ### Step 7: API Endpoints ✅
 1. ✅ Add state history endpoints (`GET /api/monitoring/jobs/{id}/state-history`)
 2. ✅ Test endpoints return correct data (verified with job 006ccd6e - shows Verifying states with 2.5s durations)
-3. ⏳ Update Go Console to display state history
+3. ✅ Update Go Console to display state history
+   - ✅ Added StateChangeLogEntry model to Go API client (models.go)
+   - ✅ Added GetStateHistory() method to Go API client (client.go)
+   - ✅ Added HTML template for state history display (job-detail.html)
+   - ✅ Wired up handler to fetch and pass state history (handlers.go)
 
 ### Step 8: Commit Work ✅
 1. ✅ Verify all tests passing

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -9,6 +10,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"forkerDotNet/console/internal/apiclient"
 	"forkerDotNet/console/internal/database"
 )
 
@@ -136,11 +138,30 @@ func handleJobDetail(w http.ResponseWriter, r *http.Request, id string) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(details)
 	} else {
+		// Fetch state history from API
+		client := GetAPIClient()
+		var stateHistory []apiclient.StateChangeLogEntry
+		if client != nil {
+			ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+			defer cancel()
+
+			history, err := client.GetStateHistory(ctx, id)
+			if err != nil {
+				log.Printf("[WARN] Failed to get state history for %s: %v", id, err)
+				stateHistory = []apiclient.StateChangeLogEntry{} // Empty fallback
+			} else {
+				stateHistory = history
+			}
+		} else {
+			stateHistory = []apiclient.StateChangeLogEntry{} // Empty if no client
+		}
+
 		// Return full HTML page
 		data := map[string]interface{}{
-			"Title": "Job Details",
-			"Page":  "job-detail",
-			"Job":   enrichJobDetailsForDisplay(details),
+			"Title":        "Job Details",
+			"Page":         "job-detail",
+			"Job":          enrichJobDetailsForDisplay(details),
+			"StateHistory": enrichStateHistoryForDisplay(stateHistory),
 		}
 		w.Header().Set("Content-Type", "text/html")
 		if err := templates.ExecuteTemplate(w, "base.html", data); err != nil {
@@ -370,4 +391,40 @@ func calculateProgress(state string) int {
 	default:
 		return 0
 	}
+}
+
+type StateHistoryDisplay struct {
+	TimestampFormatted string
+	EntityType         string
+	EntityID           *string
+	OldState           *string
+	NewState           string
+	DurationMs         *int
+}
+
+func enrichStateHistoryForDisplay(history []apiclient.StateChangeLogEntry) []StateHistoryDisplay {
+	result := make([]StateHistoryDisplay, len(history))
+	for i, entry := range history {
+		// Parse and format timestamp
+		timestamp, err := time.Parse(time.RFC3339, entry.Timestamp)
+		if err != nil {
+			// Try alternative format
+			timestamp, _ = time.Parse("2006-01-02T15:04:05.999999999Z07:00", entry.Timestamp)
+		}
+
+		timestampFormatted := "N/A"
+		if !timestamp.IsZero() {
+			timestampFormatted = timestamp.Format("15:04:05.000")
+		}
+
+		result[i] = StateHistoryDisplay{
+			TimestampFormatted: timestampFormatted,
+			EntityType:         entry.EntityType,
+			EntityID:           entry.EntityID,
+			OldState:           entry.OldState,
+			NewState:           entry.NewState,
+			DurationMs:         entry.DurationMs,
+		}
+	}
+	return result
 }
