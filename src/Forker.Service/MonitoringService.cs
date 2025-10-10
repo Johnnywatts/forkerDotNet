@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using Forker.Domain;
 using Forker.Domain.Repositories;
+using Forker.Domain.Services;
 using Forker.Infrastructure.Database;
 using Forker.Service.Models;
 using Microsoft.Extensions.Options;
@@ -58,6 +59,7 @@ public class MonitoringService : BackgroundService
             _logger.LogInformation("  GET  /api/monitoring/stats");
             _logger.LogInformation("  GET  /api/monitoring/jobs");
             _logger.LogInformation("  GET  /api/monitoring/jobs/{{id}}");
+            _logger.LogInformation("  GET  /api/monitoring/jobs/{{id}}/state-history");
             _logger.LogInformation("  POST /api/monitoring/requeue");
 
             while (!stoppingToken.IsCancellationRequested)
@@ -112,6 +114,7 @@ public class MonitoringService : BackgroundService
                 "/api/monitoring/health" when method == "GET" => await GetHealthAsync(),
                 "/api/monitoring/stats" when method == "GET" => await GetStatsAsync(),
                 "/api/monitoring/jobs" when method == "GET" => await GetJobsAsync(request),
+                var p when p.StartsWith("/api/monitoring/jobs/", StringComparison.OrdinalIgnoreCase) && p.EndsWith("/state-history", StringComparison.OrdinalIgnoreCase) && method == "GET" => await GetStateHistoryAsync(path),
                 var p when p.StartsWith("/api/monitoring/jobs/", StringComparison.OrdinalIgnoreCase) && method == "GET" => await GetJobDetailsAsync(path),
                 "/api/monitoring/requeue" when method == "POST" => await RequeueJobsAsync(request),
                 _ => null
@@ -267,6 +270,42 @@ public class MonitoringService : BackgroundService
                 LastTransitionAt = t.LastTransitionAt
             }).ToList()
         };
+    }
+
+    private async Task<List<StateChangeLogResponse>?> GetStateHistoryAsync(string path)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var stateChangeLogger = scope.ServiceProvider.GetRequiredService<IStateChangeLogger>();
+
+        // Extract job ID from path: /api/monitoring/jobs/{id}/state-history
+        var pathPrefix = "/api/monitoring/jobs/";
+        var pathSuffix = "/state-history";
+        if (!path.StartsWith(pathPrefix, StringComparison.OrdinalIgnoreCase) ||
+            !path.EndsWith(pathSuffix, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var jobIdStr = path.Substring(pathPrefix.Length, path.Length - pathPrefix.Length - pathSuffix.Length);
+        if (string.IsNullOrEmpty(jobIdStr))
+        {
+            return null;
+        }
+
+        var history = await stateChangeLogger.GetJobHistoryAsync(jobIdStr);
+
+        return history.Select(entry => new StateChangeLogResponse
+        {
+            Id = entry.Id,
+            JobId = entry.JobId,
+            EntityType = entry.EntityType,
+            EntityId = entry.EntityId,
+            OldState = entry.OldState,
+            NewState = entry.NewState,
+            Timestamp = entry.Timestamp,
+            DurationMs = entry.DurationMs,
+            AdditionalContext = entry.AdditionalContext
+        }).ToList();
     }
 
     private async Task<RequeueResponse> RequeueJobsAsync(HttpListenerRequest request)

@@ -91,3 +91,19 @@ public record RequeueResponse
     public required List<string> Errors { get; init; }
     public required DateTime Timestamp { get; init; }
 }
+
+/// <summary>
+/// State change log entry for audit trail
+/// </summary>
+public record StateChangeLogResponse
+{
+    public required long Id { get; init; }
+    public required string JobId { get; init; }
+    public required string EntityType { get; init; }
+    public string? EntityId { get; init; }
+    public string? OldState { get; init; }
+    public required string NewState { get; init; }
+    public required DateTime Timestamp { get; init; }
+    public int? DurationMs { get; init; }
+    public string? AdditionalContext { get; init; }
+}

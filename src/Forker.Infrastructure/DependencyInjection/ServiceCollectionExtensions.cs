@@ -92,6 +92,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IMetricsCollector, PrometheusMetricsCollector>();
         services.AddScoped<IObservabilityService, ObservabilityService>();
 
+        // Register state change logging service
+        services.AddScoped<IStateChangeLogger, StateChangeLogger>();
+
         return services;
     }
 

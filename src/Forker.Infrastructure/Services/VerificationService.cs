@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Forker.Domain;
+using Forker.Domain.Repositories;
 using Forker.Domain.Services;
 using Microsoft.Extensions.Logging;
 
@@ -13,11 +14,19 @@ namespace Forker.Infrastructure.Services;
 public sealed class VerificationService : IVerificationService
 {
     private readonly IHashingService _hashingService;
+    private readonly ITargetOutcomeRepository _targetOutcomeRepository;
+    private readonly IStateChangeLogger _stateChangeLogger;
     private readonly ILogger<VerificationService> _logger;
 
-    public VerificationService(IHashingService hashingService, ILogger<VerificationService> logger)
+    public VerificationService(
+        IHashingService hashingService,
+        ITargetOutcomeRepository targetOutcomeRepository,
+        IStateChangeLogger stateChangeLogger,
+        ILogger<VerificationService> logger)
     {
         _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
+        _targetOutcomeRepository = targetOutcomeRepository ?? throw new ArgumentNullException(nameof(targetOutcomeRepository));
+        _stateChangeLogger = stateChangeLogger ?? throw new ArgumentNullException(nameof(stateChangeLogger));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -126,7 +135,23 @@ public sealed class VerificationService : IVerificationService
         try
         {
             // Update target state to VERIFYING before starting verification
+            var previousState = targetOutcome.CopyState.ToString();
             targetOutcome.StartVerification();
+
+            // Log state change to audit trail
+            await _stateChangeLogger.LogTargetStateChangeAsync(
+                targetOutcome.JobId.Value.ToString(),
+                targetOutcome.TargetId,
+                previousState,
+                TargetCopyState.Verifying.ToString(),
+                additionalContext: $"{{\"filePath\":\"{targetOutcome.FinalPath}\",\"expectedHash\":\"{expectedHash}\"}}",
+                cancellationToken);
+
+            // Persist VERIFYING state to database immediately so it's visible via API
+            await _targetOutcomeRepository.UpdateAsync(targetOutcome, cancellationToken);
+
+            _logger.LogDebug("Target state updated to VERIFYING and persisted: Job {JobId}, Target {TargetId}",
+                targetOutcome.JobId, targetOutcome.TargetId);
 
             var result = await VerifyFileHashAsync(targetOutcome.FinalPath, expectedHash, cancellationToken);
 
@@ -134,6 +159,16 @@ public sealed class VerificationService : IVerificationService
             if (result.VerificationSucceeded && result.IsMatch)
             {
                 targetOutcome.CompleteVerification();
+
+                // Log successful verification to audit trail
+                await _stateChangeLogger.LogTargetStateChangeAsync(
+                    targetOutcome.JobId.Value.ToString(),
+                    targetOutcome.TargetId,
+                    TargetCopyState.Verifying.ToString(),
+                    TargetCopyState.Verified.ToString(),
+                    additionalContext: $"{{\"computedHash\":\"{result.ComputedHash}\",\"fileSizeBytes\":{result.FileSize},\"verificationDurationMs\":{result.VerificationDuration.TotalMilliseconds}}}",
+                    cancellationToken);
+
                 _logger.LogInformation("Target verification successful: Job {JobId}, Target {TargetId}",
                     targetOutcome.JobId, targetOutcome.TargetId);
             }
@@ -141,6 +176,16 @@ public sealed class VerificationService : IVerificationService
             {
                 // Hash mismatch - this is a serious integrity issue
                 targetOutcome.MarkAsPermanentlyFailed($"Hash mismatch: expected {expectedHash}, got {result.ComputedHash}");
+
+                // Log hash mismatch to audit trail
+                await _stateChangeLogger.LogTargetStateChangeAsync(
+                    targetOutcome.JobId.Value.ToString(),
+                    targetOutcome.TargetId,
+                    TargetCopyState.Verifying.ToString(),
+                    TargetCopyState.FailedPermanent.ToString(),
+                    additionalContext: $"{{\"expectedHash\":\"{expectedHash}\",\"computedHash\":\"{result.ComputedHash}\",\"error\":\"Hash mismatch\"}}",
+                    cancellationToken);
+
                 _logger.LogError("Hash mismatch detected: Job {JobId}, Target {TargetId}, Expected {ExpectedHash}, Computed {ComputedHash}",
                     targetOutcome.JobId, targetOutcome.TargetId, expectedHash, result.ComputedHash);
             }
@@ -148,6 +193,16 @@ public sealed class VerificationService : IVerificationService
             {
                 // Verification failed due to I/O issues - may be retryable
                 targetOutcome.MarkAsRetryableFailed($"Verification failed: {result.ErrorMessage}");
+
+                // Log I/O error to audit trail
+                await _stateChangeLogger.LogTargetStateChangeAsync(
+                    targetOutcome.JobId.Value.ToString(),
+                    targetOutcome.TargetId,
+                    TargetCopyState.Verifying.ToString(),
+                    TargetCopyState.FailedRetryable.ToString(),
+                    additionalContext: $"{{\"error\":\"{result.ErrorMessage?.Replace("\"", "\\\"")}\"}}",
+                    cancellationToken);
+
                 _logger.LogWarning("Target verification failed with I/O error: Job {JobId}, Target {TargetId}, Error {Error}",
                     targetOutcome.JobId, targetOutcome.TargetId, result.ErrorMessage);
             }

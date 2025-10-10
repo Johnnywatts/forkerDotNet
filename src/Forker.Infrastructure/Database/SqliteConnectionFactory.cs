@@ -113,33 +113,89 @@ public sealed class SqliteConnectionFactory : ISqliteConnectionFactory, IDisposa
 
     /// <summary>
     /// Applies the database schema from embedded SQL scripts.
+    /// Runs migrations in order based on current schema version.
     /// </summary>
     private async Task ApplySchemaAsync(SqliteConnection connection, CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetExecutingAssembly();
-        string schemaScript;
 
+        // Get current schema version
+        int currentVersion = await GetCurrentSchemaVersionAsync(connection, cancellationToken);
+        _logger.LogInformation("Current database schema version: {Version}", currentVersion);
+
+        // Define migration scripts in order
+        var migrations = new[]
+        {
+            ("Forker.Infrastructure.Database.Scripts.001_CreateTables.sql", 1),
+            ("Forker.Infrastructure.Database.Scripts.002_AddStateChangeLog.sql", 2)
+        };
+
+        // Apply migrations that haven't been run yet
+        foreach (var (resourceName, version) in migrations)
+        {
+            if (version <= currentVersion)
+            {
+                _logger.LogDebug("Skipping migration {Version} - already applied", version);
+                continue;
+            }
+
+            _logger.LogInformation("Applying migration {Version}: {ResourceName}", version, resourceName);
+
+            string schemaScript;
+            try
+            {
+                schemaScript = await ReadEmbeddedResourceAsync(assembly, resourceName);
+            }
+            catch (Exception ex)
+            {
+                if (version == 1)
+                {
+                    _logger.LogWarning(ex, "Failed to read embedded schema script {ResourceName}, using fallback", resourceName);
+                    schemaScript = GetFallbackSchemaScript();
+                }
+                else
+                {
+                    _logger.LogError(ex, "Failed to read migration script {ResourceName}", resourceName);
+                    throw;
+                }
+            }
+
+            if (string.IsNullOrEmpty(schemaScript))
+            {
+                throw new InvalidOperationException($"Schema script not found or empty: {resourceName}");
+            }
+
+            using var command = connection.CreateCommand();
+            command.CommandText = schemaScript;
+            command.CommandTimeout = _config.CommandTimeoutSeconds;
+
+            var rowsAffected = await command.ExecuteNonQueryAsync(cancellationToken);
+            _logger.LogInformation("Migration {Version} executed successfully. Rows affected: {RowsAffected}", version, rowsAffected);
+        }
+    }
+
+    /// <summary>
+    /// Gets the current schema version from the database.
+    /// Returns 0 if DatabaseMetadata table doesn't exist yet.
+    /// </summary>
+    private static async Task<int> GetCurrentSchemaVersionAsync(SqliteConnection connection, CancellationToken cancellationToken)
+    {
         try
         {
-            schemaScript = await ReadEmbeddedResourceAsync(assembly, "Forker.Infrastructure.Database.Scripts.001_CreateTables.sql");
+            using var command = connection.CreateCommand();
+            command.CommandText = "SELECT Value FROM DatabaseMetadata WHERE Key = 'SchemaVersion'";
+            var result = await command.ExecuteScalarAsync(cancellationToken);
+
+            if (result == null || result == DBNull.Value)
+                return 0;
+
+            return int.TryParse(result.ToString(), out var version) ? version : 0;
         }
-        catch (Exception ex)
+        catch (SqliteException)
         {
-            _logger.LogWarning(ex, "Failed to read embedded schema script, using fallback");
-            schemaScript = GetFallbackSchemaScript();
+            // Table doesn't exist yet
+            return 0;
         }
-
-        if (string.IsNullOrEmpty(schemaScript))
-        {
-            throw new InvalidOperationException("Schema script not found or empty");
-        }
-
-        using var command = connection.CreateCommand();
-        command.CommandText = schemaScript;
-        command.CommandTimeout = _config.CommandTimeoutSeconds;
-
-        var rowsAffected = await command.ExecuteNonQueryAsync(cancellationToken);
-        _logger.LogDebug("Schema script executed successfully. Rows affected: {RowsAffected}", rowsAffected);
     }
 
     /// <summary>

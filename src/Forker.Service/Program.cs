@@ -43,6 +43,7 @@ try
     builder.Services.Configure<FileMonitoringConfiguration>(builder.Configuration.GetSection("Monitoring"));
     builder.Services.Configure<TargetConfiguration>(builder.Configuration.GetSection("Target"));
     builder.Services.Configure<TestingConfiguration>(builder.Configuration.GetSection("Testing"));
+    builder.Services.Configure<StateChangeLoggingConfig>(builder.Configuration.GetSection("StateChangeLogging"));
 
     // Register ForkerDotNet infrastructure services
     builder.Services.AddForkerInfrastructure();
