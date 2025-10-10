@@ -65,3 +65,16 @@ type RequeueResponse struct {
 	Message string `json:"message"`
 	NewState string `json:"newState"`
 }
+
+// StateChangeLogEntry matches MonitoringModels.StateChangeLogResponse
+type StateChangeLogEntry struct {
+	ID                int64   `json:"id"`
+	JobID             string  `json:"jobId"`
+	EntityType        string  `json:"entityType"`
+	EntityID          *string `json:"entityId"`
+	OldState          *string `json:"oldState"`
+	NewState          string  `json:"newState"`
+	Timestamp         string  `json:"timestamp"`
+	DurationMs        *int    `json:"durationMs"`
+	AdditionalContext *string `json:"additionalContext"`
+}

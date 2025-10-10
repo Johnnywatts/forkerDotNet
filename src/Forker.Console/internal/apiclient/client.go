@@ -200,6 +200,40 @@ func (c *Client) RequeueJob(ctx context.Context, jobID string) (*RequeueResponse
 	return &result, nil
 }
 
+// GetStateHistory retrieves state change history for a specific job
+func (c *Client) GetStateHistory(ctx context.Context, jobID string) ([]StateChangeLogEntry, error) {
+	url := fmt.Sprintf("%s/api/monitoring/jobs/%s/state-history", c.baseURL, jobID)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("create request: %w", err)
+	}
+
+	fixHostHeader(req)
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("http request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusNotFound {
+		return []StateChangeLogEntry{}, nil
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("unexpected status %d: %s", resp.StatusCode, string(body))
+	}
+
+	var history []StateChangeLogEntry
+	if err := json.NewDecoder(resp.Body).Decode(&history); err != nil {
+		return nil, fmt.Errorf("decode response: %w", err)
+	}
+
+	return history, nil
+}
+
 // Ping verifies the API is reachable
 func (c *Client) Ping(ctx context.Context) error {
 	_, err := c.Health(ctx)
