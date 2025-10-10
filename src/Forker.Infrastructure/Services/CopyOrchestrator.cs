@@ -18,6 +18,7 @@ public sealed class CopyOrchestrator : ICopyOrchestrator, IDisposable
     private readonly IFileCopyService _fileCopyService;
     private readonly IJobRepository _jobRepository;
     private readonly ITargetOutcomeRepository _targetOutcomeRepository;
+    private readonly IStateChangeLogger _stateChangeLogger;
     private readonly TargetConfiguration _config;
     private readonly TestingConfiguration _testingConfig;
     private readonly ILogger<CopyOrchestrator> _logger;
@@ -32,6 +33,7 @@ public sealed class CopyOrchestrator : ICopyOrchestrator, IDisposable
         IFileCopyService fileCopyService,
         IJobRepository jobRepository,
         ITargetOutcomeRepository targetOutcomeRepository,
+        IStateChangeLogger stateChangeLogger,
         IOptions<TargetConfiguration> config,
         IOptions<TestingConfiguration> testingConfig,
         ILogger<CopyOrchestrator> logger)
@@ -39,6 +41,7 @@ public sealed class CopyOrchestrator : ICopyOrchestrator, IDisposable
         _fileCopyService = fileCopyService ?? throw new ArgumentNullException(nameof(fileCopyService));
         _jobRepository = jobRepository ?? throw new ArgumentNullException(nameof(jobRepository));
         _targetOutcomeRepository = targetOutcomeRepository ?? throw new ArgumentNullException(nameof(targetOutcomeRepository));
+        _stateChangeLogger = stateChangeLogger ?? throw new ArgumentNullException(nameof(stateChangeLogger));
         _config = config?.Value ?? throw new ArgumentNullException(nameof(config));
         _testingConfig = testingConfig?.Value ?? new TestingConfiguration();
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -123,7 +126,19 @@ public sealed class CopyOrchestrator : ICopyOrchestrator, IDisposable
                 // Use temp directory from configuration (even though we copy directly to final destination,
                 // the state machine requires a valid temp path)
                 var tempPath = Path.Combine(_config.TempDirectory, Path.GetFileName(sourceFilePath));
+                var previousState = outcome.CopyState.ToString();
                 outcome.StartCopy(tempPath);
+
+                // Log state change to audit trail
+                await _stateChangeLogger.LogTargetStateChangeAsync(
+                    outcome.JobId.Value.ToString(),
+                    outcome.TargetId.Value,
+                    previousState,
+                    TargetCopyState.Copying.ToString(),
+                    additionalContext: $"{{\"tempPath\":\"{tempPath}\"}}",
+                    cancellationToken);
+
+                // Persist state to database immediately
                 await _targetOutcomeRepository.UpdateAsync(outcome, cancellationToken);
             }
 
@@ -159,7 +174,19 @@ public sealed class CopyOrchestrator : ICopyOrchestrator, IDisposable
                 foreach (var outcome in targetOutcomes)
                 {
                     var result = copyResults[new TargetId(outcome.TargetId.Value)];
+                    var previousState = outcome.CopyState.ToString();
                     outcome.CompleteCopy(result.Hash, result.TargetFilePath);
+
+                    // Log state change to audit trail
+                    await _stateChangeLogger.LogTargetStateChangeAsync(
+                        outcome.JobId.Value.ToString(),
+                        outcome.TargetId.Value,
+                        previousState,
+                        TargetCopyState.Copied.ToString(),
+                        additionalContext: $"{{\"hash\":\"{result.Hash}\",\"finalPath\":\"{result.TargetFilePath}\",\"copyDurationMs\":{result.Duration.TotalMilliseconds}}}",
+                        cancellationToken);
+
+                    // Persist state to database immediately
                     await _targetOutcomeRepository.UpdateAsync(outcome, cancellationToken);
                 }
 
@@ -186,14 +213,35 @@ public sealed class CopyOrchestrator : ICopyOrchestrator, IDisposable
                     var targetId = new TargetId(outcome.TargetId.Value);
                     if (copyResults.TryGetValue(targetId, out var result))
                     {
+                        var previousState = outcome.CopyState.ToString();
+
                         if (result.Success)
                         {
                             outcome.CompleteCopy(result.Hash, result.TargetFilePath);
+
+                            // Log successful copy completion
+                            await _stateChangeLogger.LogTargetStateChangeAsync(
+                                outcome.JobId.Value.ToString(),
+                                outcome.TargetId.Value,
+                                previousState,
+                                TargetCopyState.Copied.ToString(),
+                                additionalContext: $"{{\"hash\":\"{result.Hash}\",\"finalPath\":\"{result.TargetFilePath}\"}}",
+                                cancellationToken);
                         }
                         else
                         {
                             outcome.MarkAsRetryableFailed(result.ErrorMessage ?? "Copy operation failed");
+
+                            // Log failed copy
+                            await _stateChangeLogger.LogTargetStateChangeAsync(
+                                outcome.JobId.Value.ToString(),
+                                outcome.TargetId.Value,
+                                previousState,
+                                TargetCopyState.FailedRetryable.ToString(),
+                                additionalContext: $"{{\"error\":\"{result.ErrorMessage?.Replace("\"", "\\\"")}\"}}",
+                                cancellationToken);
                         }
+
                         await _targetOutcomeRepository.UpdateAsync(outcome, cancellationToken);
                     }
                 }

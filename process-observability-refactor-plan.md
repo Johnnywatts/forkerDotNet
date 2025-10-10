@@ -435,10 +435,12 @@ Falls back to original behavior (only save final state).
 2. ✅ Add repository UpdateAsync after StartVerification()
 3. ⏳ Test with slow drive files (ready to test)
 
-### Step 6: Extend to Copy Operations ⏳
-1. ⏳ Modify FileCopyService to log state changes
-2. ⏳ Add repository UpdateAsync after CompleteCopy()
-3. ⏳ Test with slow drive files
+### Step 6: Extend to Copy Operations ✅
+1. ✅ Modified CopyOrchestrator to inject IStateChangeLogger
+2. ✅ Added state logging after StartCopy() transitions (Pending → Copying)
+3. ✅ Added state logging after CompleteCopy() transitions (Copying → Copied)
+4. ✅ Added state logging for failure cases (Copying → FailedRetryable)
+5. ✅ Tested with real file operations (Job 1247cfa2 - captured all 8 state transitions)
 
 ### Step 7: API Endpoints ✅
 1. ✅ Add state history endpoints (`GET /api/monitoring/jobs/{id}/state-history`)
