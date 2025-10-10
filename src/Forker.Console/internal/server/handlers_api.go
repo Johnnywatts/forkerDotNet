@@ -330,7 +330,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
     </header>
     <main>
         <h2>File Copy Transactions</h2>
-        <div id="transactions-container" hx-get="/api/jobs" hx-trigger="load, every 5s" hx-swap="none">
+        <div id="transactions-container" hx-get="/api/jobs" hx-trigger="load, every 2s" hx-swap="none">
             <div class="loading">Loading transactions...</div>
         </div>
     </main>
@@ -338,17 +338,30 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
     document.body.addEventListener('htmx:afterRequest', function(evt) {
         if (evt.detail.target.id === 'transactions-container') {
             try {
+                // Check if request was successful
+                if (evt.detail.xhr.status !== 200) {
+                    evt.detail.target.innerHTML = '<div class="loading">Error: API returned status ' + evt.detail.xhr.status + '</div>';
+                    return;
+                }
+
                 const data = JSON.parse(evt.detail.xhr.responseText);
                 // API returns {"jobs": [...]} so extract the jobs array
                 const jobs = data.jobs || [];
                 const html = renderTransactions(jobs);
                 evt.detail.target.innerHTML = html;
             } catch (e) {
-                console.error('Failed to parse transaction data:', e);
-                evt.detail.target.innerHTML = '<div class="loading">Error loading transactions: ' + e.message + '</div>';
+                console.error('Failed to parse transaction data:', e, 'Response:', evt.detail.xhr.responseText);
+                evt.detail.target.innerHTML = '<div class="loading">Error loading transactions: ' + e.message + '. Check console for details.</div>';
             }
         }
     });
+
+    // Helper function to extract filename from path
+    function getFilename(path) {
+        if (!path) return 'Unknown file';
+        const parts = path.split(/[\\/]/);
+        return parts[parts.length - 1] || 'Unknown file';
+    }
 
     function renderTransactions(jobs) {
         if (!jobs || jobs.length === 0) {
@@ -372,18 +385,20 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
 
         if (pending.length > 0) {
             pending.forEach(job => {
+                const filename = getFilename(job.sourcePath);
+                const size = formatBytes(job.sizeBytes || 0);
                 html += ` + "`" + `
                     <div class="transaction-item">
-                        <div class="transaction-filename">${job.filename}</div>
+                        <div class="transaction-filename">${filename}</div>
                         <div class="transaction-details">
                             State: ${job.state}<br>
-                            Size: ${formatBytes(job.sizeBytes)}
+                            Size: ${size}
                         </div>
                     </div>
                 ` + "`" + `;
             });
         } else {
-            html += '<div class="no-transactions">No pending transactions</div>';
+            html += '<div class="no-transactions">No pending files - files process within 3-24 seconds</div>';
         }
 
         html += '</div></div>';
@@ -397,18 +412,20 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
 
         if (copied.length > 0) {
             copied.forEach(job => {
+                const filename = getFilename(job.sourcePath);
+                const size = formatBytes(job.sizeBytes || 0);
                 html += ` + "`" + `
                     <div class="transaction-item">
-                        <div class="transaction-filename">${job.filename}</div>
+                        <div class="transaction-filename">${filename}</div>
                         <div class="transaction-details">
                             State: ${job.state}<br>
-                            Size: ${formatBytes(job.sizeBytes)}
+                            Size: ${size}
                         </div>
                     </div>
                 ` + "`" + `;
             });
         } else {
-            html += '<div class="no-transactions">No copied transactions</div>';
+            html += '<div class="no-transactions">No files currently copying</div>';
         }
 
         html += '</div></div>';
@@ -422,18 +439,20 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
 
         if (verified.length > 0) {
             verified.forEach(job => {
+                const filename = getFilename(job.sourcePath);
+                const size = formatBytes(job.sizeBytes || 0);
                 html += ` + "`" + `
                     <div class="transaction-item">
-                        <div class="transaction-filename">${job.filename}</div>
+                        <div class="transaction-filename">${filename}</div>
                         <div class="transaction-details">
                             State: ${job.state}<br>
-                            Size: ${formatBytes(job.sizeBytes)}
+                            Size: ${size}
                         </div>
                     </div>
                 ` + "`" + `;
             });
         } else {
-            html += '<div class="no-transactions">No verified transactions</div>';
+            html += '<div class="no-transactions">No verified files yet</div>';
         }
 
         html += '</div></div>';
@@ -447,18 +466,20 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
 
         if (failed.length > 0) {
             failed.forEach(job => {
+                const filename = getFilename(job.sourcePath);
+                const size = formatBytes(job.sizeBytes || 0);
                 html += ` + "`" + `
                     <div class="transaction-item">
-                        <div class="transaction-filename">${job.filename}</div>
+                        <div class="transaction-filename">${filename}</div>
                         <div class="transaction-details">
                             State: ${job.state}<br>
-                            Size: ${formatBytes(job.sizeBytes)}
+                            Size: ${size}
                         </div>
                     </div>
                 ` + "`" + `;
             });
         } else {
-            html += '<div class="no-transactions">No failed transactions</div>';
+            html += '<div class="no-transactions">No failed files</div>';
         }
 
         html += '</div></div></div>';
@@ -466,7 +487,8 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
     }
 
     function formatBytes(bytes) {
-        if (bytes === 0) return '0 B';
+        if (!bytes || bytes === 0) return '0 B';
+        if (isNaN(bytes)) return '0 B';
         const k = 1024;
         const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));

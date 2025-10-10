@@ -28,7 +28,7 @@ type JobSummary struct {
 	JobID       string  `json:"jobId"`
 	SourcePath  string  `json:"sourcePath"`
 	State       string  `json:"state"`
-	InitialSize int64   `json:"initialSize"`
+	InitialSize int64   `json:"sizeBytes"` // C# API returns "sizeBytes" not "initialSize"
 	SourceHash  *string `json:"sourceHash"`
 	CreatedAt   string  `json:"createdAt"`
 }
@@ -38,7 +38,7 @@ type JobDetails struct {
 	JobID        string          `json:"jobId"`
 	SourcePath   string          `json:"sourcePath"`
 	State        string          `json:"state"`
-	InitialSize  int64           `json:"initialSize"`
+	InitialSize  int64           `json:"sizeBytes"` // C# API returns "sizeBytes" not "initialSize"
 	SourceHash   *string         `json:"sourceHash"`
 	CreatedAt    string          `json:"createdAt"`
 	VersionToken int             `json:"versionToken"`
