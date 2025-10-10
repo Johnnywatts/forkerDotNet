@@ -14,6 +14,7 @@
         <nav>
             <a href="/" {{if eq .Page "dashboard"}}class="active"{{end}}>Dashboard</a>
             <a href="/folders" {{if eq .Page "folders"}}class="active"{{end}}>Folders</a>
+            <a href="/transactions" {{if eq .Page "transactions"}}class="active"{{end}}>Transactions</a>
             <a href="/demo" {{if eq .Page "demo"}}class="active"{{end}}>Demo Mode</a>
         </nav>
         <div id="stats-bar" hx-get="/api/stats" hx-trigger="load, every 10s" hx-swap="innerHTML">

@@ -253,6 +253,75 @@ The dual-mode `main.go` will detect missing `FORKER_API_URL` and fall back to SQ
 - [ ] Task 3.5: Docker Configuration - Update docker-compose.yml ✅ COMPLETE (part of 3.2)
 - [ ] Task 3.6: Integration Testing - Verify console ↔ API communication
 
+## Troubleshooting
+
+### Issue: "undefined" Target States in Active Pane (2025-10-10)
+
+**Symptom**: Transactions page Active pane showed "undefined" for target copy states (e.g., "Copying", "Verifying").
+
+**Root Cause**: Field name mismatch in data flow chain:
+1. **C# Service** (`MonitoringModels.cs:68`): Returns `CopyState` property → JSON serializes as `copyState` (camelCase)
+2. **Go API Client** (`apiclient/models.go:51`): Had `State` field with `json:"state"` tag → Failed to unmarshal `copyState`
+3. **Go Console** (`handlers_api.go:1208`): Referenced `target.State` → Got empty string
+4. **JavaScript** (`handlers_api.go:714`): Read `target.copyState` → Got `undefined`
+
+**Fix Applied**:
+```go
+// apiclient/models.go - BEFORE (WRONG)
+type TargetOutcome struct {
+    TargetID string  `json:"targetId"`
+    State    string  `json:"state"`      // ❌ Mismatched field name
+    ...
+}
+
+// apiclient/models.go - AFTER (CORRECT)
+type TargetOutcome struct {
+    TargetID  string  `json:"targetId"`
+    CopyState string  `json:"copyState"` // ✅ Matches C# API
+    ...
+}
+```
+
+```go
+// handlers_api.go:1208 - BEFORE (WRONG)
+State: target.State,  // ❌ Referenced old field name
+
+// handlers_api.go:1208 - AFTER (CORRECT)
+State: target.CopyState,  // ✅ Updated reference
+```
+
+```javascript
+// handlers_api.go:714-715 - Already correct (no change needed)
+const badge = getTargetStateBadge(target.copyState);
+const operation = getTargetStateDescription(target.copyState, target.targetId);
+```
+
+**Important Rebuild Note**: When modifying Go code, use `docker-compose build --no-cache` instead of `docker build`. Docker Compose creates its own image (`forkerconsole-forker-console`) separate from manually tagged images (`forker-console:latest`).
+
+**Testing the Fix**:
+```bash
+# Test C# API directly (should show copyState)
+curl -s "http://localhost:8081/api/monitoring/jobs/{id}" | grep copyState
+
+# Test Go Console API (should also show copyState)
+curl -s "http://localhost:5000/api/jobs/{id}" | grep copyState
+
+# Both should return: "copyState": "Copying" (or Verifying, Verified, etc.)
+```
+
+**Data Flow Verification**:
+```
+C# Service → JSON: {"copyState": "Copying"}
+     ↓
+Go Client unmarshals: TargetOutcome.CopyState = "Copying"
+     ↓
+Go Handler accesses: target.CopyState → "Copying"
+     ↓
+Go Console serializes: {"copyState": "Copying"}
+     ↓
+Browser JavaScript reads: target.copyState → "Copying" ✅
+```
+
 ## References
 
 - **Design Document**: `console-design.md` (Decision 6)

@@ -48,7 +48,7 @@ type JobDetails struct {
 // TargetOutcome matches MonitoringModels.TargetOutcomeResponse
 type TargetOutcome struct {
 	TargetID         string  `json:"targetId"`
-	State            string  `json:"state"`
+	CopyState        string  `json:"copyState"`
 	Hash             *string `json:"hash"`
 	BytesCopied      *int64  `json:"bytesCopied"`
 	LastTransitionAt string  `json:"lastTransitionAt"`

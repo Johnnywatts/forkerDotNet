@@ -180,27 +180,104 @@ func handleFoldersPage(w http.ResponseWriter, r *http.Request) {
             <a href="/folders" class="active">Folders</a>
             <a href="/transactions">Transactions</a>
             <a href="/demo">Demo Mode</a>
+            <span style="margin-left: 20px; display: inline-flex; gap: 10px; align-items: center;">
+                <label for="refresh-rate" style="color: #666; font-size: 0.9em;">Refresh:</label>
+                <select id="refresh-rate" onchange="updateRefreshRate(this.value)" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #ddd;">
+                    <option value="1">1s</option>
+                    <option value="2">2s</option>
+                    <option value="3">3s</option>
+                    <option value="5" selected>5s</option>
+                    <option value="10">10s</option>
+                    <option value="60">60s</option>
+                </select>
+                <button id="pause-btn" onclick="togglePause()" style="padding: 4px 12px; border-radius: 4px; border: 1px solid #ddd; background: white; cursor: pointer;">⏸ Pause</button>
+            </span>
         </nav>
     </header>
     <main>
         <h2>ForkerDemo Folder Scanner</h2>
-        <div id="folders-container" hx-get="/api/folders" hx-trigger="load, every 5s" hx-swap="none">
+        <div id="folders-container">
             <div class="loading">Loading folders...</div>
         </div>
     </main>
     <script>
-    document.body.addEventListener('htmx:afterRequest', function(evt) {
-        if (evt.detail.target.id === 'folders-container') {
-            try {
-                const data = JSON.parse(evt.detail.xhr.responseText);
-                const html = renderFolders(data);
-                evt.detail.target.innerHTML = html;
-            } catch (e) {
-                console.error('Failed to parse folder data:', e, evt.detail.xhr.responseText);
-                evt.detail.target.innerHTML = '<div class="loading">Error loading folders: ' + e.message + '</div>';
-            }
-        }
+    // Global state (persisted across page navigations)
+    let refreshInterval = null;
+    let refreshRate = parseInt(localStorage.getItem('forker-refresh-rate') || '5000');
+    let isPaused = localStorage.getItem('forker-paused') === 'true';
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Restore UI state from localStorage
+        restoreRefreshControlState();
+
+        fetchFoldersData(); // Initial load
+        startAutoRefresh(); // Start polling
     });
+
+    // Restore refresh control UI state
+    function restoreRefreshControlState() {
+        const rateSelect = document.getElementById('refresh-rate');
+        if (rateSelect) {
+            rateSelect.value = (refreshRate / 1000).toString();
+        }
+
+        const pauseBtn = document.getElementById('pause-btn');
+        if (pauseBtn) {
+            pauseBtn.textContent = isPaused ? '▶ Resume' : '⏸ Pause';
+            pauseBtn.style.background = isPaused ? '#ffffcc' : 'white';
+        }
+    }
+
+    // Fetch folders data from API
+    function fetchFoldersData() {
+        fetch('/api/folders')
+            .then(r => {
+                if (r.status !== 200) {
+                    throw new Error('API returned status ' + r.status);
+                }
+                return r.json();
+            })
+            .then(data => {
+                const html = renderFolders(data);
+                document.getElementById('folders-container').innerHTML = html;
+            })
+            .catch(err => {
+                console.error('Failed to fetch folders:', err);
+                document.getElementById('folders-container').innerHTML =
+                    '<div class="loading">Error loading folders: ' + err.message + '</div>';
+            });
+    }
+
+    // Start automatic refresh
+    function startAutoRefresh() {
+        if (refreshInterval) clearInterval(refreshInterval);
+        refreshInterval = setInterval(() => {
+            if (!isPaused) {
+                fetchFoldersData();
+            }
+        }, refreshRate);
+    }
+
+    // Toggle pause/resume
+    function togglePause() {
+        isPaused = !isPaused;
+        localStorage.setItem('forker-paused', isPaused.toString());
+
+        const btn = document.getElementById('pause-btn');
+        btn.textContent = isPaused ? '▶ Resume' : '⏸ Pause';
+        btn.style.background = isPaused ? '#ffffcc' : 'white';
+    }
+
+    // Update refresh rate
+    function updateRefreshRate(seconds) {
+        refreshRate = seconds * 1000;
+        localStorage.setItem('forker-refresh-rate', refreshRate.toString());
+
+        if (!isPaused) {
+            startAutoRefresh(); // Restart with new rate
+        }
+    }
 
     function renderFolders(data) {
         if (!data || Object.keys(data).length === 0) {
@@ -383,6 +460,68 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         .expand-btn:hover {
             color: #004499;
         }
+
+        /* Horizontal layout for transaction items */
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            gap: 15px;
+        }
+
+        .transaction-item:hover {
+            background: #f0f0f0;
+        }
+
+        .transaction-filename {
+            flex: 1;
+            font-weight: 600;
+            color: #0066cc;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 150px;
+        }
+
+        .transaction-size {
+            flex: 0 0 90px;
+            text-align: right;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .transaction-time {
+            flex: 0 0 80px;
+            text-align: right;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .transaction-action {
+            flex: 0 0 100px;
+            text-align: right;
+        }
+
+        .transaction-operation {
+            flex: 0 0 200px;
+            color: #666;
+            font-size: 0.85em;
+            text-align: right;
+        }
+
+        .state-badge-container {
+            flex: 0 0 auto;
+        }
+
+        .transaction-item-expanded {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -393,54 +532,86 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
             <a href="/folders">Folders</a>
             <a href="/transactions" class="active">Transactions</a>
             <a href="/demo">Demo Mode</a>
+            <span style="margin-left: 20px; display: inline-flex; gap: 10px; align-items: center;">
+                <label for="refresh-rate" style="color: #666; font-size: 0.9em;">Refresh:</label>
+                <select id="refresh-rate" onchange="updateRefreshRate(this.value)" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #ddd;">
+                    <option value="1">1s</option>
+                    <option value="2" selected>2s</option>
+                    <option value="3">3s</option>
+                    <option value="10">10s</option>
+                    <option value="60">60s</option>
+                </select>
+                <button id="pause-btn" onclick="togglePause()" style="padding: 4px 12px; border-radius: 4px; border: 1px solid #ddd; background: white; cursor: pointer;">⏸ Pause</button>
+            </span>
         </nav>
     </header>
     <main>
         <h2>File Copy Transactions</h2>
-        <div id="transactions-container" hx-get="/api/jobs" hx-trigger="load, every 2s" hx-swap="none">
+        <div id="transactions-container">
             <div class="loading">Loading transactions...</div>
         </div>
     </main>
     <script>
-    // Global cache for all job details
+    // Global state (persisted across page navigations)
     let allJobDetails = [];
     let expandedJobs = new Set();
+    let refreshInterval = null;
+    let refreshRate = parseInt(localStorage.getItem('forker-refresh-rate') || '2000');
+    let isPaused = localStorage.getItem('forker-paused') === 'true';
 
-    document.body.addEventListener('htmx:afterRequest', function(evt) {
-        if (evt.detail.target.id === 'transactions-container') {
-            handleJobsResponse(evt);
-        }
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Restore UI state from localStorage
+        restoreRefreshControlState();
+
+        fetchJobsData(); // Initial load
+        startAutoRefresh(); // Start polling
     });
 
-    async function handleJobsResponse(evt) {
-        try {
-            if (evt.detail.xhr.status !== 200) {
-                evt.detail.target.innerHTML = '<div class="loading">Error: API returned status ' + evt.detail.xhr.status + '</div>';
-                return;
-            }
+    // Restore refresh control UI state
+    function restoreRefreshControlState() {
+        const rateSelect = document.getElementById('refresh-rate');
+        if (rateSelect) {
+            rateSelect.value = (refreshRate / 1000).toString();
+        }
 
-            const data = JSON.parse(evt.detail.xhr.responseText);
-            const jobs = data.jobs || [];
-
-            if (jobs.length === 0) {
-                evt.detail.target.innerHTML = '<div class="no-transactions">No jobs in database yet</div>';
-                return;
-            }
-
-            // Batch fetch all job details in parallel
-            await fetchAllJobDetails(jobs);
-
-            // Render UI with all data available
-            renderTransactions();
-
-        } catch (e) {
-            console.error('Failed to process transaction data:', e, 'Response:', evt.detail.xhr.responseText);
-            evt.detail.target.innerHTML = '<div class="loading">Error loading transactions: ' + e.message + '</div>';
+        const pauseBtn = document.getElementById('pause-btn');
+        if (pauseBtn) {
+            pauseBtn.textContent = isPaused ? '▶ Resume' : '⏸ Pause';
+            pauseBtn.style.background = isPaused ? '#ffffcc' : 'white';
         }
     }
 
+    // Fetch jobs data from API
+    function fetchJobsData() {
+        fetch('/api/jobs')
+            .then(r => {
+                if (r.status !== 200) {
+                    throw new Error('API returned status ' + r.status);
+                }
+                return r.json();
+            })
+            .then(data => {
+                const jobs = data.jobs || [];
+                if (jobs.length === 0) {
+                    document.getElementById('transactions-container').innerHTML =
+                        '<div class="no-transactions">No jobs in database yet</div>';
+                    return;
+                }
+                return fetchAllJobDetails(jobs);
+            })
+            .then(() => {
+                renderTransactions();
+            })
+            .catch(err => {
+                console.error('Failed to fetch jobs:', err);
+                document.getElementById('transactions-container').innerHTML =
+                    '<div class="loading">Error loading transactions: ' + err.message + '</div>';
+            });
+    }
+
+    // Batch fetch all job details
     async function fetchAllJobDetails(jobs) {
-        // Fetch all job details in parallel
         const detailPromises = jobs.map(job =>
             fetch('/api/jobs/' + job.jobId)
                 .then(r => r.json())
@@ -454,11 +625,42 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         allJobDetails = results.filter(j => j !== null);
     }
 
+    // Start automatic refresh
+    function startAutoRefresh() {
+        if (refreshInterval) clearInterval(refreshInterval);
+        refreshInterval = setInterval(() => {
+            if (!isPaused) {
+                fetchJobsData();
+            }
+        }, refreshRate);
+    }
+
+    // Toggle pause/resume
+    function togglePause() {
+        isPaused = !isPaused;
+        localStorage.setItem('forker-paused', isPaused.toString());
+
+        const btn = document.getElementById('pause-btn');
+        btn.textContent = isPaused ? '▶ Resume' : '⏸ Pause';
+        btn.style.background = isPaused ? '#ffffcc' : 'white';
+    }
+
+    // Update refresh rate
+    function updateRefreshRate(seconds) {
+        refreshRate = seconds * 1000;
+        localStorage.setItem('forker-refresh-rate', refreshRate.toString());
+
+        if (!isPaused) {
+            startAutoRefresh(); // Restart with new rate
+        }
+    }
+
+    // Render transactions UI
     function renderTransactions() {
         const container = document.getElementById('transactions-container');
         if (!container) return;
 
-        // Group ALL jobs by state first (don't filter yet)
+        // Group jobs by state
         const active = allJobDetails.filter(j =>
             ['Discovered', 'Queued', 'InProgress', 'Partial'].includes(j.state)
         );
@@ -467,25 +669,20 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
             ['Failed', 'Quarantined'].includes(j.state)
         );
 
-        // Apply time filter ONLY to Complete pane
+        // Apply time filter to Complete pane
         const filterValue = document.getElementById('complete-filter')?.value || 'today';
         const complete = filterJobsByTime(allComplete, filterValue);
 
         let html = '<div class="transactions-grid">';
-
-        // Active pane (no filter)
         html += renderActivePane(active);
-
-        // Complete pane (with time filter)
         html += renderCompletePane(complete);
-
-        // Failed pane (no filter)
         html += renderFailedPane(failed);
-
         html += '</div>';
+
         container.innerHTML = html;
     }
 
+    // Render Active pane (horizontal layout) - shows jobs/targets being worked on
     function renderActivePane(jobs) {
         let html = '<div class="transaction-pane"><h3>Active (' + jobs.length + ')</h3><div class="transaction-list">';
 
@@ -493,14 +690,53 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
             jobs.forEach(job => {
                 const filename = getFilename(job.sourcePath);
                 const size = formatBytes(job.sizeBytes || 0);
-                const badge = getStateBadge(job.state);
+                const queuedTime = formatTime(job.createdAt);
+                let rendered = false;
 
-                html += '<div class="transaction-item">';
-                html += '<div class="transaction-filename">' + filename + badge + '</div>';
-                html += '<div class="transaction-details">';
-                html += 'Size: ' + size + '<br>';
-                html += 'Status: ' + getStateDescription(job.state);
-                html += '</div></div>';
+                // For Discovered/Queued jobs: show job-level state (not started copying yet)
+                if (job.state === 'Discovered' || job.state === 'Queued') {
+                    const badge = getStateBadge(job.state);
+                    const operation = getStateDescription(job.state);
+
+                    html += '<div class="transaction-item">';
+                    html += '<div class="transaction-filename">' + filename + '</div>';
+                    html += '<div class="transaction-size">' + size + '</div>';
+                    html += '<div class="state-badge-container">' + badge + '</div>';
+                    html += '<div class="transaction-operation">' + operation + ' @ ' + queuedTime + '</div>';
+                    html += '</div>';
+                    rendered = true;
+                }
+                // For InProgress/Partial jobs: show individual target operations
+                else if (job.state === 'InProgress' || job.state === 'Partial') {
+                    if (job.targets && job.targets.length > 0) {
+                        job.targets.forEach(target => {
+                            // Show ALL targets (API returns 'copyState' field)
+                            const badge = getTargetStateBadge(target.copyState);
+                            const operation = getTargetStateDescription(target.copyState, target.targetId);
+
+                            html += '<div class="transaction-item">';
+                            html += '<div class="transaction-filename">' + filename + ' → ' + target.targetId + '</div>';
+                            html += '<div class="transaction-size">' + size + '</div>';
+                            html += '<div class="state-badge-container">' + badge + '</div>';
+                            html += '<div class="transaction-operation">' + operation + ' @ ' + queuedTime + '</div>';
+                            html += '</div>';
+                            rendered = true;
+                        });
+                    }
+                }
+
+                // Fallback: if nothing rendered yet, show job-level state
+                if (!rendered) {
+                    const badge = getStateBadge(job.state);
+                    const operation = getStateDescription(job.state);
+
+                    html += '<div class="transaction-item">';
+                    html += '<div class="transaction-filename">' + filename + '</div>';
+                    html += '<div class="transaction-size">' + size + '</div>';
+                    html += '<div class="state-badge-container">' + badge + '</div>';
+                    html += '<div class="transaction-operation">' + operation + ' @ ' + queuedTime + '</div>';
+                    html += '</div>';
+                }
             });
         } else {
             html += '<div class="no-transactions">No files processing - system ready</div>';
@@ -510,10 +746,39 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         return html;
     }
 
+    // Get target state badge (for individual target operations)
+    function getTargetStateBadge(state) {
+        const badges = {
+            'Pending': '<span class="state-badge queued">Pending</span>',
+            'Copying': '<span class="state-badge copying">Copying</span>',
+            'Copied': '<span class="state-badge copying">Copied</span>',
+            'Verifying': '<span class="state-badge verifying">Verifying</span>',
+            'Verified': '<span class="state-badge discovered">Verified</span>',
+            'FailedRetryable': '<span class="state-badge failed">Failed (Retrying)</span>',
+            'FailedPermanent': '<span class="state-badge failed">Failed</span>'
+        };
+        return badges[state] || '<span class="state-badge">' + state + '</span>';
+    }
+
+    // Get target state description (for individual target operations)
+    function getTargetStateDescription(state, targetId) {
+        const descriptions = {
+            'Pending': 'Waiting to copy to ' + targetId,
+            'Copying': 'Copying to ' + targetId,
+            'Copied': 'Copied to ' + targetId + ', waiting for verification',
+            'Verifying': 'Verifying hash for ' + targetId,
+            'Verified': 'Verified at ' + targetId,
+            'FailedRetryable': 'Failed at ' + targetId + ' (will retry)',
+            'FailedPermanent': 'Failed permanently at ' + targetId
+        };
+        return descriptions[state] || (state + ' - ' + targetId);
+    }
+
+    // Render Complete pane (horizontal layout)
     function renderCompletePane(jobs) {
         let html = '<div class="transaction-pane">';
         html += '<h3>Complete (' + jobs.length + ')';
-        html += '<select id="complete-filter" onchange="handleFilterChange(this.value)">';
+        html += '<select id="complete-filter" onchange="handleFilterChange()">';
         html += '<option value="hour">Last Hour</option>';
         html += '<option value="today" selected>Today</option>';
         html += '<option value="all">All Time</option>';
@@ -529,19 +794,20 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
 
                 html += '<div class="transaction-item">';
                 html += '<div class="transaction-filename">' + filename + '</div>';
-                html += '<div class="transaction-details">';
-                html += 'Size: ' + size + '<br>';
-                html += 'Completed: ' + time + '<br>';
+                html += '<div class="transaction-size">' + size + '</div>';
+                html += '<div class="transaction-time">' + time + '</div>';
+                html += '<div class="transaction-action">';
                 html += '<span class="expand-btn" onclick="toggleJobDetails(\'' + job.jobId + '\')">';
-                html += isExpanded ? '▼ Hide details' : '▶ Show details';
+                html += isExpanded ? '▼ Hide' : '▶ Details';
                 html += '</span>';
+                html += '</div>';
                 html += '</div>';
 
                 if (isExpanded) {
+                    html += '<div class="transaction-item-expanded">';
                     html += renderTargetDetails(job);
+                    html += '</div>';
                 }
-
-                html += '</div>';
             });
         } else {
             const filter = document.getElementById('complete-filter')?.value || 'today';
@@ -553,6 +819,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         return html;
     }
 
+    // Render Failed pane (horizontal layout)
     function renderFailedPane(jobs) {
         let html = '<div class="transaction-pane"><h3>Failed (' + jobs.length + ')</h3><div class="transaction-list">';
 
@@ -560,13 +827,14 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
             jobs.forEach(job => {
                 const filename = getFilename(job.sourcePath);
                 const size = formatBytes(job.sizeBytes || 0);
+                const time = formatTime(job.createdAt);
 
                 html += '<div class="transaction-item">';
                 html += '<div class="transaction-filename">' + filename + '</div>';
-                html += '<div class="transaction-details">';
-                html += 'State: ' + job.state + '<br>';
-                html += 'Size: ' + size;
-                html += '</div></div>';
+                html += '<div class="transaction-size">' + size + '</div>';
+                html += '<div class="transaction-time">' + time + '</div>';
+                html += '<div class="transaction-action" style="color: red; font-weight: 600;">' + job.state + '</div>';
+                html += '</div>';
             });
         } else {
             html += '<div class="no-transactions">No failures detected</div>';
@@ -576,6 +844,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         return html;
     }
 
+    // Render target details (unchanged)
     function renderTargetDetails(job) {
         if (!job.targets || job.targets.length === 0) {
             return '<div class="job-details-expanded">No target data available</div>';
@@ -612,6 +881,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         return html;
     }
 
+    // Toggle job details expansion
     function toggleJobDetails(jobId) {
         if (expandedJobs.has(jobId)) {
             expandedJobs.delete(jobId);
@@ -621,10 +891,12 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         renderTransactions();
     }
 
-    function handleFilterChange(value) {
+    // Handle filter change
+    function handleFilterChange() {
         renderTransactions();
     }
 
+    // Filter jobs by time
     function filterJobsByTime(jobs, filter) {
         if (filter === 'all') return jobs;
 
@@ -640,6 +912,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         return jobs.filter(j => new Date(j.createdAt) >= cutoff);
     }
 
+    // Get state badge HTML
     function getStateBadge(state) {
         const badges = {
             'Discovered': '<span class="state-badge discovered">Discovered</span>',
@@ -650,6 +923,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         return badges[state] || '';
     }
 
+    // Get state description
     function getStateDescription(state) {
         const descriptions = {
             'Discovered': 'File found, checking stability',
@@ -660,6 +934,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         return descriptions[state] || state;
     }
 
+    // Get filter label
     function getFilterLabel(filter) {
         const labels = {
             'hour': 'in last hour',
@@ -669,12 +944,14 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         return labels[filter] || filter;
     }
 
+    // Get filename from path
     function getFilename(path) {
         if (!path) return 'Unknown file';
         const parts = path.split(/[\\/]/);
         return parts[parts.length - 1] || 'Unknown file';
     }
 
+    // Format bytes
     function formatBytes(bytes) {
         if (!bytes || bytes === 0) return '0 B';
         if (isNaN(bytes)) return '0 B';
@@ -684,6 +961,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
+    // Format time
     function formatTime(timestamp) {
         if (!timestamp) return 'N/A';
         const date = new Date(timestamp);
@@ -927,7 +1205,7 @@ func enrichAPIJobDetailsForDisplay(details *apiclient.JobDetails) *APIJobDetails
 	// Find TargetA and TargetB
 	for _, target := range details.Targets {
 		display := &TargetDisplay{
-			State:        target.State,
+			State:        target.CopyState,
 			Path:         target.TargetID,
 			Hash:         stringOr(target.Hash, "N/A"),
 			BytesCopied:  formatBytesPtr(target.BytesCopied),
