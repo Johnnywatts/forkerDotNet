@@ -457,28 +457,28 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         const container = document.getElementById('transactions-container');
         if (!container) return;
 
-        // Apply current filter
-        const filterValue = document.getElementById('complete-filter')?.value || 'today';
-        const filteredJobs = filterJobsByTime(allJobDetails, filterValue);
-
-        // Group jobs by state
-        const active = filteredJobs.filter(j =>
+        // Group ALL jobs by state first (don't filter yet)
+        const active = allJobDetails.filter(j =>
             ['Discovered', 'Queued', 'InProgress', 'Partial'].includes(j.state)
         );
-        const complete = filteredJobs.filter(j => j.state === 'Verified');
-        const failed = filteredJobs.filter(j =>
+        const allComplete = allJobDetails.filter(j => j.state === 'Verified');
+        const failed = allJobDetails.filter(j =>
             ['Failed', 'Quarantined'].includes(j.state)
         );
 
+        // Apply time filter ONLY to Complete pane
+        const filterValue = document.getElementById('complete-filter')?.value || 'today';
+        const complete = filterJobsByTime(allComplete, filterValue);
+
         let html = '<div class="transactions-grid">';
 
-        // Active pane
+        // Active pane (no filter)
         html += renderActivePane(active);
 
-        // Complete pane
+        // Complete pane (with time filter)
         html += renderCompletePane(complete);
 
-        // Failed pane
+        // Failed pane (no filter)
         html += renderFailedPane(failed);
 
         html += '</div>';
