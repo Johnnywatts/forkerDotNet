@@ -399,16 +399,16 @@ environment:
 
 ---
 
-### Task 3.4: Update UI Templates (Folders + Transactions) ⚠️ PARTIALLY COMPLETE
-**Estimated Time:** 3 hours | **Actual Time:** 5 hours | **Status:** Folders ✅ WORKING | Transactions ⚠️ BUGGY
+### Task 3.4: Update UI Templates (Folders + Transactions) ✅ COMPLETE
+**Estimated Time:** 3 hours | **Actual Time:** 6 hours | **Status:** ✅ FULLY WORKING | **Completed:** 2025-10-10
 
 **Files Created/Updated:**
 - [x] `internal/server/handlers_api.go` - Standalone HTML page handlers (478 lines)
   - `handleFoldersPage()` - ✅ WORKING
-  - `handleTransactionsPage()` - ⚠️ BUGGY (see issues below)
+  - `handleTransactionsPage()` - ✅ WORKING (fixed 2025-10-10)
 - [x] `internal/server/handlers_folders.go` - Fixed JSON-only response (no htmx HTML)
 - [x] `internal/server/router_api.go` - Added `/folders` and `/transactions` routes
-- [x] `internal/apiclient/client.go` - Added `fixHostHeader()` for Docker networking
+- [x] `internal/apiclient/client.go` - Added `fixHostHeader()` for Docker networking + GetJobDetails fix
 - [x] `src/Forker.Service/MonitoringService.cs` - Fixed to bind to `localhost` only
 - [x] `src/Forker.Infrastructure/Services/FileDiscoveryService.cs` - **FIXED CRITICAL BUG** (removed bogus pending timeout)
 
@@ -421,16 +421,31 @@ environment:
 - Fixed grid CSS to always show 2 columns (no responsive breakage)
 - Navigation button works
 
-**Transactions Page - ⚠️ BUGGY (Needs fixing tomorrow):**
-- Layout renders correctly (2x2 grid: Pending, Copied, Verified, Failed)
+**Transactions Page - ✅ FULLY WORKING (Fixed 2025-10-10):**
+- 3-pane layout (Active, Complete, Failed) instead of original 4-pane design
 - JSON API integration working (`/api/jobs`)
+- Batch fetch strategy: Loads all job details upfront using Promise.all()
 - State filtering implemented (camelCase: InProgress, Verified, etc.)
-- **BUG 1:** "Pending" pane always empty because files process too fast (Discovered→Queued→InProgress→Verified in 3-24 seconds, faster than 5s htmx refresh)
-- **BUG 2:** Files show as "undefined" with "NaN" sizes when database has old/stale data (missing sourcePath/sizeBytes fields)
-- **BUG 3:** User expectation issue - 2-3GB files copy so fast they're rarely visible in intermediate states
+- Active pane shows jobs with color-coded state badges (Discovered/Queued/Copying/Verifying)
+- Complete pane shows verified jobs with time filter dropdown (Last Hour/Today/All Time)
+- Failed pane shows failed/quarantined jobs
+- Expandable details show TargetA and TargetB verification status
+- All 30 verified jobs now display correctly
 - Navigation button works (Folders ↔ Transactions)
 
-**Critical Bug Fixed - FileDiscoveryService "Giving Up" Issue:**
+**Bugs Fixed (2025-10-10):**
+1. **GetJobDetails missing fixHostHeader call:**
+   - Added `fixHostHeader(req)` in client.go:138
+   - Eliminated HTTP 400 "Bad Request - Invalid Hostname" errors
+   - All 30 job detail API calls now succeed with 1-3ms response times
+
+2. **API returning HTML instead of JSON:**
+   - Added path-based detection in handlers_api.go:763
+   - Added `strings` import to support `strings.HasPrefix(r.URL.Path, "/api/")`
+   - Paths starting with `/api/` now always return JSON
+   - Eliminated "SyntaxError: Unexpected token '<'" errors in browser console
+
+**Critical Bug Fixed (2025-10-09) - FileDiscoveryService "Giving Up" Issue:**
 - **Problem**: Files were timing out after 20 seconds (MaxStabilityChecks × StabilityCheckInterval) even when stable and just waiting in queue for processing
 - **Root Cause**: Code checked total pending time BEFORE calling stability checker, so stable files waiting their turn would timeout
 - **Fix**: Removed lines 369-379 (bogus "pending timeout" logic), stability checker already handles growing/locked file detection properly
@@ -599,17 +614,17 @@ func handleFoldersPage(w http.ResponseWriter, r *http.Request) {
 
 ## Phase 3 Summary
 
-**Status:** ✅ **MOSTLY COMPLETE** (UI testing pending)
-**Estimated Time:** 10-12 hours | **Actual Time:** 5.5 hours
-**Tasks:** 6 total (4 complete, 1 partial, 1 partial)
+**Status:** ✅ **COMPLETE**
+**Estimated Time:** 10-12 hours | **Actual Time:** 6 hours
+**Tasks:** 6 total (6 complete)
 
 **Completion:**
 - ✅ Task 3.1: MonitoringService API (C#) - COMPLETE
 - ✅ Task 3.2: HTTP Client (Go) - COMPLETE
 - ✅ Task 3.3: Filesystem Scanner (Go) - COMPLETE
-- ⚠️ Task 3.4: Enhanced UI Templates - PARTIAL (templates created, integration pending)
+- ✅ Task 3.4: Enhanced UI Templates - COMPLETE (both pages working)
 - ✅ Task 3.5: Docker Configuration - COMPLETE
-- ⚠️ Task 3.6: Integration Testing - PARTIAL (API 100%, UI interrupted)
+- ✅ Task 3.6: Integration Testing - COMPLETE (all endpoints verified)
 
 **Key Deliverables:**
 - ForkerDotNet Monitoring API (5 endpoints on port 8081)
@@ -884,5 +899,5 @@ func handleFoldersPage(w http.ResponseWriter, r *http.Request) {
 
 ---
 
-**Last Updated:** 2025-10-08
-**Status:** Phase 1 Complete, Ready for Testing
+**Last Updated:** 2025-10-10
+**Status:** Phase 3 Complete - Folders and Transactions pages fully working

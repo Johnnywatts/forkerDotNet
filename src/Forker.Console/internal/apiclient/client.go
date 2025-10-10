@@ -134,6 +134,8 @@ func (c *Client) GetJobDetails(ctx context.Context, jobID string) (*JobDetails, 
 		return nil, fmt.Errorf("create request: %w", err)
 	}
 
+	fixHostHeader(req)
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("http request: %w", err)

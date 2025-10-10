@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"forkerDotNet/console/internal/apiclient"
@@ -758,11 +759,16 @@ func handleJobDetailAPI(w http.ResponseWriter, r *http.Request, id string) {
 		return
 	}
 
-	// Check if htmx request or regular page load
-	if r.Header.Get("HX-Request") == "true" {
+	// Check if this is an API request (from /api/jobs/{id}) or page request (from /jobs/{id})
+	// API requests should always return JSON, page requests return HTML
+	isAPIPath := strings.HasPrefix(r.URL.Path, "/api/")
+
+	if isAPIPath || r.Header.Get("HX-Request") == "true" || r.Header.Get("Accept") == "application/json" {
+		// Return JSON for API paths, HTMX requests, or explicit JSON requests
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(details)
 	} else {
+		// Return HTML template for page views (/jobs/{id})
 		data := map[string]interface{}{
 			"Title": "Job Details",
 			"Page":  "job-detail",
