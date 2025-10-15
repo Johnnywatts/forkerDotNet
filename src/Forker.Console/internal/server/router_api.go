@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"strings"
 )
 
 // NewAPIRouter creates the HTTP router using API-based handlers (Phase 3)
@@ -26,6 +27,14 @@ func NewAPIRouter() http.Handler {
 			handleJobListAPI(w, r)
 			return
 		}
+
+		// Check if this is a state-history request
+		if strings.HasSuffix(r.URL.Path, "/state-history") {
+			id := strings.TrimSuffix(PathParam(r.URL.Path, "/api/jobs/"), "/state-history")
+			handleJobStateHistoryAPI(w, r, id)
+			return
+		}
+
 		id := PathParam(r.URL.Path, "/api/jobs/")
 		handleJobDetailAPI(w, r, id)
 	})

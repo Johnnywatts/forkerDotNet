@@ -881,10 +881,11 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
 
         // Show target summary first
         job.targets.forEach(target => {
+            const state = target.copyState || target.state || 'Unknown';
             html += '<div class="target-detail">';
             html += '<strong>' + target.targetId + ':</strong> ';
-            html += target.state === 'Verified' ? '✓ ' : '✗ ';
-            html += target.state + '<br>';
+            html += state === 'Verified' ? '✓ ' : '✗ ';
+            html += state + '<br>';
 
             if (target.hash) {
                 const hashMatch = target.hash === job.sourceHash;
@@ -1145,6 +1146,28 @@ func handleJobDetailAPI(w http.ResponseWriter, r *http.Request, id string) {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		}
 	}
+}
+
+func handleJobStateHistoryAPI(w http.ResponseWriter, r *http.Request, id string) {
+	client := GetAPIClient()
+	if client == nil {
+		http.Error(w, "API client not configured", http.StatusServiceUnavailable)
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	defer cancel()
+
+	history, err := client.GetStateHistory(ctx, id)
+	if err != nil {
+		log.Printf("[ERROR] Failed to get state history for %s: %v", id, err)
+		http.Error(w, "State history not found", http.StatusNotFound)
+		return
+	}
+
+	// Return JSON array
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(history)
 }
 
 func handleStatsAPI(w http.ResponseWriter, r *http.Request) {

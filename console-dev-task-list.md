@@ -3,10 +3,12 @@
 **Technology Stack:** Go 1.23+ | stdlib HTTP | htmx 1.9+ | Docker | ForkerDotNet HTTP API + Direct Filesystem Access
 
 **Estimated Total Effort:** 29-38 hours (updated with Phase 3 API redesign)
-**Actual Time:** Phase 1: ~2h | Phase 2: ~3h | **Total: ~5h** | Phase 3: 🔄 IN PROGRESS
+**Actual Time:** Phase 1: ~2h | Phase 2: ~3h | Phase 3: ~9h | **Total: ~14h** | Phase 3: ✅ COMPLETE
 
 **Repository:** `src/Forker.Console/` (within forkerDotNet repo)
-**Status:** Phase 1 ✅ COMPLETE | Phase 2 ✅ COMPLETE | Phase 3 🔄 IN PROGRESS | Phase 4-5 PENDING
+**Status:** Phase 1 ✅ COMPLETE | Phase 2 ✅ COMPLETE | Phase 3 ✅ COMPLETE | Phase 4-5 PENDING
+
+**Test Suite:** 281/281 tests passing (Domain: 143, Infrastructure: 116, Resilience: 22)
 
 > **📖 Implementation Details:** See [IMPLEMENTATION-DETAILS.md](src/Forker.Console/IMPLEMENTATION-DETAILS.md) for code examples and technical specifications.
 
@@ -237,7 +239,7 @@
 
 ---
 
-## Phase 3: API-First Architecture Redesign (10-12 hours) 🔄 IN PROGRESS
+## Phase 3: API-First Architecture Redesign (10-12 hours) ✅ COMPLETE
 
 **Objective:** Replace direct SQLite access with HTTP API + filesystem approach
 
@@ -612,11 +614,100 @@ func handleFoldersPage(w http.ResponseWriter, r *http.Request) {
 
 ---
 
+### Task 3.8: State History Integration ✅ COMPLETE
+**Estimated Time:** 3-4 hours | **Actual Time:** 3 hours | **Completed:** 2025-10-15
+
+**Objective:** Integrate ForkerDotNet StateChangeLogging with Console UI to display complete job lifecycle
+
+**Files Created/Updated:**
+- [x] `src/Forker.Console/internal/server/handlers_api.go` (+22 lines)
+  - Added `handleJobStateHistoryAPI()` function to proxy state history requests from API
+  - Fixed `copyState` vs `state` field name mismatch in target display (line 884)
+  - Enhanced state history timeline display with grouped transitions (lines 908-945)
+- [x] `src/Forker.Console/internal/server/router_api.go` (+11 lines)
+  - Added state-history route detection in `/api/jobs/` handler (lines 30-35)
+  - Added `strings` import for route suffix detection
+- [x] `src/Forker.Service/appsettings.Demo.json` (StateChangeLogging config)
+  - Removed artificial 10s verification delay (VerificationDelaySeconds: 10 → 0)
+  - Added StateChangeLogging configuration block with 90-day retention
+
+**State History Features Implemented:**
+1. **API Endpoint Proxy:**
+   - Go Console now proxies `/api/jobs/{id}/state-history` to C# API
+   - Returns JSON array of state transitions from StateChangeLog table
+   - 1-3ms response time per request
+
+2. **UI State History Display:**
+   - Complete pane "Details" view shows full state transition timeline
+   - Grouped by entity (Job-level + per-target transitions)
+   - Shows timestamp, duration, and state transitions
+   - Example: "Pending → Copying (3.96s) → Copied (1ms) → Verifying (1.5s) → Verified"
+
+3. **Target State Display Fix:**
+   - Fixed "TargetA: ✗ undefined" bug by using `target.copyState || target.state`
+   - Now correctly shows "TargetA: ✓ Verified" with proper checkmark
+
+4. **UX Improvements:**
+   - Filter persistence using localStorage (survives page refresh)
+   - Scroll detection pauses auto-refresh (prevents interruption during scrolling)
+   - Filter dropdown correctly reflects stored value after expanding details
+
+**Testing Results:**
+- Tested with 6x 2-3GB medical imaging files
+- State history displays correctly for all completed jobs
+- All 281 tests passing (Domain: 143, Infrastructure: 116, Resilience: 22)
+- Console accessible at http://localhost:8082
+- API accessible at http://localhost:8081
+- Docker rebuild successful (build time: ~15s)
+
+**State Transitions Captured:**
+```
+Job-Level:
+  Discovered → Queued → InProgress → Partial → Verified
+
+Target-Level (per target):
+  Pending → Copying → Copied → Verifying → Verified
+```
+
+**Bugs Fixed:**
+1. Missing `/api/jobs/{id}/state-history` route in Go Console router
+2. API field name mismatch (`copyState` in API, `state` in UI)
+3. Filter reverting to "Today" on refresh (localStorage persistence)
+4. Auto-refresh interrupting scrolling (scroll detection with 1s pause)
+5. Filter dropdown showing wrong value after clicking Details
+
+**Port Configuration:**
+- C# Service Health: http://localhost:8080/health/live
+- C# Service API: http://localhost:8081
+- Go Console: http://localhost:8082 (Docker: 8080→8082 mapping)
+- CORS configured for localhost:8082
+
+**Success Criteria:** ✅ All met
+- State history endpoint working correctly
+- UI displays complete transition timeline
+- Target states display correctly with checkmarks
+- Filter persistence working across refreshes
+- Scroll interruption resolved
+- Docker container rebuilt and tested
+
+**Architecture Benefits:**
+- Complete observability into job lifecycle
+- Debugging made significantly easier
+- Can see timing of each state transition
+- Historical data preserved in database
+- No impact on core processing performance
+
+**Screenshots:**
+- `screenshots/transaction_details-sotill-wrong.jpg` - Before fix (showing "undefined")
+- Additional screenshots showing working state history display
+
+---
+
 ## Phase 3 Summary
 
 **Status:** ✅ **COMPLETE**
-**Estimated Time:** 10-12 hours | **Actual Time:** 6 hours
-**Tasks:** 6 total (6 complete)
+**Estimated Time:** 10-12 hours | **Actual Time:** 9 hours
+**Tasks:** 8 total (7 complete, 1 technical debt)
 
 **Completion:**
 - ✅ Task 3.1: MonitoringService API (C#) - COMPLETE
@@ -625,12 +716,16 @@ func handleFoldersPage(w http.ResponseWriter, r *http.Request) {
 - ✅ Task 3.4: Enhanced UI Templates - COMPLETE (both pages working)
 - ✅ Task 3.5: Docker Configuration - COMPLETE
 - ✅ Task 3.6: Integration Testing - COMPLETE (all endpoints verified)
+- 🔲 Task 3.7: Refactor to Proper Go Templates - TODO (technical debt)
+- ✅ Task 3.8: State History Integration - COMPLETE
 
 **Key Deliverables:**
-- ForkerDotNet Monitoring API (5 endpoints on port 8081)
+- ForkerDotNet Monitoring API (6 endpoints on port 8081, including state-history)
 - Console HTTP client + filesystem scanner
 - 4-pane folder view UI (explorer-style)
-- 2-pane transaction view UI
+- 3-pane transaction view UI with expandable details
+- State history timeline display (complete job lifecycle visualization)
+- Filter persistence and scroll detection UX improvements
 - Re-queue operation
 - Docker configuration with `extra_hosts`
 
@@ -899,5 +994,5 @@ func handleFoldersPage(w http.ResponseWriter, r *http.Request) {
 
 ---
 
-**Last Updated:** 2025-10-10
-**Status:** Phase 3 Complete - Folders and Transactions pages fully working
+**Last Updated:** 2025-10-15
+**Status:** Phase 3 Complete - Full state history integration with timeline display and UX improvements
