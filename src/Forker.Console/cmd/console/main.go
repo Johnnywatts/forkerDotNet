@@ -59,7 +59,7 @@ func runAPIMode(apiURL string) {
 
 	// Create HTTP server
 	srv := &http.Server{
-		Addr:         ":5000",
+		Addr:         ":8080",
 		Handler:      router,
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
@@ -68,8 +68,8 @@ func runAPIMode(apiURL string) {
 
 	// Start server in a goroutine
 	go func() {
-		log.Printf("[INFO] Console listening on http://localhost:5000")
-		log.Printf("[INFO] Health endpoint: http://localhost:5000/health")
+		log.Printf("[INFO] Console listening on http://localhost:8080")
+		log.Printf("[INFO] Health endpoint: http://localhost:8080/health")
 		log.Printf("[INFO] Mode: API-based (Phase 3)")
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("[FATAL] Server failed: %v", err)
@@ -131,7 +131,7 @@ func runSQLiteMode() {
 
 	// Create HTTP server
 	srv := &http.Server{
-		Addr:         ":5000",
+		Addr:         ":8080",
 		Handler:      router,
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
@@ -140,8 +140,8 @@ func runSQLiteMode() {
 
 	// Start server in a goroutine
 	go func() {
-		log.Printf("[INFO] Console listening on http://localhost:5000")
-		log.Printf("[INFO] Health endpoint: http://localhost:5000/health")
+		log.Printf("[INFO] Console listening on http://localhost:8080")
+		log.Printf("[INFO] Health endpoint: http://localhost:8080/health")
 		log.Printf("[INFO] Mode: SQLite direct (Phase 2 - deprecated)")
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("[FATAL] Server failed: %v", err)

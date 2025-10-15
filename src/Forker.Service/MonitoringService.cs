@@ -91,8 +91,8 @@ public class MonitoringService : BackgroundService
 
         try
         {
-            // Add CORS headers for console on localhost:5000
-            response.AddHeader("Access-Control-Allow-Origin", "http://localhost:5000");
+            // Add CORS headers for console on localhost:8082
+            response.AddHeader("Access-Control-Allow-Origin", "http://localhost:8082");
             response.AddHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
             response.AddHeader("Access-Control-Allow-Headers", "Content-Type");
 

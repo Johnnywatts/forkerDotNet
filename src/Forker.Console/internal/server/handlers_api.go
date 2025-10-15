@@ -558,15 +558,30 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
     let refreshInterval = null;
     let refreshRate = parseInt(localStorage.getItem('forker-refresh-rate') || '2000');
     let isPaused = localStorage.getItem('forker-paused') === 'true';
+    let completeFilter = localStorage.getItem('forker-complete-filter') || 'today';
+    let isScrolling = false;
+    let scrollTimeout = null;
 
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
         // Restore UI state from localStorage
         restoreRefreshControlState();
 
+        // Add scroll detection to pause refreshes while scrolling
+        document.addEventListener('scroll', handleScroll, true); // Capture phase for scrollable divs
+
         fetchJobsData(); // Initial load
         startAutoRefresh(); // Start polling
     });
+
+    // Handle scroll events - pause refresh while user is scrolling
+    function handleScroll() {
+        isScrolling = true;
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            isScrolling = false;
+        }, 1000); // Resume after 1 second of no scrolling
+    }
 
     // Restore refresh control UI state
     function restoreRefreshControlState() {
@@ -610,16 +625,29 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
             });
     }
 
-    // Batch fetch all job details
+    // Batch fetch all job details AND state history
     async function fetchAllJobDetails(jobs) {
-        const detailPromises = jobs.map(job =>
-            fetch('/api/jobs/' + job.jobId)
-                .then(r => r.json())
-                .catch(err => {
-                    console.warn('Failed to load job ' + job.jobId + ':', err);
-                    return null;
-                })
-        );
+        const detailPromises = jobs.map(async job => {
+            try {
+                // Fetch job details
+                const details = await fetch('/api/jobs/' + job.jobId).then(r => r.json());
+
+                // Fetch state history for this job
+                const history = await fetch('/api/jobs/' + job.jobId + '/state-history')
+                    .then(r => r.json())
+                    .catch(err => {
+                        console.warn('Failed to load state history for ' + job.jobId + ':', err);
+                        return [];
+                    });
+
+                // Attach state history to job details
+                details.stateHistory = history || [];
+                return details;
+            } catch (err) {
+                console.warn('Failed to load job ' + job.jobId + ':', err);
+                return null;
+            }
+        });
 
         const results = await Promise.all(detailPromises);
         allJobDetails = results.filter(j => j !== null);
@@ -629,7 +657,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
     function startAutoRefresh() {
         if (refreshInterval) clearInterval(refreshInterval);
         refreshInterval = setInterval(() => {
-            if (!isPaused) {
+            if (!isPaused && !isScrolling) {
                 fetchJobsData();
             }
         }, refreshRate);
@@ -669,8 +697,8 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
             ['Failed', 'Quarantined'].includes(j.state)
         );
 
-        // Apply time filter to Complete pane
-        const filterValue = document.getElementById('complete-filter')?.value || 'today';
+        // Apply time filter to Complete pane (use stored filter value)
+        const filterValue = document.getElementById('complete-filter')?.value || completeFilter;
         const complete = filterJobsByTime(allComplete, filterValue);
 
         let html = '<div class="transactions-grid">';
@@ -779,9 +807,9 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         let html = '<div class="transaction-pane">';
         html += '<h3>Complete (' + jobs.length + ')';
         html += '<select id="complete-filter" onchange="handleFilterChange()">';
-        html += '<option value="hour">Last Hour</option>';
-        html += '<option value="today" selected>Today</option>';
-        html += '<option value="all">All Time</option>';
+        html += '<option value="hour"' + (completeFilter === 'hour' ? ' selected' : '') + '>Last Hour</option>';
+        html += '<option value="today"' + (completeFilter === 'today' ? ' selected' : '') + '>Today</option>';
+        html += '<option value="all"' + (completeFilter === 'all' ? ' selected' : '') + '>All Time</option>';
         html += '</select></h3>';
         html += '<div class="transaction-list">';
 
@@ -810,8 +838,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
                 }
             });
         } else {
-            const filter = document.getElementById('complete-filter')?.value || 'today';
-            const message = filter === 'all' ? 'No completed jobs yet' : 'No jobs completed ' + getFilterLabel(filter);
+            const message = completeFilter === 'all' ? 'No completed jobs yet' : 'No jobs completed ' + getFilterLabel(completeFilter);
             html += '<div class="no-transactions">' + message + '</div>';
         }
 
@@ -844,7 +871,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
         return html;
     }
 
-    // Render target details (unchanged)
+    // Render target details with state history timeline
     function renderTargetDetails(job) {
         if (!job.targets || job.targets.length === 0) {
             return '<div class="job-details-expanded">No target data available</div>';
@@ -852,6 +879,7 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
 
         let html = '<div class="job-details-expanded">';
 
+        // Show target summary first
         job.targets.forEach(target => {
             html += '<div class="target-detail">';
             html += '<strong>' + target.targetId + ':</strong> ';
@@ -877,8 +905,62 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
             html += '</div>';
         });
 
+        // Show state history timeline if available
+        if (job.stateHistory && job.stateHistory.length > 0) {
+            html += '<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">';
+            html += '<strong>State History:</strong><br>';
+            html += '<div style="margin-top: 10px; font-size: 0.85em;">';
+
+            // Group history by target
+            const historyByTarget = {};
+            job.stateHistory.forEach(entry => {
+                const key = entry.entityType === 'Target' ? entry.entityId : 'Job';
+                if (!historyByTarget[key]) {
+                    historyByTarget[key] = [];
+                }
+                historyByTarget[key].push(entry);
+            });
+
+            // Render each target's history
+            Object.keys(historyByTarget).sort().forEach(targetKey => {
+                const entries = historyByTarget[targetKey];
+                html += '<div style="margin: 10px 0; padding: 8px; background: #fafafa; border-left: 3px solid #0066cc;">';
+                html += '<strong>' + targetKey + ':</strong><br>';
+                html += '<ul style="margin: 5px 0; padding-left: 20px; list-style: none;">';
+
+                entries.forEach(entry => {
+                    const time = formatTimeWithSeconds(entry.timestamp);
+                    const duration = entry.durationMs ? ' (' + formatDuration(entry.durationMs) + ')' : '';
+                    html += '<li style="margin: 3px 0;">';
+                    html += '<span style="color: #666;">' + time + ':</span> ';
+                    html += entry.oldState + ' → <strong>' + entry.newState + '</strong>';
+                    html += '<span style="color: #999;">' + duration + '</span>';
+                    html += '</li>';
+                });
+
+                html += '</ul></div>';
+            });
+
+            html += '</div></div>';
+        }
+
         html += '</div>';
         return html;
+    }
+
+    // Format timestamp with seconds
+    function formatTimeWithSeconds(timestamp) {
+        if (!timestamp) return 'N/A';
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    // Format duration in ms
+    function formatDuration(ms) {
+        if (!ms || ms < 0) return '';
+        if (ms < 1000) return ms + 'ms';
+        const seconds = (ms / 1000).toFixed(2);
+        return seconds + 's';
     }
 
     // Toggle job details expansion
@@ -893,6 +975,11 @@ func handleTransactionsPage(w http.ResponseWriter, r *http.Request) {
 
     // Handle filter change
     function handleFilterChange() {
+        const filterSelect = document.getElementById('complete-filter');
+        if (filterSelect) {
+            completeFilter = filterSelect.value;
+            localStorage.setItem('forker-complete-filter', completeFilter);
+        }
         renderTransactions();
     }
 

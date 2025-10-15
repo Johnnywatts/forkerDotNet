@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: forker-console
     ports:
-      - "127.0.0.1:5000:5000"  # Localhost only
+      - "127.0.0.1:8082:8080"  # Map host:8082 to container:8080
     volumes:
       # Mount ForkerDemo folder for filesystem scanner (read-only)
       - C:\ForkerDemo:/data:ro
