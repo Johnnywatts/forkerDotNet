@@ -16,6 +16,8 @@ services:
       - FORKER_API_URL=http://host.docker.internal:8081
       - FORKER_MODE=api
       - FORKER_DATA_PATH=/data  # Path to ForkerDemo mount
+      # Phase 4: Demo Mode - CRITICAL safety check
+      - ASPNETCORE_ENVIRONMENT=Demo
       # Legacy Phase 2 variables (unused in API mode):
       # - FORKER_DB_PATH=/data/forker.db
     extra_hosts:

@@ -18,6 +18,7 @@ func NewAPIRouter() http.Handler {
 	mux.HandleFunc("/dashboard", handleDashboardAPI)
 	mux.HandleFunc("/folders", handleFoldersPage)
 	mux.HandleFunc("/transactions", handleTransactionsPage)
+	mux.HandleFunc("/demo", handleDemoPage)
 
 	// API endpoints
 	mux.HandleFunc("/api/jobs", handleJobListAPI)
@@ -57,6 +58,10 @@ func NewAPIRouter() http.Handler {
 		}
 		handleFolderView(w, r, folderName)
 	})
+
+	// Demo Mode endpoints (Phase 4)
+	mux.HandleFunc("/api/demo/preflight", handlePreFlightAPI)
+	mux.HandleFunc("/api/demo/run-scenario", handleRunScenarioAPI)
 
 	// Static files
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
